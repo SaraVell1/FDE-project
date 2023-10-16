@@ -1,19 +1,30 @@
 <div class="row">
   <div class="col-md-auto">
-    <textarea pInputText [(ngModel)]="searchText" placeholder="Enter search term" placeholder="Enter your text here!"></textarea>
+    <textarea pInputText [(ngModel)]="searchText" placeholder="Enter search term" placeholder="Enter your text here!" cols="20" rows="10"></textarea>
   </div>
   <div class="col-md-auto">
-    <button pButton (click)="callApi()" label="Analize Text"></button>
+    <button pButton (click)="callApi()" label="Analyze Text"></button>
 </div>
 
 <div class="row">
-  <div *ngIf="entityIds">
+  <div *ngIf="entityData">
     <span>I dati sono arrivati!</span>
-    <div *ngFor="let entity of entityIds">
-      <p>
-        <b>Name</b>: {{entity.Name}} <br>
-        <b>Id</b>: {{entity.Id}}
-      </p>
+    <div *ngFor="let entity of entityData">
+      <h2>{{ entity[0] }}</h2>
+      
+      <!-- Loop through the entities within each group -->
+      <div *ngFor="let ppl of entity[1]">
+        <p>
+          <b>Name</b>: {{ ppl.Name }} <br>
+          <b>Id</b>: {{ ppl.Id.join(', ')}}
+        </p>
+      </div>
+      <div *ngFor="let loc of entity[2]">
+        <p>
+          <b>Name</b>: {{ loc.Name }} <br>
+          <b>Id</b>: {{ loc.Id.join(', ')}}
+        </p>
+      </div>
     </div>
   </div>
 </div>

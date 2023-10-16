@@ -9,13 +9,13 @@ import { ApiService } from './api.service';
 export class AppComponent {
   title = 'wikidata-panel';
   searchText: string = '';
-  entityIds: any;
+  entityData: any;
   constructor(private apiService: ApiService){}
 
 
   callApi(){
     this.apiService.getResults(this.searchText).subscribe(response => {
-      this.entityIds = response;
+      this.entityData = response;
       console.log(response);
     })
   }

@@ -27,43 +27,37 @@ class Disambiguation():
         findId = Result()
         entities_json = self.checkEntities(text)
         entities = json.loads(entities_json)
-
-        unique_names = set()
-        # unique_names_person = set()
-        # unique_names_city = set()
-        # print(entities)
+        unique_person_names = set()
+        unique_location_names = set()
+        entity_dictionary = dict()
         for entity in entities:
-            if entity["type"] == "PERSON" or entity["type"] == "GPE" or entity["type"] == "LOC":
-                unique_names.add(entity["text"])
-            #     unique_names_person.add(entity["text"])
-            # elif entity["type"] == "GPE" or entity["type"] == "LOC":
-            #     unique_names_city.add(entity["text"])
+            match entity["type"]:
+                case "PERSON":
+                    unique_person_names.add(entity["text"])                    
+                case "LOC":
+                    unique_location_names.add(entity["text"])
+                case "GPE":
+                    unique_location_names.add(entity["text"])
+                case "ORG":
+                    print("I'm an organization")
+                case "LANGUAGE":
+                    print("I'm a language")
+        entity_person_list = list(unique_person_names)
+        entity_location_list = list(unique_location_names)             
+        ids_person_entity = [] 
+        ids_location_entity = []       
+        for name in entity_person_list:
+            my_name_check = findId.checkHumanEntity(name)
+            ids_person_entity.extend(my_name_check)
+        for loc in entity_location_list:
+            my_loc_check = findId.checkLocationEntity(loc)
+            ids_location_entity.extend(my_loc_check)
 
-        # entity_person = list(unique_names_person)
-        # entity_city = list(unique_names_city)
-        entity_list = list(unique_names)
-       
 
-        ids_entity = []
-        #ids_city = []
+        entity_dictionary["PERSON"] = ids_person_entity
+        entity_dictionary["LOCATION"] = ids_location_entity
 
-        # for name in entity_person:
-        #     my_check = findId.checkName(name)
-        #     if my_check != "":
-        #         ids_name.append(my_check)
 
-        # for city in entity_city:
-        #     my_check_city = findId.checkPlace(city)
-        #     if my_check_city != "":
-        #         ids_city.append(my_check_city)
+        #print(entity_dictionary)
 
-        
-        for name in entity_list:
-            my_check = findId.checkEntity(name)
-            ids_entity.extend(my_check)
-            # if my_check != "":
-            #     ids_name.append(my_check)
-
-        # return jsonify({"Persons' ids": ids_name, "Cities' ids": ids_city})
-
-        return jsonify(ids_entity)
+        return jsonify(list(entity_dictionary.items()))
