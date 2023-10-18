@@ -132,18 +132,15 @@ class Result():
         response = requests.get(endpointUrl + encodedName + '&srnamespace=0&srlimit=5&srinfo=totalhits&srprop=snippet')
         if response.status_code == 200:
             json_response = response.json()
-            #print(json_response)
+            print(json_response)
             id_list = []
             results = []
             id_snippets_list = []
-            new_id_list = []
             for entity_key in json_response["query"]["search"]:
-                id_list.append(entity_key["title"])
-            
-            for entity_id in id_list:
-                if self.isHuman(entity_id):
-                    id_snippets_list.append({"Id": entity_id, "Snippet": entity_key["snippet"]})
-            
+                    entity_id = entity_key["title"]
+                    if self.isHuman(entity_id):
+                        id_snippets_list.append({"Id": entity_id, "Snippet": entity_key["snippet"]})
+
             results.append({"Id": id_snippets_list, "Name": name})
             #print(results)                      
         else:

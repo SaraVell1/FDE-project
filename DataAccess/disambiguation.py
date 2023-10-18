@@ -29,7 +29,7 @@ class Disambiguation():
         nlp = en_core_web_lg.load()
         doc1 = nlp(text)
         doc2 = nlp(description)
-        print(doc2.similarity(doc1))
+        return doc2.similarity(doc1)
 
     def convertText(self, text):
         findId = Result()
@@ -53,16 +53,24 @@ class Disambiguation():
         entity_person_list = list(unique_person_names)
         entity_location_list = list(unique_location_names)             
         ids_person_entity = [] 
-        ids_location_entity = []       
+        ids_location_entity = []  
+        id_snippet_verified = []     
         for name in entity_person_list:
             my_name_check = findId.checkHumanEntity(name)
             ids_person_entity.extend(my_name_check)
 
             for id in ids_person_entity:
-                id_snippet_list = id["Ids"]
+                id_snippet_list = id["Id"]
                 for id_snippet in id_snippet_list:
                     snippet = id_snippet["Snippet"]
-                    print(myres = self.compare_context_with_description(text, snippet))
+                    myres = self.compare_context_with_description(text, snippet)
+                    id_snippet_verified.append({"ID": id_snippet["Id"], "Score": myres})
+
+            if id_snippet_verified:
+                max_score_entry = max(id_snippet_verified, key=lambda x: x["Score"])
+                highest_score_id = max_score_entry["ID"]
+            print(highest_score_id)
+            
         for loc in entity_location_list:
             my_loc_check = findId.checkLocationEntity(loc)
             ids_location_entity.extend(my_loc_check)
