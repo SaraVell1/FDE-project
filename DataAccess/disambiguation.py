@@ -52,34 +52,46 @@ class Disambiguation():
                     print("I'm a language")
         entity_person_list = list(unique_person_names)
         entity_location_list = list(unique_location_names)             
-        ids_person_entity = [] 
         ids_location_entity = []  
-        id_snippet_verified = []     
-        for name in entity_person_list:
+        final_name_id = []   
+        for name in entity_person_list:           
+            #ids_person_entity = []
             my_name_check = findId.checkHumanEntity(name)
-            ids_person_entity.extend(my_name_check)
+            print("My name check is:", my_name_check)
+            #ids_person_entity.extend(my_name_check)
+            id_snippet_verified = []
 
-            for id in ids_person_entity:
-                id_snippet_list = id["Id"]
-                for id_snippet in id_snippet_list:
-                    snippet = id_snippet["Snippet"]
-                    myres = self.compare_context_with_description(text, snippet)
-                    id_snippet_verified.append({"ID": id_snippet["Id"], "Score": myres})
+            for id_entry in my_name_check:
+                if len(id_entry["Id"]) > 1:
+                    id_snippet_list = id_entry["Id"]
+                    for id_snippet in id_snippet_list:
+                        snippet = id_snippet["Snippet"]
+                        myres = self.compare_context_with_description(text, snippet)
+                        id_snippet_verified.append({"ID": id_snippet["Id"], "Score": myres})
 
-            if id_snippet_verified:
-                max_score_entry = max(id_snippet_verified, key=lambda x: x["Score"])
-                highest_score_id = max_score_entry["ID"]
-            print(highest_score_id)
-            
+                    if id_snippet_verified:
+                        print("My Ids verfied are:", id_snippet_verified)
+                        max_score_entry = max(id_snippet_verified, key=lambda x: x["Score"])
+                        highest_score_id = max_score_entry["ID"]            
+                        
+                    print(highest_score_id)
+                    final_name_id.append({"Name": name, "ID": highest_score_id})
+
+                elif len(id_entry["Id"]) == 1:
+                    final_name_id.append({"Name": name, "ID": my_name_check[0]["Id"]})
+                
+                else:
+                    final_name_id.append({"Name": name, "ID": None})
+
         for loc in entity_location_list:
             my_loc_check = findId.checkLocationEntity(loc)
             ids_location_entity.extend(my_loc_check)
 
-
-        entity_dictionary["PERSON"] = ids_person_entity
+        print(final_name_id)
+        entity_dictionary["PERSON"] = final_name_id
         entity_dictionary["LOCATION"] = ids_location_entity
 
 
-        #print(entity_dictionary)
+       # print(entity_dictionary)
 
         return jsonify(list(entity_dictionary.items()))
