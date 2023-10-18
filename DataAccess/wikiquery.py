@@ -135,15 +135,16 @@ class Result():
             #print(json_response)
             id_list = []
             results = []
+            id_snippets_list = []
             new_id_list = []
             for entity_key in json_response["query"]["search"]:
                 id_list.append(entity_key["title"])
             
             for entity_id in id_list:
                 if self.isHuman(entity_id):
-                    new_id_list.append(entity_id)
+                    id_snippets_list.append({"Id": entity_id, "Snippet": entity_key["snippet"]})
             
-            results.append({"Id": new_id_list, "Name": name})
+            results.append({"Id": id_snippets_list, "Name": name})
             #print(results)                      
         else:
             print("Request failed with status code:", response.status_code)

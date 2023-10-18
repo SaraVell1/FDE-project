@@ -1,5 +1,7 @@
 import json
 import stanza
+import spacy
+import en_core_web_lg
 from flask import jsonify
 
 from DataAccess.wikiquery import Result
@@ -22,6 +24,12 @@ class Disambiguation():
                 entities.append(entity_dict)
 
         return json.dumps(entities)
+    
+    def compare_context_with_description(self, text, description):
+        nlp = en_core_web_lg.load()
+        doc1 = nlp(text)
+        doc2 = nlp(description)
+        print(doc2.similarity(doc1))
 
     def convertText(self, text):
         findId = Result()
@@ -49,6 +57,12 @@ class Disambiguation():
         for name in entity_person_list:
             my_name_check = findId.checkHumanEntity(name)
             ids_person_entity.extend(my_name_check)
+
+            for id in ids_person_entity:
+                id_snippet_list = id["Ids"]
+                for id_snippet in id_snippet_list:
+                    snippet = id_snippet["Snippet"]
+                    print(myres = self.compare_context_with_description(text, snippet))
         for loc in entity_location_list:
             my_loc_check = findId.checkLocationEntity(loc)
             ids_location_entity.extend(my_loc_check)
