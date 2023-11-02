@@ -1,0 +1,50 @@
+First Test - https://en.wikisource.org/wiki/The_Mathematical_Principles_of_Natural_Philosophy_(1846)/The_System_of_the_World
+
+[511]
+It was the ancient opinion of not a few, in the earliest ages of philosophy, that the fixed stars stood immoveable in the highest parts of the world; that under the fixed stars the planets were carried about the sun; that the earth, as one of the planets, described an annual course about the sun, while by a diurnal motion it was in the mean time revolved about its own axis; and that the sun, as the common fire which served to warm the whole, was fixed in the centre of the universe.
+This was the philosophy taught of old by Philolaus, Aristarchus of Samos, Plato in his riper years, and the whole sect of the Pythagoreans; and this was the judgment of Anaximander, more ancient than any of them; and of that wise king of the Romans, Numa Pompilius, who, as a symbol of the figure of the world with the sun in the centre, erected a temple in honour of Vesta, of a round form, and ordained perpetual fire to be kept in the middle of it.
+The Egyptians were early observers of the heavens; and from them, probably, this philosophy was spread abroad among other nations; for from them it was, and the nations about them, that the Greeks, a people of themselves more addicted to the study of philology than of nature, derived their first, as well as soundest, notions of philosophy; and in the vestal ceremonies we may yet trace the ancient spirit of the Egyptians; for it was their way to deliver their mysteries, that is, their philosophy of things above the vulgar way of thinking, under the veil of religious rites and hieroglyphic symbols.
+It is not to be denied but that Anaxagoras, Democritus, and others, did now and then start up, who would have it that the earth possessed the centre of the world, and that the stars of all sorts were revolved towards the west about the earth quiescent in the centre, some at a swifter, others at a slower rate.
+However, it was agreed on both sides that the motions of the celestial bodies were performed in spaces altogether free and void of resistance. The whim of solid orbs was of a later date, introduced by Eudoxus, Calippus, and Aristotle; when the ancient philosophy began to decline, and to give place to the new prevailing fictions of the Greeks.
+
+[512]
+But, above all things, the phænomena of comets can by no means consist with the notion of solid orbs. The Chaldeans, the most learned astronomers of their time, looked upon the comets (which of ancient times before had been numbered among the celestial bodies) as a particular sort of planets, which, describing very eccentric orbits, presented themselves to our view only by turns, viz., once in a revolution, when they descended into the lower parts of their orbits.
+And as it was the unavoidable consequence of the hypothesis of solid orbs, while it prevailed, that the comets should be thrust down below the moon, so no sooner had the late observations of astronomers restored the comets to their ancient places in the higher heavens, but these celestial spaces were at once cleared of the incumbrance of solid orbs, which by these observations were broke into pieces, and discarded for ever.
+Whence it was that the planets came to be retained within any certain bounds in these free spaces, and to be drawn off from the rectilinear courses, which, left to themselves, they should have pursued, into regular revolutions in curvilinear orbits, are questions which we do not know how the ancients explained; and probably it was to give some sort of satisfaction to this difficulty that solid orbs were introduced.
+The later philosophers pretend to account for it either by the action of certain vortices, as Kepler and Des Cartes; or by some other principle of impulse or attraction, as Borelli, Hooke, and others of our nation; for, from the laws of motion, it is most certain that these effects must proceed from the action of some force or other.
+But our purpose is only to trace out the quantity and properties of this force from the phænomena (p. 218), and to apply what we discover in some simple cases as principles, by which, in a mathematical way, we may estimate the effects thereof in more involved cases; for it would be endless and impossible to bring every particular to direct and immediate observation.
+We said, in a mathematical way, to avoid all questions about the nature or quality of this force, which we would not be understood to determine by any hypothesis; and therefore call it by the general name of a centripetal force, as it is a force which is directed towards some centre; and as it regards more particularly a body in that centre, we call it circum-solar, circum-terrestrial, circum-jovial; and in like manner in respect of other central bodies.
+That by means of centripetal forces the planets may be retained in certain orbits, we may easily understand, if we consider the motions of projectiles (p. 75, 76, 77); for a stone projected is by the pressure of its own weight forced out of the rectilinear path, which by the projection alone it should have pursued, and made to describe a curve line in the air; and through that crooked way is at last brought down to the ground; and the greater the velocity is with which it is projected, the farther it goes before it falls to the earth. We may therefore suppose the velocity to be so increased, that it would describe an arc of 1, 2, 5, 10, 100, 1000 miles before it arrived at the earth, till at last, exceeding the limits of the earth, it should pass quite by without touching it.
+
+Entities:
+[511]
+Name: Philolaus, ID: Q212338, Type: PERSON - SI
+Name: Aristarchus of Samos, ID: Q140188, Type: PERSON - SI
+Name: Plato, ID: Q859, Type: PERSON - SI
+Name: Pythagoreanism, ID: Q191359, Type: GROUP OF HUMANS - SI
+Name: Anaximander, ID: Q42458, Type: PERSON - SI
+Name: Numa Pompilius, ID: Q200031, Type: PERSON - SI
+Name: Vesta (mythology), ID: Q178710, Type: DEITY - SI
+Name: Ants Oras, ID: Q3482381, Type: PERSON - NO
+Name: Democritus, ID: Q41980, Type: PERSON - SI
+Name: Eudoxus of Cnidus, ID: Q185150, Type: PERSON - SI
+Name: Callippus, ID: Q471218, Type: PERSON - SI
+Name: Aristotle, ID: Q868, Type: PERSON - SI
+
+Non ha identificato come entità: Romans, Egyptians, Anaxagoras
+
+[512]
+Name: Johannes Kepler, ID: Q8963, Type: PERSON - SI
+Name: René Descartes, ID: Q9191, Type: PERSON - SI
+Name: Giovanni Alfonso Borelli, ID: Q311814, Type: PERSON - SI
+Name: Robert Hooke, ID: Q46830, Type: PERSON - SI
+
+_________________________________________________
+Second Test - https://en.wikisource.org/wiki/The_Sidereal_Messenger_of_Galileo_Galilei/The_Sidereal_Messenger
+
+There is certainly something very noble and large-minded in the intention of those who have endeavoured to protect from envy the noble achievements of distinguished men, 
+and to rescue their names, worthy of immortality, from oblivion and decay. This desire has given us the lineaments of famous men, sculptured in marble, or fashioned in bronze, as a memorial of them to future ages; to the same feeling we owe the erection of statues, both ordinary and equestrian; hence, as the poet[1] says, has originated expenditure, mounting to the stars, upon columns and pyramids; with this desire, lastly, cities have been built, and distinguished by the names of those men, whom the gratitude of posterity thought worthy of being handed down to all ages. For the state of the human mind is such, that unless it be continually stirred by the counterparts
+of matters, obtruding themselves upon it from without, all recollection of the matters easily passes away from it.
+But others, having regard for more stable and more lasting monuments, secured the eternity of the fame of great men by placing it under the protection,
+not of marble or bronze, but of the Muses' guardianship and the imperishable monuments of literature. But why do I mention these things, as if human wit, content with these regions, 
+did not dare to advance further; whereas, since she well understood that all human monuments do perish at last by violence, by weather, or by age, she took a wider view, and invented more imperishable signs, over which destroying Time and envious Age could claim no rights; so, betaking herself to the sky, she inscribed on the well-known orbs of the brightest stars—those everlasting orbs—the names of those who, for eminent and god-like deeds, were accounted worthy to enjoy an eternity in company with the stars. Wherefore the fame of Jupiter, Mars, Mercury, Hercules, and the rest of the heroes by whose names the stars are called, will not fade until the extinction of the splendour of the constellations themselves.

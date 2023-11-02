@@ -47,7 +47,8 @@ class Disambiguation():
             if entity_id is not None and entity_name is not None and entity_type is not None:
                 entities.append([{"Name":entity_name, "ID":entity_id, "Type": entity_type}])
             elif entity_id is not None and entity_name is not None and entity_type is None:
-                entities.append([{"Name":entity_name, "ID":entity_id}])
+                entity_type = span.predicted_entity_types[0][1].upper()
+                entities.append([{"Name":entity_name, "ID":entity_id, "Type": entity_type}])
         return jsonify(entities)
         # findId = Result()
         # entities_json = self.checkEntities(text)
