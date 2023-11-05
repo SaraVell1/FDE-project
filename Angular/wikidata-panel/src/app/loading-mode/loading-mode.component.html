@@ -1,0 +1,36 @@
+<h2>Insert your text here!</h2>
+<div class="row">
+  <div class="col-md-auto">
+    <textarea pInputText [(ngModel)]="searchText" placeholder="Enter search term" placeholder="Once Upon a Time..." cols="100" rows="40"></textarea>
+  </div>
+  <div class="col-md-auto">  
+    <button pButton [routerLink]="['./view']" (click)="sendText()" label="Analyze Text"></button>
+  </div>
+</div>
+ 
+<!-- <div class="row">
+  <div #results *ngIf="entityData">
+    <div *ngFor="let entities of entityData">
+      <div *ngFor="let entity of entities">
+          <h2>Name: {{ entity.Name}}, ID: {{ entity.ID }}<span *ngIf="entity.Type != null">, Type: {{entity.Type}}</span></h2>
+      </div>
+    </div> -->
+    <!-- <div *ngFor="let entity of entityData">
+      <h2>{{ entity }}</h2> -->
+      
+      <!-- Loop through the entities within each group -->
+      <!-- <div *ngFor="let ppl of entity[1]">
+        <p>
+          <b>Name</b>: {{ ppl.Name }} <br>
+          <b>Id</b>: {{ ppl.Id}}
+        </p>
+      </div>
+      <div *ngFor="let loc of entity[2]">
+        <p>
+          <b>Name</b>: {{ loc.Name }} <br>
+          <b>Id</b>: {{ loc.Id}}
+        </p>
+      </div>
+    </div> -->
+  <!-- </div>
+</div> -->

@@ -6,6 +6,7 @@ import en_core_web_lg
 from flask import jsonify
 import datetime
 from refined.inference.processor import Refined
+from refined.data_types.base_types import Span
 
 from DataAccess.wikiquery import Result
 
@@ -38,11 +39,11 @@ class Disambiguation():
         refined = Refined.from_pretrained(model_name="wikipedia_model", entity_set="wikidata", download_files=False)
         spans = refined.process_text(text)
         my_spans = str(spans)
-        print(my_spans)
+        print(spans)
         entities = []
         for span in spans:
             entity_id = span.predicted_entity.wikidata_entity_id
-            entity_name = span.predicted_entity.wikipedia_entity_title
+            entity_name = span.text
             entity_type = span.coarse_mention_type
             if entity_id is not None and entity_name is not None and entity_type is not None:
                 entities.append([{"Name":entity_name, "ID":entity_id, "Type": entity_type}])

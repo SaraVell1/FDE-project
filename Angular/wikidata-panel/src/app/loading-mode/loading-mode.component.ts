@@ -1,13 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ApiService } from './api.service';
-import { Route, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { ApiService } from '../api.service';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-loading-mode',
+  templateUrl: './loading-mode.component.html',
+  styleUrls: ['./loading-mode.component.css']
 })
-export class AppComponent implements OnInit {
+export class LoadingModeComponent {
   title = 'wikidata-panel';
   searchText: string = '';
   entityData: any;
@@ -19,6 +20,13 @@ export class AppComponent implements OnInit {
     this.router.navigate(path);
   }
   
+  sendText(){
+    this.apiService.setText(this.searchText);
+    this.apiService.getAnalyzedText();
+  }
+
+
+
   // callApi(){
   //   this.entityData = null;
   //   this.apiService.getResults(this.searchText).subscribe(response => {
@@ -26,5 +34,8 @@ export class AppComponent implements OnInit {
   //     console.log(response);
   //   })
   // }
+
+  
 }
+
 

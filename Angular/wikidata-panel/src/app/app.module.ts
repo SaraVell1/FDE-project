@@ -1,16 +1,21 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import{ InputTextModule } from 'primeng/inputtext';
 import { ButtonModule} from 'primeng/button';
 import{ Table, TableModule } from 'primeng/table';
+import { RouterModule } from '@angular/router';
+import { ProgressSpinnerModule } from 'primeng/progressspinner'
+import { MessageService } from 'primeng/api';
+import { ApiService } from './api.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    routingComponents
   ],
   imports: [
     BrowserModule,
@@ -19,9 +24,11 @@ import{ Table, TableModule } from 'primeng/table';
     FormsModule,
     InputTextModule,
     ButtonModule,
-    TableModule
+    TableModule,
+    RouterModule,
+    ProgressSpinnerModule
   ],
-  providers: [],
+  providers: [MessageService, ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

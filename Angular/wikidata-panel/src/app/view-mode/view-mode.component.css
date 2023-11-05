@@ -1,0 +1,14 @@
+.col-md-auto{
+    text-align: center;
+}
+
+h1{
+    text-align: center;
+}
+
+.bookMode{
+   background-color: beige;
+    padding: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
