@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewModeComponent } from './view-mode.component';
+import { EditModeComponent } from './edit-mode.component';
 
-describe('ViewModeComponent', () => {
-  let component: ViewModeComponent;
-  let fixture: ComponentFixture<ViewModeComponent>;
+describe('EditModeComponent', () => {
+  let component: EditModeComponent;
+  let fixture: ComponentFixture<EditModeComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewModeComponent]
+      declarations: [EditModeComponent]
     });
-    fixture = TestBed.createComponent(ViewModeComponent);
+    fixture = TestBed.createComponent(EditModeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

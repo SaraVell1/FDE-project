@@ -1,4 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
-.mySpan{
+.mySpan {
+    cursor: pointer;
     text-decoration: underline;
-}
+    /* Add styling for the span */
+  }
+  
+  .card {
+    display: none;
+    /* Add styling for the card container */
+  }
+  
+  /* Add styling for the card when it's displayed */
+  .mySpan:hover + .card {
+    display: block;
+    position: absolute;
+    /* Adjust positioning as needed */
+  }
+  

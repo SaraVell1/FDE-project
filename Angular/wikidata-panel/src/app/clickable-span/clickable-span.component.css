@@ -1,0 +1,16 @@
+.mySpan-container {
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .card {
+    display: none;
+    /* Add styling for the card container */
+  }
+  
+  .mySpan-container:hover + .card {
+    display: block;
+    position: absolute;
+    /* Add positioning and styling for the card when hovering over the span container */
+  }
+  

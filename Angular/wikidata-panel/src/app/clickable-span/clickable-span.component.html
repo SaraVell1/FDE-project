@@ -1,0 +1,8 @@
+<div class="card" *ngIf="cardOpen">
+  <div>
+    <p>ID: <input [(ngModel)]="dataId"></p>
+    <p>Class: <input [(ngModel)]="dataClass"></p>
+    <p>List: <input [(ngModel)]="dataList"></p>
+    <button (click)="updateSpanData()">Update</button>
+  </div>
+</div>
