@@ -1,4 +1,4 @@
-import { Component, OnInit, SecurityContext, ViewContainerRef, Renderer2, ComponentFactoryResolver, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver } from '@angular/core';
 import { Route, Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -20,11 +20,12 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   spanContainer: any;
   response: any;
   textFragments: any[] = [];
+  private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
 
-  constructor(private apiService:ApiService, private sanitizer: DomSanitizer, private componentFactoryResolver: ComponentFactoryResolver, private renderer: Renderer2, private el: ElementRef){}
+  constructor(private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector){}
 
   ngOnInit(): void {
     this.getResult();
@@ -48,45 +49,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       this.loading = false;
     })
   }
-  //Galileo Galilei and Filippo Salviati were astronomers
-  // formatText(text: string, response: any) {
-  //   const flatResponse = response.flatMap((array: any) => array);
-  
-  //   const spanDataList: any[] = [];
-  //   const container = this.formattedTextContainer.nativeElement;
-  
-  //   flatResponse.forEach((item: any) => {
-  //     if (item.Name && item.ID && item.Type && item.Candidates) {
-  //       const name = item.Name;
-  //       const namePattern = new RegExp(`\\b${name}\\b`, 'g');
-  //       const spanData = {
-  //         Name: item.Name,
-  //         ID: item.ID,
-  //         Type: item.Type,
-  //         Candidates: item.Candidates,
-  //       };
-  //       spanDataList.push(spanData);
-  
-  //       // Create a span element
-  //       const spanElement = this.renderer.createElement('span');
-  //       this.renderer.addClass(spanElement, 'mySpan');
-  //       this.renderer.setProperty(spanElement, 'textContent', name);
-  
-  //       // Add a click event listener to the span
-  //       this.renderer.listen(spanElement, 'click', () => this.handleSpanClick(spanData));
-  
-  //       // Append the span element to the container
-  //       this.renderer.appendChild(container, spanElement);
-  //       text = text.replace(namePattern, `<span class="mySpan" (click)="handleSpanClick(${JSON.stringify(spanData)})">${name}</span>`);
 
-  //     }
-  //   });
-  
-  //   this.spanDataList = spanDataList;
-  //   console.log("this is the spanDataList",this.spanDataList)
-  //   this.formattedText = this.sanitizer.bypassSecurityTrustHtml(text);
-
-  //}
   formatText(text: string, response: any) {
     const flatResponse = response.flatMap((array: any) => array);
   
@@ -132,13 +95,36 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     
   
   handleSpanClick(spanData: any) {
-    // Handle the click event for the spanData
-    // You can open a card or perform any other desired action here
     console.log('Span clicked:', spanData);
     this.selectedSpanData = spanData;
-  }
-  updateSpanData(data: any, index: number) {
-    this.spanDataList[index] = data;
+
+    const factory = this.componentFactoryResolver.resolveComponentFactory(ClickableSpanComponent);
+    this.componentRef = factory.create(this.injector);
+
+    this.componentRef.changeDetectorRef.detectChanges();
+    // Set the input properties of the dynamic component with the span data
+    this.componentRef.instance.text = spanData.Name;
+    this.componentRef.instance.dataId = this.apiService.getUpdatedDataId();
+    this.componentRef.instance.dataClass = spanData.Type;
+    this.componentRef.instance.dataList = spanData.Candidates;
+
+    this.componentRef.instance.openCard();
+    console.log("dataid", this.componentRef.instance.dataId);
+    // Subscribe to update and spanClick events of the dynamic component
+    this.componentRef.instance.updateSpan.subscribe((data: any) => {
+      // Handle updateSpan event
+      console.log('Update span data:', data);
+    });
+
+    this.componentRef.instance.spanClick.subscribe((data: any) => {
+      // Handle spanClick event
+      console.log('Span clicked within dynamic component:', data);
+    });
+
+    // Append the dynamic component to the DOM
+    this.componentRef.location.nativeElement.style.display = 'inline-block';
+    this.componentRef.location.nativeElement.style.float = 'right';
+    this.spans.insert(this.componentRef.hostView);
   }
 }
 

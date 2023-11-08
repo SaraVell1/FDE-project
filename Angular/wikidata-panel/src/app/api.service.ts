@@ -9,15 +9,9 @@ export class ApiService {
   private inText :string = '';
   private apiResponse: any;
   private apiResponseSubject = new Subject<any>();
+  private updatedDataId:string = '';
 
   constructor(private http:HttpClient) { }
-
-  // getResults(text: string){
-  //     const apiUrl = 'http://127.0.0.1:8888';
-  //     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-  //     return this.http.post(apiUrl, {text});
-  // }
 
   setText(text:string){
     this.inText = text;
@@ -25,6 +19,14 @@ export class ApiService {
 
   getText(): string{
     return this.inText;
+  }
+
+  getUpdatedDataId(): string {
+    return this.updatedDataId;
+  }
+
+  setUpdatedDataId(updatedDataId: string) {
+    this.updatedDataId = updatedDataId;
   }
 
   getAnalyzedText(){

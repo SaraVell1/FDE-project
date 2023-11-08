@@ -9,6 +9,6 @@ h1{
 .bookMode{
    background-color: beige;
     padding: 5%;
-    margin-left: 10%;
-    margin-right: 10%;
+    display: inline-block;
+    float: left;
 }

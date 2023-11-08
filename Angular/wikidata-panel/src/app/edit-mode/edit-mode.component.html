@@ -1,4 +1,4 @@
-<div>
+<div class="row">
   <h1>Here's your FDE!</h1>
   <div class="col-md-auto bookMode">
     <div>
@@ -8,50 +8,10 @@
           <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
         </span>
       </ng-container>
-    </div>
-  </div>
-
-  <div class="col-md-auto" *ngIf="loading === true">
-    <p-progressSpinner></p-progressSpinner>
-  </div>
-</div>
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- <!-- <div>
-  <h1>Here your FDE!</h1>
-  <div class="col-md-auto bookMode">
-    Display the formatted text here 
-    <div #formattedTextContainer>
-      <div *ngIf="spanDataList">
-        <ng-container *ngFor="let spanData of spanDataList">
-          <span class="mySpan" (click)="handleSpanClick(spanData)"> {{ inText | slice: spanDataList[spanDataList.length - 1].Name.length }}</span>
-        </ng-container>
+      <div class="col-md-auto" *ngIf="loading === true">
+        <p-progressSpinner></p-progressSpinner>
       </div>
     </div>
-
-  <div class="col-md-auto" *ngIf="loading === true">
-    <p-progressSpinner></p-progressSpinner>
   </div>
+  <div class="col-md-auto" #spanContainer></div>  
 </div>
-
-<div *ngIf="selectedSpanData">
-  <h2>Selected Span Data:</h2>
-  <p>ID: {{ selectedSpanData.dataId }}</p>
-  <p>Class: {{ selectedSpanData.dataClass }}</p>
-  <p>List: {{ selectedSpanData.dataList }}</p>
-</div> -->

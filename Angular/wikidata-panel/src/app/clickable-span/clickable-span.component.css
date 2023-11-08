@@ -4,7 +4,9 @@
   }
   
   .card {
-    display: none;
+    display: inline-block;
+    padding: 2%;
+    background-color: lightgray;
     /* Add styling for the card container */
   }
   
