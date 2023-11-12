@@ -27,13 +27,13 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataList']) {
       this.dataList = [...changes['dataList'].currentValue];
+
+      // Set the selectedValue if dataList is not empty
       if (this.dataList.length > 0) {
         this.selectedValue = this.dataList[0];
       }
-      this.cdr.detectChanges();
-    }
-    if (changes['selectedValue']) {
-      this.selectedValue = changes['selectedValue'].currentValue;
+
+      // Manually trigger change detection
       this.cdr.detectChanges();
     }
   }
@@ -45,22 +45,31 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   updateSpanData() {
     this.cardOpen = false;
     this.updatedDataId = this.selectedValue;
+    this.apiService.updateSpanData({
+      ID: this.updatedDataId,
+      Candidates: this.dataList,
+      // ... (other properties)
+    });
     this.apiService.updateDataList(this.dataList);
     this.apiService.setUpdatedDataId(this.updatedDataId);
     this.updateSpan.emit({
-    dataId: this.updatedDataId,
-    dataClass: this.dataClass,
-    dataList: this.dataList,
-  });
-  this.cdr.detectChanges();
-  console.log('After updateSpanData - dataList:', this.dataList);
-  }
-
-  onClick() {
-    this.spanClick.emit({
+      Name: this.text,
+      ID: this.updatedDataId,
+      Type: this.dataClass,
+      Candidates: this.dataList,
+      text: this.text,
       dataId: this.updatedDataId,
       dataClass: this.dataClass,
-      dataList: this.dataList,
-    });
+      dataList: this.dataList
+  });
+  this.cdr.detectChanges();
   }
+
+  // onClick() {
+  //   this.spanClick.emit({
+  //     dataId: this.updatedDataId,
+  //     dataClass: this.dataClass,
+  //     dataList: this.dataList,
+  //   });
+  // }
 }

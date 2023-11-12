@@ -11,6 +11,8 @@ export class ApiService {
   private apiResponseSubject = new Subject<any>();
   private updatedDataId:string = '';
   private dataList: string[] = [];
+  private spanDataSubject = new BehaviorSubject<any>(null);
+  spanData$ = this.spanDataSubject.asObservable();
 
   constructor(private http:HttpClient) { }
 
@@ -29,7 +31,10 @@ export class ApiService {
   setUpdatedDataId(updatedDataId: string) {
     this.updatedDataId = updatedDataId;
   }
-
+  updateSpanData(spanData: any) {
+    this.spanDataSubject.next(spanData);
+  }
+  
   updateDataList(newDataList: string[]) {
     return this.dataList = newDataList;
   }

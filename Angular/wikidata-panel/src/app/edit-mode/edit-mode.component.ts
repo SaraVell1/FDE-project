@@ -22,6 +22,8 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   textFragments: any[] = [];
   dataL:string[] = [];
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
+  private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
+
 
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
@@ -29,8 +31,14 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   constructor(private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
+    this.apiService.spanData$.subscribe((spanData) => {
+      // Handle the updated spanData
+      console.log('Updated spanData:', spanData);
+      // ... (other code)
+    });
     this.getResult();
   }
+  
 
   ngAfterViewInit() {
     console.log("ngAfterViewInit called")
@@ -94,50 +102,62 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     this.textFragments = textFragments;
   }
     
-  
   handleSpanClick(spanData: any) {
     console.log('Span clicked:', spanData);
     this.selectedSpanData = spanData;
+
+    // Create a new dynamic component if it doesn't exist
     const factory = this.componentFactoryResolver.resolveComponentFactory(ClickableSpanComponent);
-    //this.componentRef = factory.create(this.injector);
-    this.componentRef = this.spans.createComponent(factory);  
-
-    if(this.componentRef){
-    this.componentRef.instance.text = this.selectedSpanData.Name;
-    this.componentRef.instance.dataId = this.apiService.getUpdatedDataId();
-    this.componentRef.instance.dataClass = this.selectedSpanData.Type;
-    this.componentRef.instance.dataList = this.selectedSpanData.Candidates;
-
-    this.componentRef.instance.openCard();
+    this.dynamicComponentRef = this.spans.createComponent(factory);
     
-    this.componentRef.instance.updatedDataId = this.apiService.getUpdatedDataId();
 
-    this.componentRef.instance.updateSpan.subscribe((data: any) => {
-      const index = this.textFragments.findIndex(fragment => fragment.type === 'span' && fragment.data === spanData);
-      if (index !== -1) {
-        this.textFragments[index].data = data;
-      }
-      if(this.componentRef){
-        this.componentRef.instance.dataList = data.dataList;
-        this.componentRef.instance.selectedValue = data.dataList.length > 0 ? data.dataList[0] : '';        
-      }
-      
-      spanData.ID = data.dataId;
-      spanData.Candidates = data.dataList;
-      console.log('Update span data:', data);
-    });
+    if (this.dynamicComponentRef) {
+      // Update the existing dynamic component with new data
+      const dynamicComponent = this.dynamicComponentRef.instance;
+      dynamicComponent.text = spanData.Name;
+      dynamicComponent.dataId = spanData.ID;
+      dynamicComponent.dataClass = spanData.Type;
+      dynamicComponent.dataList = spanData.Candidates;
+      dynamicComponent.openCard();
+
+      // Subscribe to update and spanClick events of the dynamic component
+      dynamicComponent.updateSpan.subscribe((data: any) => {
+        const index = this.textFragments.findIndex(fragment => fragment.type === 'span' && fragment.data === spanData);
+        if (index !== -1) {
+          this.textFragments[index].data = data;
+        }
+        if (this.componentRef) {
+          this.componentRef.instance.dataList = data.dataList;
+          this.componentRef.instance.selectedValue = data.dataList.length > 0 ? data.dataList[0] : '';
+          // Set other properties directly from the updated data
+          this.componentRef.instance.dataId = data.dataId;
+          this.componentRef.instance.dataClass = data.dataClass;
+        }
+        // Update spanData properties here if needed
+        spanData.ID = data.dataId;
+        spanData.Candidates = data.dataList;
+        spanData.Type = data.dataClass;
+        console.log('Update span data:', data);
+        this.cdr.detectChanges();
+      });
+
+      dynamicComponent.spanClick.subscribe((data: any) => {
+        // Handle spanClick event
+        console.log('Span clicked within dynamic component:', data);
+      });
+
+      // Manually trigger change detection
     
-    this.componentRef.instance.spanClick.subscribe((data: any) => {
-      // Handle spanClick event
-      console.log('Span clicked within dynamic component:', data);
-    });
-  
-    this.componentRef.changeDetectorRef.detectChanges();
-    // Append the dynamic component to the DOM
-    this.componentRef.location.nativeElement.style.display = 'inline-block';
-    this.componentRef.location.nativeElement.style.float = 'right';
-    this.spans.insert(this.componentRef.hostView);
+      this.spans.insert(this.dynamicComponentRef.hostView);
+
+      // Don't forget to destroy the previous component reference if exists
+      if (this.componentRef) {
+        this.componentRef.destroy();
+      }
+    
+      // Update the current component reference
+      this.componentRef = this.dynamicComponentRef;
+    }
   }
-}
 }
 
