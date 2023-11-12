@@ -10,6 +10,7 @@ export class ApiService {
   private apiResponse: any;
   private apiResponseSubject = new Subject<any>();
   private updatedDataId:string = '';
+  private dataList: string[] = [];
 
   constructor(private http:HttpClient) { }
 
@@ -27,6 +28,10 @@ export class ApiService {
 
   setUpdatedDataId(updatedDataId: string) {
     this.updatedDataId = updatedDataId;
+  }
+
+  updateDataList(newDataList: string[]) {
+    return this.dataList = newDataList;
   }
 
   getAnalyzedText(){

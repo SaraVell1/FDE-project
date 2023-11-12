@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver, ChangeDetectorRef } from '@angular/core';
 import { Route, Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -20,12 +20,13 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   spanContainer: any;
   response: any;
   textFragments: any[] = [];
+  dataL:string[] = [];
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
 
-  constructor(private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector){}
+  constructor(private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
     this.getResult();
@@ -97,34 +98,46 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   handleSpanClick(spanData: any) {
     console.log('Span clicked:', spanData);
     this.selectedSpanData = spanData;
-
     const factory = this.componentFactoryResolver.resolveComponentFactory(ClickableSpanComponent);
-    this.componentRef = factory.create(this.injector);
+    //this.componentRef = factory.create(this.injector);
+    this.componentRef = this.spans.createComponent(factory);  
 
-    this.componentRef.changeDetectorRef.detectChanges();
-    // Set the input properties of the dynamic component with the span data
-    this.componentRef.instance.text = spanData.Name;
+    if(this.componentRef){
+    this.componentRef.instance.text = this.selectedSpanData.Name;
     this.componentRef.instance.dataId = this.apiService.getUpdatedDataId();
-    this.componentRef.instance.dataClass = spanData.Type;
-    this.componentRef.instance.dataList = spanData.Candidates;
+    this.componentRef.instance.dataClass = this.selectedSpanData.Type;
+    this.componentRef.instance.dataList = this.selectedSpanData.Candidates;
 
     this.componentRef.instance.openCard();
-    console.log("dataid", this.componentRef.instance.dataId);
-    // Subscribe to update and spanClick events of the dynamic component
+    
+    this.componentRef.instance.updatedDataId = this.apiService.getUpdatedDataId();
+
     this.componentRef.instance.updateSpan.subscribe((data: any) => {
-      // Handle updateSpan event
+      const index = this.textFragments.findIndex(fragment => fragment.type === 'span' && fragment.data === spanData);
+      if (index !== -1) {
+        this.textFragments[index].data = data;
+      }
+      if(this.componentRef){
+        this.componentRef.instance.dataList = data.dataList;
+        this.componentRef.instance.selectedValue = data.dataList.length > 0 ? data.dataList[0] : '';        
+      }
+      
+      spanData.ID = data.dataId;
+      spanData.Candidates = data.dataList;
       console.log('Update span data:', data);
     });
-
+    
     this.componentRef.instance.spanClick.subscribe((data: any) => {
       // Handle spanClick event
       console.log('Span clicked within dynamic component:', data);
     });
-
+  
+    this.componentRef.changeDetectorRef.detectChanges();
     // Append the dynamic component to the DOM
     this.componentRef.location.nativeElement.style.display = 'inline-block';
     this.componentRef.location.nativeElement.style.float = 'right';
     this.spans.insert(this.componentRef.hostView);
   }
+}
 }
 
