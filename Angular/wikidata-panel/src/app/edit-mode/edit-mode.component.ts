@@ -173,9 +173,8 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       text: this.textFragments.map(fragment => fragment.text).join(''),
       spans: updatedSpans
     };
+    this.apiService.setEditedContent(this.editedContent);
 
-    // Set the flag to indicate that spans have been saved
-    this.spansSaved = true;
     console.log("The text has been saved!");
   }
 }

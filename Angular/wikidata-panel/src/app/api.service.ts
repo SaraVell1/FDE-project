@@ -13,6 +13,8 @@ export class ApiService {
   private dataList: string[] = [];
   private spanDataSubject = new BehaviorSubject<any>(null);
   spanData$ = this.spanDataSubject.asObservable();
+  private editedContent: any = {};
+
 
   constructor(private http:HttpClient) { }
 
@@ -37,6 +39,14 @@ export class ApiService {
   
   updateDataList(newDataList: string[]) {
     return this.dataList = newDataList;
+  }
+
+  setEditedContent(content: any) {
+    this.editedContent = content;
+  }
+
+  getEditedContent() {
+    return this.editedContent;
   }
 
   getAnalyzedText(){

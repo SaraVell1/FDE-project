@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-view-mode',
@@ -7,4 +9,10 @@ import { Component } from '@angular/core';
 })
 export class ViewModeComponent {
 
+  editedContent :any = {}
+  constructor(private apiService: ApiService){}
+
+  ngOnInit(){
+     this.editedContent = this.apiService.getEditedContent();
+  }
 }
