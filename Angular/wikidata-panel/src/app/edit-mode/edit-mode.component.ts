@@ -21,6 +21,8 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   response: any;
   textFragments: any[] = [];
   dataL:string[] = [];
+  spansSaved: boolean = false;
+  editedContent: any = {};
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
@@ -123,9 +125,10 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       // Subscribe to update and spanClick events of the dynamic component
       dynamicComponent.updateSpan.subscribe((data: any) => {
         const index = this.textFragments.findIndex(fragment => fragment.type === 'span' && fragment.data === spanData);
-        if (index !== -1) {
-          this.textFragments[index].data = data;
-        }
+      if (index !== -1) {
+        // Update the existing fragment with new data
+        this.textFragments[index] = { type: 'span', text: dynamicComponent.text, data: data };
+      }
         if (this.componentRef) {
           this.componentRef.instance.dataList = data.dataList;
           this.componentRef.instance.selectedValue = data.dataList.length > 0 ? data.dataList[0] : '';
@@ -158,6 +161,22 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       // Update the current component reference
       this.componentRef = this.dynamicComponentRef;
     }
+  }
+
+  saveText(){
+    const updatedSpans = this.textFragments
+      .filter(fragment => fragment.type === 'span')
+      .map(fragment => fragment.data);
+
+    // Save the entire text with the updated spans into the object
+    this.editedContent = {
+      text: this.textFragments.map(fragment => fragment.text).join(''),
+      spans: updatedSpans
+    };
+
+    // Set the flag to indicate that spans have been saved
+    this.spansSaved = true;
+    console.log("The text has been saved!");
   }
 }
 

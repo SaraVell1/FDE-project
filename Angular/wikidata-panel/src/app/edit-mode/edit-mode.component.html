@@ -12,6 +12,11 @@
         <p-progressSpinner></p-progressSpinner>
       </div>
     </div>
+    <button *ngIf="!spansSaved" (click)="saveText()">Save Spans</button>
+    <div *ngIf="spansSaved">
+      <p>Spans have been saved!</p>
+      <!-- You can add a button here to trigger the navigation to the visualization component -->
+    </div>
   </div>
   <div class="col-md-auto" #spanContainer></div>  
 </div>

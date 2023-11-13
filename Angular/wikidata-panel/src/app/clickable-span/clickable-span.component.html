@@ -1,10 +1,10 @@
 <div class="card" *ngIf="cardOpen">
   <div>
-    <p>ID: <input [(ngModel)]="updatedDataId"></p>
-    <p>Class: {{ dataClass }}</p>
+    <p>ID: <input [(ngModel)]="dataId"></p>
+    <p>Class: <input [(ngModel)]="dataClass"></p>
     <p>List:
       <select [(ngModel)]="selectedValue">
-        <option *ngFor="let value of dataList" >{{ value }}</option> <!--[value]="value" -->
+        <option *ngFor="let value of dataList" [value]="value">{{ value }}</option> <!--[value]="value" -->
       </select>
     </p>
     <button (click)="updateSpanData()">Update</button>

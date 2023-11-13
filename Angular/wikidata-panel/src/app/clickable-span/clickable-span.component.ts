@@ -44,7 +44,7 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   
   updateSpanData() {
     this.cardOpen = false;
-    this.updatedDataId = this.selectedValue;
+    this.updatedDataId = this.selectedValue ? this.selectedValue : this.dataId;
     this.apiService.updateSpanData({
       ID: this.updatedDataId,
       Candidates: this.dataList,

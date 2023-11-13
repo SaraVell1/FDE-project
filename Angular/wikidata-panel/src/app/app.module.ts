@@ -11,11 +11,13 @@ import { RouterModule } from '@angular/router';
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
 import { MessageService } from 'primeng/api';
 import { ApiService } from './api.service';
+import { ViewModeComponent } from './view-mode/view-mode.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     routingComponents,
+    ViewModeComponent,
   ],
   imports: [
     BrowserModule,
