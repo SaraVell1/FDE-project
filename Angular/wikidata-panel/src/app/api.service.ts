@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import { EditedText } from './edited-text';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class ApiService {
   private spanDataSubject = new BehaviorSubject<any>(null);
   spanData$ = this.spanDataSubject.asObservable();
   private editedContent: any = {};
+  private editedContentSubject = new BehaviorSubject<EditedText>({ text: '', spans: [] });
+  editedContent$ = this.editedContentSubject.asObservable();
 
 
   constructor(private http:HttpClient) { }
@@ -41,8 +44,8 @@ export class ApiService {
     return this.dataList = newDataList;
   }
 
-  setEditedContent(content: any) {
-    this.editedContent = content;
+  setEditedContent(content: EditedText): void {
+    this.editedContentSubject.next(content);
   }
 
   getEditedContent() {
@@ -53,9 +56,6 @@ export class ApiService {
     const apiUrl = 'http://127.0.0.1:8888';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const requestBody = {text: this.inText}
-
-    // return this.http.post(apiUrl, requestBody).pipe(tap((response) => {
-    //   this.apiResponse = response;
     this.http.post(apiUrl, requestBody).subscribe((response)=> {
       this.apiResponseSubject.next(response);
     })

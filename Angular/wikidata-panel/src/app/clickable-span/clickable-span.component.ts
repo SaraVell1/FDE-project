@@ -27,13 +27,9 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataList']) {
       this.dataList = [...changes['dataList'].currentValue];
-
-      // Set the selectedValue if dataList is not empty
       if (this.dataList.length > 0) {
         this.selectedValue = this.dataList[0];
       }
-
-      // Manually trigger change detection
       this.cdr.detectChanges();
     }
   }
@@ -48,7 +44,6 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
     this.apiService.updateSpanData({
       ID: this.updatedDataId,
       Candidates: this.dataList,
-      // ... (other properties)
     });
     this.apiService.updateDataList(this.dataList);
     this.apiService.setUpdatedDataId(this.updatedDataId);
@@ -64,12 +59,4 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   });
   this.cdr.detectChanges();
   }
-
-  // onClick() {
-  //   this.spanClick.emit({
-  //     dataId: this.updatedDataId,
-  //     dataClass: this.dataClass,
-  //     dataList: this.dataList,
-  //   });
-  // }
 }

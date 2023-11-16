@@ -25,8 +25,6 @@ export class LoadingModeComponent {
     this.apiService.getAnalyzedText();
   }
 
-
-
   // callApi(){
   //   this.entityData = null;
   //   this.apiService.getResults(this.searchText).subscribe(response => {

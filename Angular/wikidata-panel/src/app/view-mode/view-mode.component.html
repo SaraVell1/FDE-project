@@ -1,6 +1,7 @@
-<div>
-    <h1>You're FDE is here</h1>
-    <div *ngIf="editedContent">
-        <p>{{editedContent}}</p>
+<div class="row">
+    <h1>View Mode</h1>
+    <div class="col-md-auto bookMode">
+      <div [innerHTML]="insertSpansIntoText()"></div>
     </div>
 </div>
+  

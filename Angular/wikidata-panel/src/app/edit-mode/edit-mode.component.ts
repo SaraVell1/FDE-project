@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver, ChangeDetectorRef } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { EditedText } from '../edited-text';
 import { ApiService } from '../api.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SafeHtml } from '@angular/platform-browser';
 import { ClickableSpanComponent } from '../clickable-span/clickable-span.component';
 
 @Component({
@@ -22,7 +22,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   textFragments: any[] = [];
   dataL:string[] = [];
   spansSaved: boolean = false;
-  editedContent: any = {};
+  editedContent: EditedText = {text: '', spans: []};
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
@@ -34,9 +34,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.apiService.spanData$.subscribe((spanData) => {
-      // Handle the updated spanData
       console.log('Updated spanData:', spanData);
-      // ... (other code)
     });
     this.getResult();
   }
@@ -47,8 +45,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     if (this.response) {
       console.log("the response is arrived", this.response)
       this.formatText(this.inText, this.response);
-    }
-    
+    }  
   }
 
   getResult(){
@@ -81,21 +78,16 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         const matches = text.match(namePattern);
         if (matches) {
           matches.forEach(match => {
-            // Extract the text before the span
             const beforeText = text.slice(currentIndex, text.indexOf(match, currentIndex));
             if (beforeText) {
               textFragments.push({ type: 'text', text: beforeText });
             }
-  
-            // Add the span data
             textFragments.push({ type: 'span', text: match, data: spanData });
             currentIndex = text.indexOf(match, currentIndex) + match.length;
           });
         }
       }
     });
-  
-    // Add any remaining text after the last span
     const remainingText = text.slice(currentIndex);
     if (remainingText) {
       textFragments.push({ type: 'text', text: remainingText });
@@ -108,13 +100,10 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     console.log('Span clicked:', spanData);
     this.selectedSpanData = spanData;
 
-    // Create a new dynamic component if it doesn't exist
     const factory = this.componentFactoryResolver.resolveComponentFactory(ClickableSpanComponent);
     this.dynamicComponentRef = this.spans.createComponent(factory);
     
-
     if (this.dynamicComponentRef) {
-      // Update the existing dynamic component with new data
       const dynamicComponent = this.dynamicComponentRef.instance;
       dynamicComponent.text = spanData.Name;
       dynamicComponent.dataId = spanData.ID;
@@ -122,60 +111,56 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       dynamicComponent.dataList = spanData.Candidates;
       dynamicComponent.openCard();
 
-      // Subscribe to update and spanClick events of the dynamic component
       dynamicComponent.updateSpan.subscribe((data: any) => {
         const index = this.textFragments.findIndex(fragment => fragment.type === 'span' && fragment.data === spanData);
       if (index !== -1) {
-        // Update the existing fragment with new data
         this.textFragments[index] = { type: 'span', text: dynamicComponent.text, data: data };
       }
         if (this.componentRef) {
           this.componentRef.instance.dataList = data.dataList;
           this.componentRef.instance.selectedValue = data.dataList.length > 0 ? data.dataList[0] : '';
-          // Set other properties directly from the updated data
           this.componentRef.instance.dataId = data.dataId;
           this.componentRef.instance.dataClass = data.dataClass;
         }
-        // Update spanData properties here if needed
         spanData.ID = data.dataId;
         spanData.Candidates = data.dataList;
         spanData.Type = data.dataClass;
         console.log('Update span data:', data);
         this.cdr.detectChanges();
       });
-
-      dynamicComponent.spanClick.subscribe((data: any) => {
-        // Handle spanClick event
-        console.log('Span clicked within dynamic component:', data);
-      });
-
-      // Manually trigger change detection
     
       this.spans.insert(this.dynamicComponentRef.hostView);
-
-      // Don't forget to destroy the previous component reference if exists
       if (this.componentRef) {
         this.componentRef.destroy();
       }
-    
-      // Update the current component reference
       this.componentRef = this.dynamicComponentRef;
     }
   }
 
   saveText(){
     const updatedSpans = this.textFragments
-      .filter(fragment => fragment.type === 'span')
-      .map(fragment => fragment.data);
+    .filter(fragment => fragment.type === 'span')
+    .map(fragment => fragment.data);
 
-    // Save the entire text with the updated spans into the object
-    this.editedContent = {
-      text: this.textFragments.map(fragment => fragment.text).join(''),
-      spans: updatedSpans
-    };
-    this.apiService.setEditedContent(this.editedContent);
+  this.editedContent = {
+    text: this.textFragments.map(fragment => fragment.text).join(''),
+    spans: updatedSpans
+  };
 
-    console.log("The text has been saved!");
+  this.apiService.setEditedContent(this.editedContent);
+
+  console.log('The text has been saved!');
+ 
   }
 }
 
+ //   const updatedSpans = this.textFragments
+  //   .filter(fragment => fragment.type === 'span')
+  //   .map(fragment => fragment.data);
+  // this.editedContent = {
+  //   text: this.textFragments.map(fragment => fragment.text).join(''),
+  //   spans: updatedSpans
+  // };
+  // this.apiService.setEditedContent(this.editedContent);
+
+  // console.log("The text has been saved!");
