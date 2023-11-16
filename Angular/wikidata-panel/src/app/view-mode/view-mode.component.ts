@@ -41,6 +41,8 @@ export class ViewModeComponent {
     textContainer.innerHTML = ''; // Clear existing content
   
     let currentIndex = 0;
+    const elements: (string | HTMLElement)[] = [];
+    let processedMatches: Set<string> = new Set(); // Keep track of processed matches
   
     for (const span of this.editedContent.spans) {
       const name = span.Name;
@@ -49,24 +51,35 @@ export class ViewModeComponent {
   
       if (matches) {
         matches.forEach(match => {
-          const textBeforeSpan = this.editedContent.text.slice(currentIndex, this.editedContent.text.indexOf(match, currentIndex));
-          const spanElement = this.renderer.createElement('span');
-          this.renderer.addClass(spanElement, 'mySpan');
-          this.renderer.setAttribute(spanElement, 'data-id', span.ID);
-          this.renderer.setAttribute(spanElement, 'data-class', span.Type);
-          this.renderer.setAttribute(spanElement, 'data-type', span.Name);
-          this.renderer.appendChild(spanElement, this.renderer.createText(match));
-          this.renderer.appendChild(textContainer, this.renderer.createText(textBeforeSpan));
-          this.renderer.appendChild(textContainer, spanElement);
-          currentIndex = this.editedContent.text.indexOf(match, currentIndex) + match.length;
+          // Check if the match has been processed to avoid duplicates
+          if (!processedMatches.has(match)) {
+            const textBeforeSpan = this.editedContent.text.slice(currentIndex, this.editedContent.text.indexOf(match, currentIndex));
+            elements.push(textBeforeSpan);
+  
+            const spanElement = this.renderer.createElement('span');
+            this.renderer.addClass(spanElement, 'mySpan');
+            this.renderer.setAttribute(spanElement, 'data-id', span.ID);
+            this.renderer.setAttribute(spanElement, 'data-class', span.Type);
+            this.renderer.setAttribute(spanElement, 'data-type', span.Name);
+            this.renderer.appendChild(spanElement, this.renderer.createText(match));
+            elements.push(spanElement);
+  
+            currentIndex = this.editedContent.text.indexOf(match, currentIndex) + match.length;
+            processedMatches.add(match); // Mark the match as processed
+          }
         });
       }
     }
   
     // Add any remaining text after the last span
     const remainingText = this.editedContent.text.slice(currentIndex);
-    this.renderer.appendChild(textContainer, this.renderer.createText(remainingText));
+    elements.push(remainingText);
+  
+    // Join the elements array and set innerHTML of textContainer
+    textContainer.innerHTML = elements.map(element => (typeof element === 'string' ? element : element.outerHTML)).join('');
   }
+  
+  
 
   // getFormattedText(): string {
   //   let formattedHTML = this.editedContent.text;

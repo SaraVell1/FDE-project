@@ -60,9 +60,10 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
   formatText(text: string, response: any) {
     const flatResponse = response.flatMap((array: any) => array);
-  
+    
     const textFragments: any[] = [];
     let currentIndex = 0;
+    let processedMatches: Set<string> = new Set(); // Keep track of processed matches
   
     flatResponse.forEach((item: any) => {
       if (item.Name && item.ID && item.Type && item.Candidates) {
@@ -78,16 +79,21 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         const matches = text.match(namePattern);
         if (matches) {
           matches.forEach(match => {
-            const beforeText = text.slice(currentIndex, text.indexOf(match, currentIndex));
-            if (beforeText) {
-              textFragments.push({ type: 'text', text: beforeText });
+            // Check if the match has been processed to avoid duplicates
+            if (!processedMatches.has(match)) {
+              const beforeText = text.slice(currentIndex, text.indexOf(match, currentIndex));
+              if (beforeText) {
+                textFragments.push({ type: 'text', text: beforeText });
+              }
+              textFragments.push({ type: 'span', text: match, data: spanData });
+              currentIndex = text.indexOf(match, currentIndex) + match.length;
+              processedMatches.add(match); // Mark the match as processed
             }
-            textFragments.push({ type: 'span', text: match, data: spanData });
-            currentIndex = text.indexOf(match, currentIndex) + match.length;
           });
         }
       }
     });
+  
     const remainingText = text.slice(currentIndex);
     if (remainingText) {
       textFragments.push({ type: 'text', text: remainingText });
@@ -95,6 +101,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   
     this.textFragments = textFragments;
   }
+  
     
   handleSpanClick(spanData: any) {
     console.log('Span clicked:', spanData);
@@ -153,14 +160,3 @@ export class EditModeComponent implements OnInit, AfterViewInit {
  
   }
 }
-
- //   const updatedSpans = this.textFragments
-  //   .filter(fragment => fragment.type === 'span')
-  //   .map(fragment => fragment.data);
-  // this.editedContent = {
-  //   text: this.textFragments.map(fragment => fragment.text).join(''),
-  //   spans: updatedSpans
-  // };
-  // this.apiService.setEditedContent(this.editedContent);
-
-  // console.log("The text has been saved!");
