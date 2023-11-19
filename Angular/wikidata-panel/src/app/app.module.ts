@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import{ InputTextModule } from 'primeng/inputtext';
 import { ButtonModule} from 'primeng/button';
 import{ Table, TableModule } from 'primeng/table';
@@ -28,7 +28,8 @@ import { ViewModeComponent } from './view-mode/view-mode.component';
     ButtonModule,
     TableModule,
     RouterModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ReactiveFormsModule
   ],
   providers: [MessageService, ApiService],
   bootstrap: [AppComponent]

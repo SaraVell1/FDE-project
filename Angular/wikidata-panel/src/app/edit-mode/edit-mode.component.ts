@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver, ChangeDetectorRef, HostListener } from '@angular/core';
 import { EditedText } from '../edited-text';
 import { ApiService } from '../api.service';
 import { SafeHtml } from '@angular/platform-browser';
@@ -22,11 +22,13 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   textFragments: any[] = [];
   dataL:string[] = [];
   spansSaved: boolean = false;
+  highlightedText:string = '';
+  addingNewSpan:boolean = false;
   editedContent: EditedText = {text: '', spans: []};
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
-
+  @HostListener('document:mouseup', ['$event'])
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
 
@@ -141,6 +143,20 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         this.componentRef.destroy();
       }
       this.componentRef = this.dynamicComponentRef;
+    }
+  }
+
+  addNewSpan() {
+    this.addingNewSpan = true;
+    this.highlightedText = ''; // Reset highlighted text
+  }
+  
+ 
+  handleMouseUp(event: MouseEvent) {
+    const selection = window.getSelection();
+    if (selection) {
+      this.highlightedText = selection.toString();
+      console.log(this.highlightedText);
     }
   }
 

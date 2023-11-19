@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-loading-mode',
@@ -12,6 +14,8 @@ export class LoadingModeComponent {
   title = 'wikidata-panel';
   searchText: string = '';
   entityData: any;
+  formData: any;
+  fileContent: string | null = null;
 
   constructor(private apiService: ApiService, private router: Router){}
   ngOnInit(): void {}
@@ -20,20 +24,37 @@ export class LoadingModeComponent {
     this.router.navigate(path);
   }
   
-  sendText(){
-    this.apiService.setText(this.searchText);
-    this.apiService.getAnalyzedText();
+  sendText() {
+    const textToAnalyze = this.fileContent !== null ? this.fileContent : this.searchText;
+    if (textToAnalyze) {
+      this.apiService.setText(textToAnalyze);
+      this.apiService.getAnalyzedText();
+    } else {
+      console.error('No text to analyze.');
+    }
   }
 
-  // callApi(){
-  //   this.entityData = null;
-  //   this.apiService.getResults(this.searchText).subscribe(response => {
-  //     this.entityData = response;
-  //     console.log(response);
-  //   })
-  // }
+  onFileChange(event: any) {
+    const fileList: FileList | null = event.target.files;
+    if (fileList && fileList.length > 0) {
+      const file: File = fileList[0];
 
-  
+      const reader = new FileReader();
+      reader.onload = () => {
+        const fileContent: string | ArrayBuffer | null = reader.result;
+
+        if (typeof fileContent === 'string') {
+          this.fileContent = fileContent;
+        } else {
+          console.error('Failed to read file content as string.');
+        }
+      };
+
+      reader.readAsText(file);
+    } else {
+      this.fileContent = null;
+    }
+  }
 }
 
 

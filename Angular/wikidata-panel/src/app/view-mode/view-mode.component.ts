@@ -79,25 +79,4 @@ export class ViewModeComponent {
     textContainer.innerHTML = elements.map(element => (typeof element === 'string' ? element : element.outerHTML)).join('');
   }
   
-  
-
-  // getFormattedText(): string {
-  //   let formattedHTML = this.editedContent.text;
-
-  //   for (const span of this.editedContent.spans) {
-  //     const spanAttributes = `data-id="${span.ID}" data-class="${span.Type}" data-type="${span.Name}"`;
-  //     const spanText = `<span ${spanAttributes} class="mySpan">${span.text}</span>`;
-  //     const insertIndex = formattedHTML.indexOf(span.text);
-  //     if (insertIndex !== -1) {
-  //       formattedHTML =
-  //         formattedHTML.slice(0, insertIndex) +
-  //         spanText +
-  //         formattedHTML.slice(insertIndex + span.text.length);
-  //     } else {
-  //       formattedHTML += spanText;
-  //     }
-  //   }
-
-  //   return formattedHTML;
-  // }
 }

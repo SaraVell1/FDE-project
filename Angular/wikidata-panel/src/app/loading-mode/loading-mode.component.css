@@ -1,5 +1,36 @@
 h2{text-align: center;}
 
-.col-md-auto{
+.center{
     text-align: center;
+    z-index: 1;
+    position: relative;
 }
+
+.split {
+    height: 100%;
+    width: 50%;
+    position: relative;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+    display: inline-block;
+  }
+  
+  /* Control the left side */
+  .left {
+    left: 0;
+  }
+  
+  /* Control the right side */
+  .right {
+    right: 0;
+  }
+  
+  /* If you want the content centered horizontally and vertically */
+  .centered {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }

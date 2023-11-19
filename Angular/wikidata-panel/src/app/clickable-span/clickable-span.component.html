@@ -1,10 +1,12 @@
 <div class="card" *ngIf="cardOpen">
+  <i class="pi pi-times"></i>
   <div>
+    <p>Entity: {{text}} </p>
     <p>ID: <input [(ngModel)]="dataId"></p>
     <p>Class: <input [(ngModel)]="dataClass"></p>
-    <p>List:
+    <p>ID List:
       <select [(ngModel)]="selectedValue">
-        <option *ngFor="let value of dataList" [value]="value">{{ value }}</option> <!--[value]="value" -->
+        <option *ngFor="let value of dataList" [value]="value" >{{ value }}</option> 
       </select>
     </p>
     <button (click)="updateSpanData()">Update</button>

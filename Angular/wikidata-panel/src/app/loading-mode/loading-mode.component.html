@@ -1,9 +1,20 @@
-<h2>Insert your text here!</h2>
 <div class="row">
-  <div class="col-md-auto">
-    <textarea pInputText [(ngModel)]="searchText" placeholder="Enter search term" placeholder="Once Upon a Time..." cols="100" rows="40"></textarea>
-  </div>
-  <div class="col-md-auto">  
-    <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyze Text"></button>
-  </div>
+  <div class="split left col-md-auto">
+      <div class="centered">
+        <h2>Insert your text here</h2>
+        <div>
+          <textarea pInputText [(ngModel)]="searchText" placeholder="Enter search term" placeholder="Once Upon a Time..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class = "split right col-md-auto">
+      <div class="centered">
+        <h2>Or choose your .txt file</h2>
+          <input type="file" (change)="onFileChange($event)">   
+      </div>
+    </div>
+</div>
+<div class="row center">  
+  <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyze Text"></button>
 </div>

@@ -1,4 +1,4 @@
-.col-md-auto{
+/* .col-md-auto{
     text-align: center;
 }
 
@@ -9,6 +9,39 @@ h1{
 .bookMode{
     background-color: beige;
     padding: 5%;
-    /* display: inline-block; */
     float: left;
-}
+} */
+
+.row {
+    display: flex;
+  }
+  
+  .col-md-auto {
+    margin: 10px; 
+    padding: 10px; 
+    border: 1px solid #ccc;
+  }
+  
+  .col-md-auto.bookMode {
+    flex-grow: 1;
+    text-align: justify;
+    padding: 5%;
+  }
+
+  
+  .mySpan {
+    cursor: pointer;
+  }
+  
+  #spanContainer {
+    display: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .saveButton{
+    justify-content: center;
+  }
+  
+  

@@ -1,6 +1,4 @@
-First Test - https://en.wikisource.org/wiki/The_Mathematical_Principles_of_Natural_Philosophy_(1846)/The_System_of_the_World
 
-[511]
 It was the ancient opinion of not a few, in the earliest ages of philosophy, that the fixed stars stood immoveable in the highest parts of the world; that under the fixed stars the planets were carried about the sun; that the earth, as one of the planets, described an annual course about the sun, while by a diurnal motion it was in the mean time revolved about its own axis; and that the sun, as the common fire which served to warm the whole, was fixed in the centre of the universe.
 This was the philosophy taught of old by Philolaus, Aristarchus of Samos, Plato in his riper years, and the whole sect of the Pythagoreans; and this was the judgment of Anaximander, more ancient than any of them; and of that wise king of the Romans, Numa Pompilius, who, as a symbol of the figure of the world with the sun in the centre, erected a temple in honour of Vesta, of a round form, and ordained perpetual fire to be kept in the middle of it.
 The Egyptians were early observers of the heavens; and from them, probably, this philosophy was spread abroad among other nations; for from them it was, and the nations about them, that the Greeks, a people of themselves more addicted to the study of philology than of nature, derived their first, as well as soundest, notions of philosophy; and in the vestal ceremonies we may yet trace the ancient spirit of the Egyptians; for it was their way to deliver their mysteries, that is, their philosophy of things above the vulgar way of thinking, under the veil of religious rites and hieroglyphic symbols.
@@ -16,31 +14,6 @@ But our purpose is only to trace out the quantity and properties of this force f
 We said, in a mathematical way, to avoid all questions about the nature or quality of this force, which we would not be understood to determine by any hypothesis; and therefore call it by the general name of a centripetal force, as it is a force which is directed towards some centre; and as it regards more particularly a body in that centre, we call it circum-solar, circum-terrestrial, circum-jovial; and in like manner in respect of other central bodies.
 That by means of centripetal forces the planets may be retained in certain orbits, we may easily understand, if we consider the motions of projectiles (p. 75, 76, 77); for a stone projected is by the pressure of its own weight forced out of the rectilinear path, which by the projection alone it should have pursued, and made to describe a curve line in the air; and through that crooked way is at last brought down to the ground; and the greater the velocity is with which it is projected, the farther it goes before it falls to the earth. We may therefore suppose the velocity to be so increased, that it would describe an arc of 1, 2, 5, 10, 100, 1000 miles before it arrived at the earth, till at last, exceeding the limits of the earth, it should pass quite by without touching it.
 
-Entities:
-[511]
-Name: Philolaus, ID: Q212338, Type: PERSON - SI
-Name: Aristarchus of Samos, ID: Q140188, Type: PERSON - SI
-Name: Plato, ID: Q859, Type: PERSON - SI
-Name: Pythagoreanism, ID: Q191359, Type: GROUP OF HUMANS - SI
-Name: Anaximander, ID: Q42458, Type: PERSON - SI
-Name: Numa Pompilius, ID: Q200031, Type: PERSON - SI
-Name: Vesta (mythology), ID: Q178710, Type: DEITY - SI
-Name: Ants Oras, ID: Q3482381, Type: PERSON - NO
-Name: Democritus, ID: Q41980, Type: PERSON - SI
-Name: Eudoxus of Cnidus, ID: Q185150, Type: PERSON - SI
-Name: Callippus, ID: Q471218, Type: PERSON - SI
-Name: Aristotle, ID: Q868, Type: PERSON - SI
-
-Non ha identificato come entità: Romans, Egyptians, Anaxagoras
-
-[512]
-Name: Johannes Kepler, ID: Q8963, Type: PERSON - SI
-Name: René Descartes, ID: Q9191, Type: PERSON - SI
-Name: Giovanni Alfonso Borelli, ID: Q311814, Type: PERSON - SI
-Name: Robert Hooke, ID: Q46830, Type: PERSON - SI
-
-_________________________________________________
-Second Test - https://en.wikisource.org/wiki/The_Sidereal_Messenger_of_Galileo_Galilei/The_Sidereal_Messenger
 
 There is certainly something very noble and large-minded in the intention of those who have endeavoured to protect from envy the noble achievements of distinguished men, 
 and to rescue their names, worthy of immortality, from oblivion and decay. This desire has given us the lineaments of famous men, sculptured in marble, or fashioned in bronze, as a memorial of them to future ages; to the same feeling we owe the erection of statues, both ordinary and equestrian; hence, as the poet[1] says, has originated expenditure, mounting to the stars, upon columns and pyramids; with this desire, lastly, cities have been built, and distinguished by the names of those men, whom the gratitude of posterity thought worthy of being handed down to all ages. For the state of the human mind is such, that unless it be continually stirred by the counterparts
