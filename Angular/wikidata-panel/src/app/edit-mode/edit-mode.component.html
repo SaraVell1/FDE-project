@@ -6,7 +6,7 @@
     </div>
       <div *ngFor="let fragment of textFragments">
         <span *ngIf="fragment.type === 'span'">
-          <span class="mySpan">{{ fragment.text }}</span>
+          <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
         </span>
       </div>
   </div>

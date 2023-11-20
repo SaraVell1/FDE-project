@@ -28,7 +28,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
-  @HostListener('document:mouseup', ['$event'])
+  // @HostListener('document:mouseup', ['$event'])
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
 
@@ -152,13 +152,13 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   }
   
  
-  handleMouseUp(event: MouseEvent) {
-    const selection = window.getSelection();
-    if (selection) {
-      this.highlightedText = selection.toString();
-      console.log(this.highlightedText);
-    }
-  }
+  // handleMouseUp(event: MouseEvent) {
+  //   const selection = window.getSelection();
+  //   if (selection) {
+  //     this.highlightedText = selection.toString();
+  //     console.log(this.highlightedText);
+  //   }
+  // }
 
   saveText(){
     const updatedSpans = this.textFragments
