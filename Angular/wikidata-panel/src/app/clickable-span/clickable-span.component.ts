@@ -35,7 +35,17 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   }
   
   openCard() {
-    this.cardOpen = true;
+    if (!this.cardOpen) {
+      if (this.text === '') {
+        // Handle logic for adding a new span
+        // Optionally, initialize the card with default values
+        this.selectedValue = '';
+        this.cardOpen = true;
+      } else {
+        // Existing logic for editing existing spans
+        this.cardOpen = true;
+      }
+    }
   }
   
   updateSpanData() {
@@ -58,5 +68,27 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
       dataList: this.dataList
   });
   this.cdr.detectChanges();
+  }
+
+  addNewSpan() {
+    this.cardOpen = false;
+    this.updatedDataId = this.selectedValue ? this.selectedValue : this.dataId;
+    this.apiService.updateSpanData({
+      ID: this.updatedDataId,
+      Candidates: this.dataList,
+    });
+    this.apiService.updateDataList(this.dataList);
+    this.apiService.setUpdatedDataId(this.updatedDataId);
+    this.updateSpan.emit({
+      Name: this.text,
+      ID: this.updatedDataId,
+      Type: this.dataClass,
+      Candidates: this.dataList,
+      text: this.text,
+      dataId: this.updatedDataId,
+      dataClass: this.dataClass,
+      dataList: this.dataList
+    });
+    this.cdr.detectChanges();
   }
 }

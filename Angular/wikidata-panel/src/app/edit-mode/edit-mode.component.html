@@ -2,13 +2,13 @@
   <!-- Left column for the list of spans -->
   <div class="col-md-auto" *ngIf="!loading === true">
     <div>
-      <button (click)="addNewSpan()">Aggiungi una nuova entità</button>
+      <button (click)="addNewSpan()">Add new entity</button>
     </div>
-      <div *ngFor="let fragment of textFragments">
-        <span *ngIf="fragment.type === 'span'">
-          <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
-        </span>
-      </div>
+    <div *ngFor="let fragment of textFragments">
+      <span *ngIf="fragment.type === 'span'">
+        <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
+      </span>
+    </div>
   </div>
 
   <div class="col-md-auto" *ngIf="loading === true">
@@ -16,17 +16,12 @@
   </div>
   <!-- Right column for the main content with class bookMode -->
   <div class="col-md-auto bookMode" *ngIf="!loading === true">
-    <ng-container *ngFor="let fragment of textFragments">
-      <span *ngIf="fragment.type === 'text'">{{ fragment.text }}</span>
-      <span *ngIf="fragment.type === 'span'">
-        <span class="mySpan">{{ fragment.text }}</span>
-      </span>
-    </ng-container>
+    <div [innerHTML]="getTextWithSpans()" (mouseup)="highlightAndOpenCard($event)"></div>
   </div>
 
   <!-- Span container -->
-  <div #spanContainer></div>
-  </div>
+<div #spanContainer></div>
+</div>
 
 <div class = "row saveButton">
   <button *ngIf="!spansSaved && !loading === true" [routerLink]="['../view']" (click)="saveText()">Save Spans</button>
