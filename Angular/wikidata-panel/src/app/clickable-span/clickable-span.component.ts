@@ -69,26 +69,4 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   });
   this.cdr.detectChanges();
   }
-
-  addNewSpan() {
-    this.cardOpen = false;
-    this.updatedDataId = this.selectedValue ? this.selectedValue : this.dataId;
-    this.apiService.updateSpanData({
-      ID: this.updatedDataId,
-      Candidates: this.dataList,
-    });
-    this.apiService.updateDataList(this.dataList);
-    this.apiService.setUpdatedDataId(this.updatedDataId);
-    this.updateSpan.emit({
-      Name: this.text,
-      ID: this.updatedDataId,
-      Type: this.dataClass,
-      Candidates: this.dataList,
-      text: this.text,
-      dataId: this.updatedDataId,
-      dataClass: this.dataClass,
-      dataList: this.dataList
-    });
-    this.cdr.detectChanges();
-  }
 }
