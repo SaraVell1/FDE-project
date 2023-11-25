@@ -4,7 +4,7 @@
     <div>
       <button (click)="addNewSpan()">Add new entity</button>
     </div>
-    <div *ngFor="let fragment of textFragments">
+    <div *ngFor="let fragment of textFragmentsList" id="spansList">
       <span *ngIf="fragment.type === 'span'">
         <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
       </span>
@@ -15,9 +15,16 @@
     <p-progressSpinner></p-progressSpinner>
   </div>
   <!-- Right column for the main content with class bookMode -->
-  <div class="col-md-auto bookMode" *ngIf="!loading === true">
-    <div [innerHTML]="getTextWithSpans()" (mouseup)="highlightAndOpenCard($event)"></div>
+  <!-- Right column for the main content with class bookMode -->
+ <!-- Right column for the main content with class bookMode -->
+<div class="col-md-auto bookMode" *ngIf="!loading === true"  (mouseup)="highlightAndOpenCard($event)">
+  <div #formattedTextWrapper>
+    <ng-container *ngFor="let fragment of textFragments">
+      <span *ngIf="fragment.type === 'text'">{{ fragment.text }}</span>
+      <span *ngIf="fragment.type === 'span'" class="mySpan">{{ fragment.text }}</span>
+    </ng-container>
   </div>
+</div>
 
   <!-- Span container -->
 <div #spanContainer></div>

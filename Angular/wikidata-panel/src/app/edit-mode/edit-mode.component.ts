@@ -12,7 +12,7 @@ import { ClickableSpanComponent } from '../clickable-span/clickable-span.compone
 export class EditModeComponent implements OnInit, AfterViewInit {
 
   inText: string = '';
-  formattedText: SafeHtml = '';
+  formattedText: string = '';
   loading: boolean = false;
   value: number = 0;
   spanDataList: any[] = [];
@@ -25,6 +25,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   highlightedText:string = '';
   addingNewSpan:boolean = false;
   editedContent: EditedText = {text: '', spans: []};
+  textFragmentsList:any[] = [];
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
@@ -57,15 +58,15 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       this.response = apiResponse;
     this.formatText(this.inText, apiResponse);
       this.loading = false;
+      console.log('Text Fragments:', this.textFragments);
+      this.textFragmentsList = this.textFragments;
     })
   }
 
   formatText(text: string, response: any) {
     const flatResponse = response.flatMap((array: any) => array);
-  
     const textFragments: (string | { type: string, text: string, data?: any })[] = [];
     let currentIndex = 0;
-    let processedMatches: Set<string> = new Set(); // Keep track of processed matches
   
     flatResponse.forEach((item: any) => {
       if (item.Name && item.ID && item.Type && item.Candidates) {
@@ -81,39 +82,51 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         const matches = text.match(namePattern);
         if (matches) {
           matches.forEach(match => {
-            // Check if the match has been processed to avoid duplicates
-            if (!processedMatches.has(match)) {
-              const textBeforeSpan = text.slice(currentIndex, text.indexOf(match, currentIndex));
-              if (textBeforeSpan) {
-                textFragments.push({ type: 'text', text: textBeforeSpan });
-              }
-  
-              textFragments.push({ type: 'span', text: match, data: spanData });
-              currentIndex = text.indexOf(match, currentIndex) + match.length;
-              processedMatches.add(match); // Mark the match as processed
+            const textBeforeSpan = text.slice(currentIndex, text.indexOf(match, currentIndex));
+            if (textBeforeSpan) {
+              textFragments.push({ type: 'text', text: textBeforeSpan });
             }
+  
+            textFragments.push({ type: 'span', text: match, data: spanData });
+            currentIndex = text.indexOf(match, currentIndex) + match.length;
           });
         }
       }
     });
   
+    // Aggiungi il testo rimanente dopo l'ultimo span
     const remainingText = text.slice(currentIndex);
     if (remainingText) {
       textFragments.push({ type: 'text', text: remainingText });
     }
   
-    this.textFragments = textFragments;
+    console.log('Text Fragments:', textFragments);
+  
+    this.textFragments = textFragments; // Aggiorna la variabile di classe
+  
+    this.formattedText = textFragments.map(fragment => {
+      if (typeof fragment === 'string') {
+        return fragment;
+      } else if (fragment.type === 'span') {
+        return `<span class="mySpan" data-id="${fragment.data.ID}" data-class="${fragment.data.Type}" data-candidates="${JSON.stringify(fragment.data.Candidates)}">${fragment.text}</span>`;
+      } else {
+        return ''; // o gestisci altri casi se necessario
+      }
+    }).join('');
   }
+  
+  
   
   getTextWithSpans(): string {
     return this.textFragments.map(fragment => {
       if (fragment.type === 'text') {
         return fragment.text;
       } else if (fragment.type === 'span') {
-        return `<span class="mySpan">${fragment.text}</span>`;
+        return `<span class="mySpan" data-id="${fragment.data.ID}" data-class="${fragment.data.Type}" data-candidates="${JSON.stringify(fragment.data.Candidates)}">${fragment.text}</span>`;
       }
     }).join('');
   }
+  
    
   handleSpanClick(spanData: any) {
     console.log('Span clicked:', spanData);
@@ -158,19 +171,54 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
   addNewSpan() {
     if (this.highlightedText) {
-      // You can add additional logic if needed
-      const newSpanData = { Name: this.highlightedText, ID: '', Candidates: [] };
-      this.handleSpanClick(newSpanData);
-
-      // Add the new span to textFragments
-      this.textFragments.push({ type: 'span', text: this.highlightedText, data: newSpanData });
-
-      // Reset highlighted text
-      this.highlightedText = '';
+      const isTextAlreadyPresent = this.textFragments.some(fragment => fragment.text === this.highlightedText);
+  
+      if (!isTextAlreadyPresent) {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          range.deleteContents();  // Rimuove il testo selezionato
+    
+          // Crea uno span con la classe desiderata
+          const span = document.createElement('span');
+          span.className = 'mySpan';
+          span.textContent = this.highlightedText;
+    
+          // Inserisci lo span nella posizione desiderata
+          range.insertNode(span);
+          
+          this.addSpanToList(this.highlightedText);
+          const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text === this.highlightedText);
+          // if (currentIndex !== -1) {
+          //   this.textFragments[currentIndex] = { type: 'span', text: this.highlightedText, data: { Name: this.highlightedText, ID: '', Candidates: [] } };
+          // }
+          
+          // Resetta lo stato
+          this.highlightedText = '';
+          this.addingNewSpan = false;
+        }
+      } else {
+        // Il testo evidenziato è già presente, puoi gestire questa situazione come desideri
+        console.log('Il testo evidenziato è già presente nella lista.');
+        this.highlightedText = '';
+        this.addingNewSpan = false;
+      }
     } else {
       this.addingNewSpan = true;
-      this.highlightedText = ''; // Reset highlighted text
     }
+  }
+  
+  
+  addSpanToList(spanText: string) {
+    const spanData = { Name: spanText, ID: '', Candidates: [] };
+  
+    // Aggiungi lo span alla lista principale (bookMode)
+   // this.textFragmentsList.push({ type: 'span', text: spanText, data: spanData });
+  
+    // Aggiungi lo span alla lista nello spansList div
+    this.spanDataList.push(spanData);
+  
+    // Opzionalmente, puoi anche fare altre azioni necessarie qui
   }
   
  
