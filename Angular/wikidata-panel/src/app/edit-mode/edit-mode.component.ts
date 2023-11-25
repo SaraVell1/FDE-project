@@ -29,7 +29,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
-  // @HostListener('document:mouseup', ['$event'])
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
 
@@ -91,16 +90,12 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         }
       }
     });
-  
-    // Aggiungi eventuali frammenti di testo rimanenti dopo l'ultimo match
     const remainingText = text.slice(currentIndex);
     if (remainingText) {
       textFragments.push({ type: 'text', text: remainingText });
     }
   
     console.log('Text Fragments:', textFragments);
-  
-    // Aggiorna l'array textFragments e formattedText
     this.textFragments = textFragments;
   
     this.formattedText = textFragments.map(fragment => {
@@ -224,12 +219,9 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       .map(fragment => fragment.data);
   
     console.log("My updated spans are:", updatedSpans);
-  
-    // Costruisci una mappa per tenere traccia degli indici di inizio e fine di ogni frammento
     const fragmentIndices: { start: number; end: number }[] = [];
     let currentIndex = 0;
-  
-    // Costruisci la mappa dei frammenti e ottieni la lunghezza totale del testo
+
     const totalLength = this.fragList.reduce((acc, fragment) => {
       if (fragment.type === 'text') {
         const start = acc;
@@ -248,7 +240,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       const textFragment = this.inText.substring(index.start, index.end);
     
       if (i < fragmentIndices.length - 1) {
-        // Aggiungi il testo rimanente tra gli span
         const span = this.fragList.find(fragment => fragment.type === 'span' && fragment.data.Name === textFragment);
         if (span) {
           if (index.start > lastIndex) {
@@ -262,7 +253,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
           lastIndex = index.end;
         }
       } else {
-        // Aggiungi il testo rimanente dopo l'ultimo span
         const remainingText = this.inText.substring(lastIndex);
         updatedText += remainingText;
       }
@@ -272,9 +262,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       text: updatedText,
       spans: updatedSpans
     };
-
-    console.log("edited content", this.editedContent);
-  
     this.apiService.setEditedContent(this.editedContent);
   
     console.log('The text has been saved!');

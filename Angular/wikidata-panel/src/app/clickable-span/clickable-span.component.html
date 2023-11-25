@@ -3,7 +3,7 @@
     <p>Entity: {{text}} </p>
     <p>ID: <input [(ngModel)]="dataId"></p>
     <p>Class: <input [(ngModel)]="dataClass"></p>
-    <p>ID List:
+    <p *ngIf="dataList.length > 0">ID List:
       <select [(ngModel)]="selectedValue">
         <option *ngFor="let value of dataList" [value]="value" >{{ value }}</option> 
       </select>

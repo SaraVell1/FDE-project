@@ -17,35 +17,29 @@ export class ViewModeComponent {
   constructor(private apiService: ApiService, private renderer: Renderer2, private el: ElementRef, private cdr: ChangeDetectorRef){}
 
   ngOnInit(){
-     //this.editedContent = this.apiService.getEditedContent();
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
       (content: EditedText) => {
         this.editedContent = content;
-        // Update the view when the content changes
         this.insertSpansIntoText();
       });
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe to avoid memory leaks
     this.editedContentSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
-    // Insert spans into text after the view has been initialized
     this.insertSpansIntoText();
     this.cdr.detectChanges();
   }
 
   insertSpansIntoText(): void {
     const textContainer = this.el.nativeElement.querySelector('.col-md-auto.bookMode > div');
-    textContainer.innerHTML = ''; // Clear existing content
+    textContainer.innerHTML = '';
   
     let currentIndex = 0;
     const elements: (string | HTMLElement)[] = [];
-    let processedMatches: Set<string> = new Set(); // Keep track of processed matches
-  
-    // Sort spans by their index in the original text
+    let processedMatches: Set<string> = new Set();
     const sortedSpans = this.editedContent.spans.sort((a, b) => {
       return this.editedContent.text.indexOf(a.Name) - this.editedContent.text.indexOf(b.Name);
     });
@@ -57,7 +51,6 @@ export class ViewModeComponent {
   
       if (matches) {
         matches.forEach(match => {
-          // Check if the match has been processed to avoid duplicates
           if (!processedMatches.has(match)) {
             const textBeforeSpan = this.editedContent.text.slice(currentIndex, this.editedContent.text.indexOf(match, currentIndex));
             elements.push(textBeforeSpan);
@@ -71,17 +64,13 @@ export class ViewModeComponent {
             elements.push(spanElement);
   
             currentIndex = this.editedContent.text.indexOf(match, currentIndex) + match.length;
-            processedMatches.add(match); // Mark the match as processed
+            processedMatches.add(match);
           }
         });
       }
     }
-  
-    // Add any remaining text after the last span
     const remainingText = this.editedContent.text.slice(currentIndex);
     elements.push(remainingText);
-  
-    // Join the elements array and set innerHTML of textContainer
     textContainer.innerHTML = elements.map(element => (typeof element === 'string' ? element : element.outerHTML)).join('');
   }
   

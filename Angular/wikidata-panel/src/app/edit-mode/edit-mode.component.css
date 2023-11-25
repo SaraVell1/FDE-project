@@ -21,6 +21,14 @@ h1{
     padding: 10px; 
     border: 1px solid #ccc;
   }
+
+  .spinner{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    width: 100vw; 
+  }
   
   .col-md-auto.bookMode {
     flex-grow: 1;

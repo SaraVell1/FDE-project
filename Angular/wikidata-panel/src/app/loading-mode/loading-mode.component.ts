@@ -16,6 +16,8 @@ export class LoadingModeComponent {
   entityData: any;
   formData: any;
   fileContent: string | null = null;
+  fileUploaded: boolean = false;
+  fileName:string = '';
 
   constructor(private apiService: ApiService, private router: Router){}
   ngOnInit(): void {}
@@ -51,6 +53,9 @@ export class LoadingModeComponent {
       };
 
       reader.readAsText(file);
+      this.fileUploaded = true;
+      this.fileName = file.name;
+
     } else {
       this.fileContent = null;
     }

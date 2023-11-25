@@ -12,6 +12,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner'
 import { MessageService } from 'primeng/api';
 import { ApiService } from './api.service';
 import { ViewModeComponent } from './view-mode/view-mode.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FileUploadModule } from 'primeng/fileupload';
+
 
 @NgModule({
   declarations: [
@@ -25,11 +28,13 @@ import { ViewModeComponent } from './view-mode/view-mode.component';
     AppRoutingModule,
     FormsModule,
     InputTextModule,
+    InputTextareaModule,
     ButtonModule,
     TableModule,
     RouterModule,
     ProgressSpinnerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FileUploadModule
   ],
   providers: [MessageService, ApiService],
   bootstrap: [AppComponent]

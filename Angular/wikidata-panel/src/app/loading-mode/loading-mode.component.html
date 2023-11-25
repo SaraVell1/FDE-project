@@ -1,20 +1,23 @@
-<div class="row">
-  <div class="split left col-md-auto">
-      <div class="centered">
-        <h2>Insert your text here</h2>
-        <div>
-          <textarea pInputText [(ngModel)]="searchText" placeholder="Enter search term" placeholder="Once Upon a Time..."></textarea>
+<div class="container">
+  <div class="row">
+    <div class="split left col-md-auto">
+        <div class="centered">
+          <h2>Insert your text here</h2>
+          <div>
+            <textarea pInputTextarea cols="70" rows="15" [(ngModel)]="searchText" placeholder="Enter search term" placeholder="Once Upon a Time..."></textarea>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class = "split right col-md-auto">
-      <div class="centered">
-        <h2>Or choose your .txt file</h2>
-          <input type="file" (change)="onFileChange($event)">   
+      <div class = "split right col-md-auto">
+        <div class="centered">
+          <h2>Or choose your .txt file</h2>
+            <label for="files"> Choose <i class="pi pi-upload"></i> </label><span *ngIf="fileUploaded"> {{fileName}}</span>
+            <input type="file" id="files" accept=".txt" (change)="onFileChange($event)" style="display: none;">   
+        </div>
       </div>
-    </div>
-</div>
-<div class="row center">  
-  <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyze Text"></button>
+  </div>
+  <div class="row center">  
+    <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyze Text"></button>
+  </div>
 </div>

@@ -1,15 +1,18 @@
 <div class="row">
-  <!-- Left column for the list of spans -->
   <div class="col-md-auto" *ngIf="!loading === true">
     <div>
       <button (click)="addNewSpan()">Add new entity</button>
     </div>
-    <div *ngFor="let fragment of fragList" id="spansList">
-      <span *ngIf="fragment.type === 'span'" class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
-    </div>
+    <ol>
+      <ng-container *ngFor="let fragment of fragList">
+        <li *ngIf="fragment.type === 'span'" id="spansList">
+          <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
+        </li>
+      </ng-container>
+    </ol>    
   </div>
 
-  <div class="col-md-auto" *ngIf="loading === true">
+  <div class="spinner" *ngIf="loading === true">
     <p-progressSpinner></p-progressSpinner>
   </div>
 

@@ -1,4 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'primeicons/primeicons.css';
+*{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color:#495b69;
+}
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+ margin:0;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: -webkit-fill-available;
+  height: auto;
+  background-color: #c2d1f0;
+  color:#495b69;
+}
+
+.header{
+  position: relative;
+  width:-webkit-fill-available;
+  height: auto;
+  background-color: #c2d1f0;
+  margin-bottom: 2%;
+  display: inline-flex;
+  padding: 2vh 2vw;
+}
+
+.header img{
+  margin-left: 2%;
+}
+
+.header h1{
+  margin: 0%;
+  padding-top: 2vh;
+  padding-left: 1vw;
+  padding-bottom: 2vh;
+  text-align: left;
+  color: #536878;
+}
+
 .mySpan {
     cursor: pointer;
     text-decoration: underline;
