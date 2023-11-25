@@ -25,7 +25,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   highlightedText:string = '';
   addingNewSpan:boolean = false;
   editedContent: EditedText = {text: '', spans: []};
-  textFragmentsList:any[] = [];
+  fragList:any[] = [];
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
@@ -58,8 +58,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       this.response = apiResponse;
     this.formatText(this.inText, apiResponse);
       this.loading = false;
-      console.log('Text Fragments:', this.textFragments);
-      this.textFragmentsList = this.textFragments;
     })
   }
 
@@ -93,38 +91,22 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         }
       }
     });
-  
-    // Aggiungi il testo rimanente dopo l'ultimo span
     const remainingText = text.slice(currentIndex);
     if (remainingText) {
       textFragments.push({ type: 'text', text: remainingText });
     }
-  
     console.log('Text Fragments:', textFragments);
-  
-    this.textFragments = textFragments; // Aggiorna la variabile di classe
-  
+    this.textFragments = textFragments;
     this.formattedText = textFragments.map(fragment => {
       if (typeof fragment === 'string') {
         return fragment;
       } else if (fragment.type === 'span') {
         return `<span class="mySpan" data-id="${fragment.data.ID}" data-class="${fragment.data.Type}" data-candidates="${JSON.stringify(fragment.data.Candidates)}">${fragment.text}</span>`;
       } else {
-        return ''; // o gestisci altri casi se necessario
+        return '';
       }
     }).join('');
-  }
-  
-  
-  
-  getTextWithSpans(): string {
-    return this.textFragments.map(fragment => {
-      if (fragment.type === 'text') {
-        return fragment.text;
-      } else if (fragment.type === 'span') {
-        return `<span class="mySpan" data-id="${fragment.data.ID}" data-class="${fragment.data.Type}" data-candidates="${JSON.stringify(fragment.data.Candidates)}">${fragment.text}</span>`;
-      }
-    }).join('');
+    this.fragList = textFragments.slice();
   }
   
    
@@ -179,26 +161,21 @@ export class EditModeComponent implements OnInit, AfterViewInit {
           const range = selection.getRangeAt(0);
           range.deleteContents();  // Rimuove il testo selezionato
     
-          // Crea uno span con la classe desiderata
           const span = document.createElement('span');
           span.className = 'mySpan';
           span.textContent = this.highlightedText;
-    
-          // Inserisci lo span nella posizione desiderata
           range.insertNode(span);
           
           this.addSpanToList(this.highlightedText);
           const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text === this.highlightedText);
-          // if (currentIndex !== -1) {
-          //   this.textFragments[currentIndex] = { type: 'span', text: this.highlightedText, data: { Name: this.highlightedText, ID: '', Candidates: [] } };
-          // }
+          if (currentIndex !== -1) {
+            this.textFragments[currentIndex] = { type: 'span', text: this.highlightedText, data: { Name: this.highlightedText, ID: '', Candidates: [] } };
+          }
           
-          // Resetta lo stato
           this.highlightedText = '';
           this.addingNewSpan = false;
         }
       } else {
-        // Il testo evidenziato è già presente, puoi gestire questa situazione come desideri
         console.log('Il testo evidenziato è già presente nella lista.');
         this.highlightedText = '';
         this.addingNewSpan = false;
@@ -211,14 +188,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   
   addSpanToList(spanText: string) {
     const spanData = { Name: spanText, ID: '', Candidates: [] };
-  
-    // Aggiungi lo span alla lista principale (bookMode)
-   // this.textFragmentsList.push({ type: 'span', text: spanText, data: spanData });
-  
-    // Aggiungi lo span alla lista nello spansList div
-    this.spanDataList.push(spanData);
-  
-    // Opzionalmente, puoi anche fare altre azioni necessarie qui
+    this.fragList.push({ type: 'span', text: spanText, data: spanData });
   }
   
  
