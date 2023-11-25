@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { EditedText } from '../edited-text';
@@ -14,7 +14,7 @@ export class ViewModeComponent {
   editedContent: EditedText = { text: '', spans: [] };
   editedContentSubscription: Subscription | any;
   
-  constructor(private apiService: ApiService, private renderer: Renderer2, private el: ElementRef){}
+  constructor(private apiService: ApiService, private renderer: Renderer2, private el: ElementRef, private cdr: ChangeDetectorRef){}
 
   ngOnInit(){
      //this.editedContent = this.apiService.getEditedContent();
@@ -34,6 +34,7 @@ export class ViewModeComponent {
   ngAfterViewInit(): void {
     // Insert spans into text after the view has been initialized
     this.insertSpansIntoText();
+    this.cdr.detectChanges();
   }
 
   insertSpansIntoText(): void {
@@ -44,7 +45,12 @@ export class ViewModeComponent {
     const elements: (string | HTMLElement)[] = [];
     let processedMatches: Set<string> = new Set(); // Keep track of processed matches
   
-    for (const span of this.editedContent.spans) {
+    // Sort spans by their index in the original text
+    const sortedSpans = this.editedContent.spans.sort((a, b) => {
+      return this.editedContent.text.indexOf(a.Name) - this.editedContent.text.indexOf(b.Name);
+    });
+  
+    for (const span of sortedSpans) {
       const name = span.Name;
       const namePattern = new RegExp(`\\b${name}\\b`, 'g');
       const matches = this.editedContent.text.match(namePattern);
@@ -78,5 +84,6 @@ export class ViewModeComponent {
     // Join the elements array and set innerHTML of textContainer
     textContainer.innerHTML = elements.map(element => (typeof element === 'string' ? element : element.outerHTML)).join('');
   }
+  
   
 }

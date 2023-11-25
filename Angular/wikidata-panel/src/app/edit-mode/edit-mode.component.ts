@@ -91,25 +91,31 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         }
       }
     });
+  
+    // Aggiungi eventuali frammenti di testo rimanenti dopo l'ultimo match
     const remainingText = text.slice(currentIndex);
     if (remainingText) {
       textFragments.push({ type: 'text', text: remainingText });
     }
+  
     console.log('Text Fragments:', textFragments);
+  
+    // Aggiorna l'array textFragments e formattedText
     this.textFragments = textFragments;
+  
     this.formattedText = textFragments.map(fragment => {
       if (typeof fragment === 'string') {
         return fragment;
       } else if (fragment.type === 'span') {
         return `<span class="mySpan" data-id="${fragment.data.ID}" data-class="${fragment.data.Type}" data-candidates="${JSON.stringify(fragment.data.Candidates)}">${fragment.text}</span>`;
       } else {
-        return '';
+        return fragment.text;
       }
     }).join('');
+
     this.fragList = textFragments.slice();
   }
   
-   
   handleSpanClick(spanData: any) {
     console.log('Span clicked:', spanData);
     this.selectedSpanData = spanData;
@@ -152,26 +158,36 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   }
 
   addNewSpan() {
-    if (this.highlightedText) {
+    if (this.highlightedText && this.addingNewSpan) {
       const isTextAlreadyPresent = this.textFragments.some(fragment => fragment.text === this.highlightedText);
   
       if (!isTextAlreadyPresent) {
         const selection = window.getSelection();
         if (selection && selection.rangeCount > 0) {
           const range = selection.getRangeAt(0);
+          const startOffset = range.startOffset;
+          const endOffset = range.endOffset;
           range.deleteContents();  // Rimuove il testo selezionato
-    
+  
+          const spanData = { Name: this.highlightedText, ID: '', Candidates: [] };
+          this.addSpanToList(this.highlightedText, spanData);
+  
           const span = document.createElement('span');
           span.className = 'mySpan';
           span.textContent = this.highlightedText;
+          span.setAttribute('data-id', '');
+          span.setAttribute('data-class', '');
+          span.setAttribute('data-candidates', JSON.stringify([]));
+          span.addEventListener('click', () => this.handleSpanClick(spanData));
+  
           range.insertNode(span);
-          
-          this.addSpanToList(this.highlightedText);
+  
+          // Trova la posizione corretta nel tuo array e aggiungi lo span
           const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text === this.highlightedText);
           if (currentIndex !== -1) {
-            this.textFragments[currentIndex] = { type: 'span', text: this.highlightedText, data: { Name: this.highlightedText, ID: '', Candidates: [] } };
+            this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: spanData });
           }
-          
+  
           this.highlightedText = '';
           this.addingNewSpan = false;
         }
@@ -186,9 +202,10 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   }
   
   
-  addSpanToList(spanText: string) {
-    const spanData = { Name: spanText, ID: '', Candidates: [] };
+  
+  addSpanToList(spanText: string, spanData:any) {
     this.fragList.push({ type: 'span', text: spanText, data: spanData });
+    console.log("the fragList in addSpanToList is", this.fragList);
   }
   
  
@@ -201,19 +218,70 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  saveText(){
-    const updatedSpans = this.textFragments
-    .filter(fragment => fragment.type === 'span')
-    .map(fragment => fragment.data);
+  saveText() {
+    const updatedSpans = this.fragList
+      .filter(fragment => fragment.type === 'span')
+      .map(fragment => fragment.data);
+  
+    console.log("My updated spans are:", updatedSpans);
+  
+    // Costruisci una mappa per tenere traccia degli indici di inizio e fine di ogni frammento
+    const fragmentIndices: { start: number; end: number }[] = [];
+    let currentIndex = 0;
+  
+    // Costruisci la mappa dei frammenti e ottieni la lunghezza totale del testo
+    const totalLength = this.fragList.reduce((acc, fragment) => {
+      if (fragment.type === 'text') {
+        const start = acc;
+        const end = start + fragment.text.length;
+        fragmentIndices.push({ start, end });
+        currentIndex = end;
+        return end;
+      }
+      return acc;
+    }, 0);
+  
+    let updatedText = '';
+    let lastIndex = 0;
+    
+    fragmentIndices.forEach((index, i) => {
+      const textFragment = this.inText.substring(index.start, index.end);
+    
+      if (i < fragmentIndices.length - 1) {
+        // Aggiungi il testo rimanente tra gli span
+        const span = this.fragList.find(fragment => fragment.type === 'span' && fragment.data.Name === textFragment);
+        if (span) {
+          if (index.start > lastIndex) {
+            const remainingText = this.inText.substring(lastIndex, index.start);
+            updatedText += remainingText;
+          }
+    
+          const spanText = `<span class="mySpan" data-id="${span.data.ID}" data-class="${span.data.Type}" data-candidates="${JSON.stringify(span.data.Candidates)}">${textFragment}</span>`;
+          updatedText += spanText;
+    
+          lastIndex = index.end;
+        }
+      } else {
+        // Aggiungi il testo rimanente dopo l'ultimo span
+        const remainingText = this.inText.substring(lastIndex);
+        updatedText += remainingText;
+      }
+    });
+    
+    this.editedContent = {
+      text: updatedText,
+      spans: updatedSpans
+    };
 
-  this.editedContent = {
-    text: this.textFragments.map(fragment => fragment.text).join(''),
-    spans: updatedSpans
-  };
-
-  this.apiService.setEditedContent(this.editedContent);
-
-  console.log('The text has been saved!');
- 
+    console.log("edited content", this.editedContent);
+  
+    this.apiService.setEditedContent(this.editedContent);
+  
+    console.log('The text has been saved!');
   }
+  
+  
+  
+  
+  
 }
