@@ -21,6 +21,7 @@ body {
   height: auto;
   background-color: #c2d1f0;
   color:#495b69;
+  margin-top: auto;
 }
 
 .header{
@@ -35,6 +36,15 @@ body {
 
 .header img{
   margin-left: 2%;
+}
+
+button{
+  border-color: gray;
+  border-radius: 3px;
+  background: white;
+  padding: 0.5%;
+  font-size: medium;
+  font-weight: 600;
 }
 
 .header h1{

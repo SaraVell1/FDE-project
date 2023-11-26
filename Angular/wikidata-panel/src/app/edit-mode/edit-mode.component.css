@@ -15,6 +15,10 @@ h1{
 .row {
     display: flex;
   }
+
+.row.explanation{
+  justify-content: center;
+}
   
   .col-md-auto {
     margin: 10px; 
@@ -26,7 +30,7 @@ h1{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 50vh;
+    height: 20vh;
     width: 100vw; 
   }
   
@@ -34,8 +38,18 @@ h1{
     flex-grow: 1;
     text-align: justify;
     padding: 5%;
+    max-height: 70vh;
+    overflow-y: auto;
   }
 
+  .addButton{
+    text-align: center;
+  }
+
+  .addButton button{
+    padding: 2vh;
+    cursor: pointer;
+  }
   
   .mySpan {
     cursor: pointer;
@@ -50,6 +64,12 @@ h1{
 
   .saveButton{
     justify-content: center;
+    z-index: 999;
+  }
+
+  .row.saveButton{
+    justify-content: center;
+    visibility: visible;
   }
   
   

@@ -1,6 +1,12 @@
-<div class="row">
+
+<div class="row explanation">
+  <p>To <b>add</b> a new entity select the word and then click on the "Add new entity" button. 
+  <br/>
+  To <b>modify</b> the ID and the Class of the entity, click on the wanted entity in the list and update the entity.</p>
+</div>
+<div class="row" style="max-height: 55vh;">
   <div class="col-md-auto" *ngIf="!loading === true">
-    <div>
+    <div class="addButton">
       <button (click)="addNewSpan()">Add new entity</button>
     </div>
     <ol>
