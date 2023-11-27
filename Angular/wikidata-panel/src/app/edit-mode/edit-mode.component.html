@@ -1,10 +1,16 @@
 
-<div class="row explanation">
+<div class="row explanation" *ngIf="!loading === true">
   <p>To <b>add</b> a new entity select the word and then click on the "Add new entity" button. 
   <br/>
   To <b>modify</b> the ID and the Class of the entity, click on the wanted entity in the list and update the entity.</p>
 </div>
-<div class="row" style="max-height: 55vh;">
+
+<div class="spinner row" *ngIf="loading === true">
+  <p>Please wait, text analysis in progress...</p>
+  <p-progressSpinner></p-progressSpinner>
+</div>
+
+<div class="row" style="max-height: 100vh;">
   <div class="col-md-auto" *ngIf="!loading === true">
     <div class="addButton">
       <button (click)="addNewSpan()">Add new entity</button>
@@ -18,9 +24,6 @@
     </ol>    
   </div>
 
-  <div class="spinner" *ngIf="loading === true">
-    <p-progressSpinner></p-progressSpinner>
-  </div>
 
   <div class="col-md-auto bookMode" *ngIf="!loading === true"  (mouseup)="highlightAndOpenCard($event)">
   <div #formattedTextWrapper>

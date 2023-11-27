@@ -15,13 +15,13 @@ body {
 
 .footer {
   position: absolute;
-  bottom: 0;
+  /* bottom: 0; */
   text-align: center;
   width: -webkit-fill-available;
   height: auto;
   background-color: #c2d1f0;
   color:#495b69;
-  margin-top: auto;
+  margin-top: 4%;
 }
 
 .header{

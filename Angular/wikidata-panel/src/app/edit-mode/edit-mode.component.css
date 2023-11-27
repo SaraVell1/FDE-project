@@ -30,8 +30,8 @@ h1{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 20vh;
-    width: 100vw; 
+    height: 90vh;
+    width: auto; 
   }
   
   .col-md-auto.bookMode {

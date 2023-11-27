@@ -55,6 +55,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     this.inText = this.apiService.getText();
     this.apiService.getResponseSubject().subscribe((apiResponse)=> {
       this.response = apiResponse;
+      console.log(this.response);
     this.formatText(this.inText, apiResponse);
       this.loading = false;
     })
