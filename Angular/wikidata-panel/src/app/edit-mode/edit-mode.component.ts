@@ -163,7 +163,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
           const range = selection.getRangeAt(0);
           const startOffset = range.startOffset;
           const endOffset = range.endOffset;
-          range.deleteContents();  // Rimuove il testo selezionato
+          range.deleteContents();
   
           const spanData = { Name: this.highlightedText, ID: '', Candidates: [] };
           this.addSpanToList(this.highlightedText, spanData);
@@ -178,7 +178,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   
           range.insertNode(span);
   
-          // Trova la posizione corretta nel tuo array e aggiungi lo span
           const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text === this.highlightedText);
           if (currentIndex !== -1) {
             this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: spanData });
@@ -188,7 +187,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
           this.addingNewSpan = false;
         }
       } else {
-        console.log('Il testo evidenziato è già presente nella lista.');
+        console.log('The highlighted text is already present in the list.');
         this.highlightedText = '';
         this.addingNewSpan = false;
       }
@@ -197,7 +196,49 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     }
   }
   
+  deleteEntity(fragment: any) {
+    console.log('deleteEntity called');
   
+    const indexInSpansList = this.fragList.findIndex(item => item === fragment);
+    const indexInTextFragments = this.textFragments.findIndex(item => item === fragment);
+  
+    if (indexInSpansList !== -1) {
+      // Replace the span with plain text in the fragList
+      this.fragList.splice(indexInSpansList, 1);
+    }
+  
+    if (indexInTextFragments !== -1) {
+      // Replace the span with plain text in the textFragments
+      const deletedFragment = this.textFragments.splice(indexInTextFragments, 1, { type: 'text', text: fragment.text })[0];
+  
+      // Update the HTML in the bookMode div
+      const bookModeDiv = document.querySelector('.bookMode');
+      if (bookModeDiv && deletedFragment) {
+        const spanToRemove = document.createElement('span');
+        spanToRemove.className = 'mySpan';
+        spanToRemove.textContent = deletedFragment.text;
+        spanToRemove.setAttribute('data-id', fragment.data.ID);
+        spanToRemove.setAttribute('data-class', fragment.data.Type);
+        spanToRemove.setAttribute('data-candidates', JSON.stringify(fragment.data.Candidates));
+  
+        const spanToSubst = bookModeDiv.querySelector(`span.mySpan[data-id="${fragment.data.ID}"][data-class="${fragment.data.Type}"][data-candidates="${JSON.stringify(fragment.data.Candidates)}"]`);
+        
+        if (spanToSubst) {
+          // Replace the span in the bookModeDiv
+          bookModeDiv.replaceChild(spanToRemove, spanToSubst);
+        }
+      }
+    }
+  
+    this.highlightedText = '';
+    this.addingNewSpan = false;
+  
+    // Additional logic if needed
+  
+    // Make sure to detect changes after modifying the lists
+    this.cdr.detectChanges();
+  }
+     
   
   addSpanToList(spanText: string, spanData:any) {
     this.fragList.push({ type: 'span', text: spanText, data: spanData });
@@ -213,6 +254,8 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       this.addingNewSpan = true;
     }
   }
+
+  
 
   saveText() {
     const updatedSpans = this.fragList

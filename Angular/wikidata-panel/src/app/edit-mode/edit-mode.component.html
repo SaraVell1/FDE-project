@@ -19,6 +19,7 @@
       <ng-container *ngFor="let fragment of fragList">
         <li *ngIf="fragment.type === 'span'" id="spansList">
           <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
+          <button (click)="deleteEntity(fragment)">Delete entity</button>
         </li>
       </ng-container>
     </ol>    

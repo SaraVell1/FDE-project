@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
-import { Observable, catchError, forkJoin, from, merge, mergeMap, of } from 'rxjs';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-loading-mode',
@@ -30,7 +28,9 @@ export class LoadingModeComponent {
     const textToAnalyze = this.fileContent !== null ? this.fileContent : this.searchText;
     if (textToAnalyze) {
       this.apiService.setText(textToAnalyze);
-      const blocks = this.splitTextIntoBlocks(textToAnalyze, 1000);
+      const maxSentencesPerBlock = 15; //con 5 me ne riconosce 14, con 10 me ne ricosce 15, con 15 me ne riconosce 17
+      const blocks = this.splitTextIntoBlocks(textToAnalyze, maxSentencesPerBlock);
+
       const allResponses: any[] = [];
 
       const sendRequest = (index: number) => {
@@ -38,24 +38,30 @@ export class LoadingModeComponent {
           const block = blocks[index];
           this.apiService.getAnalyzedText(block).subscribe(response => {
             allResponses.push(response);
+
             sendRequest(index + 1);
           });
         } else {
           this.handleCombinedResponse(allResponses);
         }
       };
+
       sendRequest(0);
     } else {
       console.error('No text to analyze.');
     }
   }
   
-
-  private splitTextIntoBlocks(text: string, blockSize: number): string[] {
+  
+  splitTextIntoBlocks(text: string, maxSentencesPerBlock: number): string[] {
+    const sentences = text.split(/(?<=[.!?])\s+/); // Suddivide il testo in frasi
     const blocks: string[] = [];
-    for (let i = 0; i < text.length; i += blockSize) {
-      blocks.push(text.slice(i, i + blockSize));
+  
+    for (let i = 0; i < sentences.length; i += maxSentencesPerBlock) {
+      const block = sentences.slice(i, i + maxSentencesPerBlock).join(' ');
+      blocks.push(block);
     }
+  
     return blocks;
   }
 
