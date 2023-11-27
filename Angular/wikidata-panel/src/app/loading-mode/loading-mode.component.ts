@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, catchError, forkJoin, from, merge, mergeMap, of } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
@@ -30,10 +30,37 @@ export class LoadingModeComponent {
     const textToAnalyze = this.fileContent !== null ? this.fileContent : this.searchText;
     if (textToAnalyze) {
       this.apiService.setText(textToAnalyze);
-      this.apiService.getAnalyzedText();
+      const blocks = this.splitTextIntoBlocks(textToAnalyze, 1000);
+      const allResponses: any[] = [];
+
+      const sendRequest = (index: number) => {
+        if (index < blocks.length) {
+          const block = blocks[index];
+          this.apiService.getAnalyzedText(block).subscribe(response => {
+            allResponses.push(response);
+            sendRequest(index + 1);
+          });
+        } else {
+          this.handleCombinedResponse(allResponses);
+        }
+      };
+      sendRequest(0);
     } else {
       console.error('No text to analyze.');
     }
+  }
+  
+
+  private splitTextIntoBlocks(text: string, blockSize: number): string[] {
+    const blocks: string[] = [];
+    for (let i = 0; i < text.length; i += blockSize) {
+      blocks.push(text.slice(i, i + blockSize));
+    }
+    return blocks;
+  }
+
+  private handleCombinedResponse(combinedResponse: any[]) {
+    this.apiService.setCombinedResponse(combinedResponse);
   }
 
   onFileChange(event: any) {

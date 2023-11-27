@@ -52,13 +52,20 @@ export class ApiService {
     return this.editedContent;
   }
 
-  getAnalyzedText(){
+  getAnalyzedText(textBlock: string): Observable<any> {
     const apiUrl = 'http://127.0.0.1:8888';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const requestBody = {text: this.inText}
-    this.http.post(apiUrl, requestBody).subscribe((response)=> {
-      this.apiResponseSubject.next(response);
-    })
+    const requestBody = { text: textBlock };
+
+    return this.http.post(apiUrl, requestBody);
+  }
+
+  setCombinedResponse(combinedResponse: any[]) {
+    const flattenedArray = combinedResponse
+    .flatMap(innerArrays => innerArrays.flat())
+    .filter(item => item && item.ID && item.Name && item.Type);
+
+    this.apiResponseSubject.next(flattenedArray);
   }
 
   getResponseSubject(){
