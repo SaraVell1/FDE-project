@@ -153,49 +153,177 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     }
   }
 
+  
+  // addNewSpan() {
+  //   if (this.highlightedText && this.addingNewSpan) {
+  //     const selection = window.getSelection();
+  //     if (selection && selection.rangeCount > 0) {
+  //       const range = selection.getRangeAt(0);
+  //       const container = range.commonAncestorContainer;
+  
+  //       // Verifica se il testo selezionato è già uno span con classe mySpan
+  //       if (container.nodeType === 3 && container.parentElement?.classList.contains('mySpan')) {
+  //         this.updateExistingSpan(container.parentElement);
+  //       } else {
+  //         // Se il testo non è già uno span, crea un nuovo elemento span
+  //         const span = document.createElement('span');
+  //         span.className = 'mySpan';
+  //         span.textContent = this.highlightedText;
+  //         span.setAttribute('data-id', '');
+  //         span.setAttribute('data-class', '');
+  //         span.setAttribute('data-candidates', JSON.stringify([]));
+  //         span.addEventListener('click', () => this.handleSpanClick({
+  //           Name: this.highlightedText,
+  //           ID: '',
+  //           Candidates: [],
+  //           Type: '',
+  //         }));
+  //         range.deleteContents();
+  //         range.insertNode(span);
+  
+  //         const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text.includes(this.highlightedText));
+  //         if (currentIndex !== -1) {
+  //           this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: {
+  //             Name: this.highlightedText,
+  //             ID: '',
+  //             Candidates: [],
+  //             Type: '',
+  //           } });
+  //         }
+  
+  //         this.highlightedText = '';
+  //         this.addingNewSpan = false;
+  //       }
+  //     }
+  //   } else {
+  //     this.addingNewSpan = true;
+  //   }
+  // }
+  
   addNewSpan() {
     if (this.highlightedText && this.addingNewSpan) {
-      const isTextAlreadyPresent = this.textFragments.some(fragment => fragment.text === this.highlightedText);
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const container = range.commonAncestorContainer;
   
-      if (!isTextAlreadyPresent) {
-        const selection = window.getSelection();
-        if (selection && selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0);
-          const startOffset = range.startOffset;
-          const endOffset = range.endOffset;
-          range.deleteContents();
-  
-          const spanData = { Name: this.highlightedText, ID: '', Candidates: [] };
-          this.addSpanToList(this.highlightedText, spanData);
-  
+        // Verifica se il testo selezionato è già uno span con classe mySpan
+        if (container.nodeType === 3 && container.parentElement?.classList.contains('mySpan')) {
+          this.updateExistingSpan(container.parentElement);
+        } else {
+          // Se il testo non è già uno span, crea un nuovo elemento span
           const span = document.createElement('span');
           span.className = 'mySpan';
           span.textContent = this.highlightedText;
           span.setAttribute('data-id', '');
           span.setAttribute('data-class', '');
           span.setAttribute('data-candidates', JSON.stringify([]));
-          span.addEventListener('click', () => this.handleSpanClick(spanData));
-  
+          span.addEventListener('click', () => this.handleSpanClick({
+            Name: this.highlightedText,
+            ID: '',
+            Candidates: [],
+            Type: '',
+          }));
+          range.deleteContents();
           range.insertNode(span);
   
-          const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text === this.highlightedText);
+          const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text.includes(this.highlightedText));
           if (currentIndex !== -1) {
-            this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: spanData });
+            this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: {
+              Name: this.highlightedText,
+              ID: '',
+              Candidates: [],
+              Type: '',
+            } });
           }
   
           this.highlightedText = '';
           this.addingNewSpan = false;
+  
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete entity';
+        deleteButton.addEventListener('click', () => this.deleteEntity(span));
+
+        // Crea l'elemento li e aggiungi span e bottone
+        const listItem = document.createElement('li');
+        listItem.appendChild(span);
+        listItem.appendChild(deleteButton);
+
+          // Aggiungi il nuovo span alla spansList div
+          const spansList = document.getElementById('spansList');
+          if (spansList) {
+            const listItem = document.createElement('li');
+            listItem.appendChild(span);
+            listItem.appendChild(deleteButton);
+            spansList.appendChild(listItem);
+          }
         }
-      } else {
-        console.log('The highlighted text is already present in the list.');
-        this.highlightedText = '';
-        this.addingNewSpan = false;
       }
     } else {
       this.addingNewSpan = true;
     }
   }
   
+  
+  private updateExistingSpan(existingSpan: HTMLElement) {
+    existingSpan.classList.add('mySpan');
+    existingSpan.setAttribute('data-id', '');
+    existingSpan.setAttribute('data-class', '');
+    existingSpan.setAttribute('data-candidates', JSON.stringify([]));
+    existingSpan.addEventListener('click', () => this.handleSpanClick({
+      Name: existingSpan.innerText,
+      ID: '',
+      Candidates: [],
+      Type: '',
+    }));
+    this.addingNewSpan = false;
+  }
+  
+  // deleteEntity(fragment: any) {
+  //   console.log('deleteEntity called');
+  
+  //   const indexInSpansList = this.fragList.findIndex(item => item === fragment);
+  //   const indexInTextFragments = this.textFragments.findIndex(item => item === fragment);
+  
+  //   if (indexInSpansList !== -1) {
+  //     // Replace the span with plain text in the fragList
+  //     this.fragList.splice(indexInSpansList, 1);
+  //   }
+  
+  //   if (indexInTextFragments !== -1) {
+  //     // Replace the span with plain text in the textFragments
+  //     const deletedFragment = this.textFragments.splice(indexInTextFragments, 1, { type: 'text', text: fragment.text })[0];
+  
+  //     // Update the HTML in the bookMode div
+  //     const bookModeDiv = document.querySelector('.bookMode');
+  //     if (bookModeDiv && deletedFragment) {
+  //       const spanToRemove = document.createElement('span');
+  //       spanToRemove.className = 'mySpan';
+  //       spanToRemove.textContent = deletedFragment.text;
+  //       spanToRemove.setAttribute('data-id', fragment.data.ID);
+  //       spanToRemove.setAttribute('data-class', fragment.data.Type);
+  //       spanToRemove.setAttribute('data-candidates', JSON.stringify(fragment.data.Candidates));
+  
+  //       //const spanToSubst = bookModeDiv.querySelector(`span.mySpan[data-id="${fragment.data.ID}"][data-class="${fragment.data.Type}"][data-candidates="${JSON.stringify(fragment.data.Candidates)}"]`);
+  //       const sanitizedText = deletedFragment.text.replace(/["\[\]]/g, ''); // Replace double quotes and square brackets
+  //       const spanToSubst = bookModeDiv.querySelector(`span.mySpan:contains('${sanitizedText}')`);
+
+  //       if (spanToSubst) {
+  //         // Replace the span in the bookModeDiv
+  //         bookModeDiv.replaceChild(spanToRemove, spanToSubst);
+  //       }
+  //     }
+  //   }
+  
+  //   this.highlightedText = '';
+  //   this.addingNewSpan = false;
+  
+  //   // Additional logic if needed
+  
+  //   // Make sure to detect changes after modifying the lists
+  //   this.cdr.detectChanges();
+  // }
+     
   deleteEntity(fragment: any) {
     console.log('deleteEntity called');
   
@@ -214,18 +342,25 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       // Update the HTML in the bookMode div
       const bookModeDiv = document.querySelector('.bookMode');
       if (bookModeDiv && deletedFragment) {
-        const spanToRemove = document.createElement('span');
-        spanToRemove.className = 'mySpan';
-        spanToRemove.textContent = deletedFragment.text;
-        spanToRemove.setAttribute('data-id', fragment.data.ID);
-        spanToRemove.setAttribute('data-class', fragment.data.Type);
-        spanToRemove.setAttribute('data-candidates', JSON.stringify(fragment.data.Candidates));
+        // Convert NodeListOf<Element> to array
+        const spans = Array.from(bookModeDiv.querySelectorAll('.mySpan'));
   
-        const spanToSubst = bookModeDiv.querySelector(`span.mySpan[data-id="${fragment.data.ID}"][data-class="${fragment.data.Type}"][data-candidates="${JSON.stringify(fragment.data.Candidates)}"]`);
-        
-        if (spanToSubst) {
-          // Replace the span in the bookModeDiv
-          bookModeDiv.replaceChild(spanToRemove, spanToSubst);
+        // Iterate through spans and find the one with the specified text
+        for (const span of spans) {
+          if (span.textContent === deletedFragment.text) {
+            // Update the properties of the existing span
+            span.classList.remove('mySpan');
+            span.removeAttribute('data-id');
+            span.removeAttribute('data-class');
+            span.removeAttribute('data-candidates');
+            span.removeEventListener('click', () => this.handleSpanClick({
+              Name: span.textContent,
+              ID: '',
+              Candidates: [],
+              Type: '',
+            }));
+            break;
+          }
         }
       }
     }
@@ -238,7 +373,9 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     // Make sure to detect changes after modifying the lists
     this.cdr.detectChanges();
   }
-     
+  
+  
+  
   
   addSpanToList(spanText: string, spanData:any) {
     this.fragList.push({ type: 'span', text: spanText, data: spanData });
