@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef, AfterViewInit, Injector, ComponentRef, ComponentFactoryResolver, ChangeDetectorRef, HostListener, Renderer2 } from '@angular/core';
 import { EditedText } from '../edited-text';
 import { ApiService } from '../api.service';
 import { SafeHtml } from '@angular/platform-browser';
@@ -32,7 +32,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
 
-  constructor(private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdr: ChangeDetectorRef){}
+  constructor(private renderer: Renderer2 ,private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
     this.apiService.spanData$.subscribe((spanData) => {
@@ -154,109 +154,47 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   }
 
   
-  // addNewSpan() {
-  //   if (this.highlightedText && this.addingNewSpan) {
-  //     const selection = window.getSelection();
-  //     if (selection && selection.rangeCount > 0) {
-  //       const range = selection.getRangeAt(0);
-  //       const container = range.commonAncestorContainer;
-  
-  //       // Verifica se il testo selezionato è già uno span con classe mySpan
-  //       if (container.nodeType === 3 && container.parentElement?.classList.contains('mySpan')) {
-  //         this.updateExistingSpan(container.parentElement);
-  //       } else {
-  //         // Se il testo non è già uno span, crea un nuovo elemento span
-  //         const span = document.createElement('span');
-  //         span.className = 'mySpan';
-  //         span.textContent = this.highlightedText;
-  //         span.setAttribute('data-id', '');
-  //         span.setAttribute('data-class', '');
-  //         span.setAttribute('data-candidates', JSON.stringify([]));
-  //         span.addEventListener('click', () => this.handleSpanClick({
-  //           Name: this.highlightedText,
-  //           ID: '',
-  //           Candidates: [],
-  //           Type: '',
-  //         }));
-  //         range.deleteContents();
-  //         range.insertNode(span);
-  
-  //         const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text.includes(this.highlightedText));
-  //         if (currentIndex !== -1) {
-  //           this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: {
-  //             Name: this.highlightedText,
-  //             ID: '',
-  //             Candidates: [],
-  //             Type: '',
-  //           } });
-  //         }
-  
-  //         this.highlightedText = '';
-  //         this.addingNewSpan = false;
-  //       }
-  //     }
-  //   } else {
-  //     this.addingNewSpan = true;
-  //   }
-  // }
-  
   addNewSpan() {
-    if (this.highlightedText && this.addingNewSpan) {
+    if (this.highlightedText) {
       const selection = window.getSelection();
+      
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
+        const startOffset = range.startOffset;
+        const endOffset = range.endOffset;
         const container = range.commonAncestorContainer;
+  
+        const spanData = { Name: this.highlightedText, ID: '', Candidates: [] };
   
         // Verifica se il testo selezionato è già uno span con classe mySpan
         if (container.nodeType === 3 && container.parentElement?.classList.contains('mySpan')) {
-          this.updateExistingSpan(container.parentElement);
+          // Aggiorna uno span esistente
+          this.updateExistingSpan(container.parentElement, spanData);
         } else {
-          // Se il testo non è già uno span, crea un nuovo elemento span
+          // Aggiungi un nuovo span
+          range.deleteContents();
+  
           const span = document.createElement('span');
           span.className = 'mySpan';
           span.textContent = this.highlightedText;
           span.setAttribute('data-id', '');
           span.setAttribute('data-class', '');
           span.setAttribute('data-candidates', JSON.stringify([]));
-          span.addEventListener('click', () => this.handleSpanClick({
-            Name: this.highlightedText,
-            ID: '',
-            Candidates: [],
-            Type: '',
-          }));
-          range.deleteContents();
+          span.addEventListener('click', () => this.handleSpanClick(spanData));
+  
           range.insertNode(span);
   
-          const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text.includes(this.highlightedText));
+          // Trova la posizione corretta nel tuo array e aggiungi lo span
+          const currentIndex = this.textFragments.findIndex(fragment => fragment.type === 'text' && fragment.text === this.highlightedText);
           if (currentIndex !== -1) {
-            this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: {
-              Name: this.highlightedText,
-              ID: '',
-              Candidates: [],
-              Type: '',
-            } });
+            this.textFragments.splice(currentIndex, 1, { type: 'span', text: this.highlightedText, data: spanData });
+          } else {
+            // Se il testo non è già presente, aggiungilo alla lista
+            this.addSpanToList(this.highlightedText, spanData);
           }
   
           this.highlightedText = '';
           this.addingNewSpan = false;
-  
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete entity';
-        deleteButton.addEventListener('click', () => this.deleteEntity(span));
-
-        // Crea l'elemento li e aggiungi span e bottone
-        const listItem = document.createElement('li');
-        listItem.appendChild(span);
-        listItem.appendChild(deleteButton);
-
-          // Aggiungi il nuovo span alla spansList div
-          const spansList = document.getElementById('spansList');
-          if (spansList) {
-            const listItem = document.createElement('li');
-            listItem.appendChild(span);
-            listItem.appendChild(deleteButton);
-            spansList.appendChild(listItem);
-          }
         }
       }
     } else {
@@ -264,66 +202,20 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     }
   }
   
-  
-  private updateExistingSpan(existingSpan: HTMLElement) {
+  updateExistingSpan(existingSpan: HTMLElement, spanData: any) {
     existingSpan.classList.add('mySpan');
     existingSpan.setAttribute('data-id', '');
     existingSpan.setAttribute('data-class', '');
     existingSpan.setAttribute('data-candidates', JSON.stringify([]));
-    existingSpan.addEventListener('click', () => this.handleSpanClick({
-      Name: existingSpan.innerText,
-      ID: '',
-      Candidates: [],
-      Type: '',
-    }));
     this.addingNewSpan = false;
+    this.addSpanToList(existingSpan.innerHTML, spanData);
   }
   
-  // deleteEntity(fragment: any) {
-  //   console.log('deleteEntity called');
+  addSpanToList(spanText: string, spanData: any) {
+    this.fragList.push({ type: 'span', text: spanText, data: spanData });
+    console.log("The fragList in addSpanToList is", this.fragList);
+  }
   
-  //   const indexInSpansList = this.fragList.findIndex(item => item === fragment);
-  //   const indexInTextFragments = this.textFragments.findIndex(item => item === fragment);
-  
-  //   if (indexInSpansList !== -1) {
-  //     // Replace the span with plain text in the fragList
-  //     this.fragList.splice(indexInSpansList, 1);
-  //   }
-  
-  //   if (indexInTextFragments !== -1) {
-  //     // Replace the span with plain text in the textFragments
-  //     const deletedFragment = this.textFragments.splice(indexInTextFragments, 1, { type: 'text', text: fragment.text })[0];
-  
-  //     // Update the HTML in the bookMode div
-  //     const bookModeDiv = document.querySelector('.bookMode');
-  //     if (bookModeDiv && deletedFragment) {
-  //       const spanToRemove = document.createElement('span');
-  //       spanToRemove.className = 'mySpan';
-  //       spanToRemove.textContent = deletedFragment.text;
-  //       spanToRemove.setAttribute('data-id', fragment.data.ID);
-  //       spanToRemove.setAttribute('data-class', fragment.data.Type);
-  //       spanToRemove.setAttribute('data-candidates', JSON.stringify(fragment.data.Candidates));
-  
-  //       //const spanToSubst = bookModeDiv.querySelector(`span.mySpan[data-id="${fragment.data.ID}"][data-class="${fragment.data.Type}"][data-candidates="${JSON.stringify(fragment.data.Candidates)}"]`);
-  //       const sanitizedText = deletedFragment.text.replace(/["\[\]]/g, ''); // Replace double quotes and square brackets
-  //       const spanToSubst = bookModeDiv.querySelector(`span.mySpan:contains('${sanitizedText}')`);
-
-  //       if (spanToSubst) {
-  //         // Replace the span in the bookModeDiv
-  //         bookModeDiv.replaceChild(spanToRemove, spanToSubst);
-  //       }
-  //     }
-  //   }
-  
-  //   this.highlightedText = '';
-  //   this.addingNewSpan = false;
-  
-  //   // Additional logic if needed
-  
-  //   // Make sure to detect changes after modifying the lists
-  //   this.cdr.detectChanges();
-  // }
-     
   deleteEntity(fragment: any) {
     console.log('deleteEntity called');
   
@@ -372,14 +264,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   
     // Make sure to detect changes after modifying the lists
     this.cdr.detectChanges();
-  }
-  
-  
-  
-  
-  addSpanToList(spanText: string, spanData:any) {
-    this.fragList.push({ type: 'span', text: spanText, data: spanData });
-    console.log("the fragList in addSpanToList is", this.fragList);
   }
   
  
