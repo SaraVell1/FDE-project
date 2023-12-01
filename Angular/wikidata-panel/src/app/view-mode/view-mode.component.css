@@ -1,0 +1,17 @@
+.row{
+    min-height: 70vh;
+}
+
+.col-md-auto {
+    margin: 10px; 
+    padding: 10px; 
+    border: 1px solid #ccc;
+}
+
+.col-md-auto.bookMode {
+    flex-grow: 1;
+    text-align: justify;
+    padding: 5%;
+    max-height: 70vh;
+    overflow-y: auto;
+}

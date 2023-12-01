@@ -44,7 +44,7 @@ export class ApiService {
     return this.dataList = newDataList;
   }
 
-  setEditedContent(content: EditedText): void {
+  setEditedContent(content: any): void {
     this.editedContentSubject.next(content);
   }
 

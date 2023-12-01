@@ -11,16 +11,15 @@ import { Subscription } from 'rxjs';
 })
 export class ViewModeComponent {
 
-  editedContent: EditedText = { text: '', spans: [] };
+  editedContent: any;
   editedContentSubscription: Subscription | any;
   
   constructor(private apiService: ApiService, private renderer: Renderer2, private el: ElementRef, private cdr: ChangeDetectorRef){}
 
   ngOnInit(){
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
-      (content: EditedText) => {
+      (content: any) => {
         this.editedContent = content;
-        this.insertSpansIntoText();
       });
   }
 
@@ -29,50 +28,8 @@ export class ViewModeComponent {
   }
 
   ngAfterViewInit(): void {
-    this.insertSpansIntoText();
     this.cdr.detectChanges();
   }
 
-  insertSpansIntoText(): void {
-    const textContainer = this.el.nativeElement.querySelector('.col-md-auto.bookMode > div');
-    textContainer.innerHTML = '';
-  
-    let currentIndex = 0;
-    const elements: (string | HTMLElement)[] = [];
-    let processedMatches: Set<string> = new Set();
-    const sortedSpans = this.editedContent.spans.sort((a, b) => {
-      return this.editedContent.text.indexOf(a.Name) - this.editedContent.text.indexOf(b.Name);
-    });
-  
-    for (const span of sortedSpans) {
-      const name = span.Name;
-      const namePattern = new RegExp(`\\b${name}\\b`, 'g');
-      const matches = this.editedContent.text.match(namePattern);
-  
-      if (matches) {
-        matches.forEach(match => {
-          if (!processedMatches.has(match)) {
-            const textBeforeSpan = this.editedContent.text.slice(currentIndex, this.editedContent.text.indexOf(match, currentIndex));
-            elements.push(textBeforeSpan);
-  
-            const spanElement = this.renderer.createElement('span');
-            this.renderer.addClass(spanElement, 'mySpan');
-            this.renderer.setAttribute(spanElement, 'data-id', span.ID);
-            this.renderer.setAttribute(spanElement, 'data-class', span.Type);
-            this.renderer.setAttribute(spanElement, 'data-type', span.Name);
-            this.renderer.appendChild(spanElement, this.renderer.createText(match));
-            elements.push(spanElement);
-  
-            currentIndex = this.editedContent.text.indexOf(match, currentIndex) + match.length;
-            processedMatches.add(match);
-          }
-        });
-      }
-    }
-    const remainingText = this.editedContent.text.slice(currentIndex);
-    elements.push(remainingText);
-    textContainer.innerHTML = elements.map(element => (typeof element === 'string' ? element : element.outerHTML)).join('');
-  }
-  
   
 }

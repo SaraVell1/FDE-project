@@ -16,23 +16,21 @@
       <button (click)="addNewSpan()">Add new entity</button>
     </div>
     <ol>
-      <ng-container *ngFor="let fragment of fragList">
-        <li *ngIf="fragment.type === 'span'" class="spansList">
-          <span class="mySpan" (click)="handleSpanClick(fragment.data)">{{ fragment.text }}</span>
-          <button (click)="deleteEntity(fragment)">Delete entity</button>
+      <ng-container *ngFor="let item of fragList">
+        <li>
+          <span [attr.data-identifier]="item.ID">{{ item.Name }}</span>
+          <span>
+          <i class="pi pi-pencil" (click)="handleSpanClick(item)"></i>
+          <i class="pi pi-trash" (click)="deleteEntity(item)"></i>
+          </span>
         </li>
       </ng-container>
     </ol>    
   </div>
 
 
-  <div class="col-md-auto bookMode" *ngIf="!loading === true"  (mouseup)="highlightAndOpenCard($event)">
-  <div #formattedTextWrapper>
-    <ng-container *ngFor="let fragment of textFragments">
-      <span *ngIf="fragment.type === 'text'">{{ fragment.text }}</span>
-      <span *ngIf="fragment.type === 'span'" class="mySpan">{{ fragment.text }}</span>
-    </ng-container>
-  </div>
+<div class="col-md-auto bookMode" *ngIf="!loading === true"  (mouseup)="highlightAndOpenCard($event)">
+  <div [innerHtml]="editableText" id="book"></div>
 </div>
 
 <div #spanContainer></div>
