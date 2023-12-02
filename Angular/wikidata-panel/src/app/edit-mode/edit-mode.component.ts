@@ -63,45 +63,12 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       this.loading = false;
     })
   }
-
-  // formatText(text: string, response: any) {
-  //   const flatResponse = response.flatMap((array: any) => array);
-  
-  //   const sentencesBetweenNewLines = 5;
-  //   let sentenceCountOriginal = text.split('.').length - 1;
-  //   console.log("sentence count:", sentenceCountOriginal);
-  
-  //   let sentenceCountProcessed = 0;
-  
-  //   flatResponse.forEach((item: any) => {
-  //     const spanElement = document.createElement('span');
-  //     spanElement.textContent = item.Name;
-  //     spanElement.className = 'mySpan ' + item.ID;
-  //     const spanHtml = spanElement.outerHTML;
-  
-  //     const regex = new RegExp(item.Name, 'g');
-  //     text = text.replace(regex, spanHtml);
-  //     sentenceCountProcessed += (text.split(/(?<=[.!?)])(?<!\(\w)\s+/).length - 1);
-  
-  //     if (sentenceCountProcessed > 0 && sentenceCountProcessed % sentencesBetweenNewLines === 0) {
-  //       // Sostituisci '. ' con '. <br>' ogni volta che raggiungi la quinta frase
-  //       text = text.replace(/\.\s/g, '. <br>');
-  //   }
-    
-  //   });
-  
-  //   console.log("sentence count processed", sentenceCountProcessed);
-  
-  //   this.editableText = text;
-  //   this.fragList = this.response;
-  //   return this.editableText;
-  // }
   
   formatText(text: string, response: any) {
     const flatResponse = response.flatMap((array: any) => array);
     const sentencesBetweenNewLines = 5;
 
-    flatResponse.forEach((item: any, index: number) => {
+    flatResponse.forEach((item: any) => {
         const spanElement = document.createElement('span');
         spanElement.textContent = item.Name;
         spanElement.className = 'mySpan ' + item.ID;
@@ -115,7 +82,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     let sentenceCountProcessed = 0;
     let modifiedText = "";
 
-    sentences.forEach((sentence, index) => {
+    sentences.forEach((sentence) => {
         sentenceCountProcessed++;
         if (sentenceCountProcessed % sentencesBetweenNewLines === 0 && sentenceCountProcessed < sentences.length) {
             modifiedText += `<br/><br/>`;
@@ -127,17 +94,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     this.fragList = this.response;
     return this.editableText;
 }
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
   
   handleSpanClick(spanData: any) {
     console.log('Span clicked:', spanData);
@@ -199,7 +155,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     console.log('Target ID:', targetId);
 
     if (myDiv) {
-        // Verifica se l'elemento è presente nel DOM prima di cercare di selezionarlo
         if (myDiv.querySelector(`span.${targetId}`)) {
             var spanEl = this.el.nativeElement.querySelector(`span.${targetId}`);
             console.log("spanEl", spanEl);
@@ -237,7 +192,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
 
   saveText() {
-    this.apiService.setEditedContent(this.editableText);
+    this.apiService.setEditedContent(this.inText, this.fragList);
     console.log('The text has been saved!');
   }
 

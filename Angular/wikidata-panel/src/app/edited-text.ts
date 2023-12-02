@@ -1,4 +1,4 @@
 export interface EditedText {
-  text: string;
+  text: any;
   spans: any[];
 }
