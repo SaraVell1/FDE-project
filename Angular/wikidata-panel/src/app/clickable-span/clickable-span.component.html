@@ -1,4 +1,5 @@
 <div class="card" *ngIf="cardOpen">
+  <i class="pi pi-times" (click)="close()"></i>
   <div>
     <p>Entity: {{text}} </p>
     <p>ID: <input [(ngModel)]="dataId"></p>

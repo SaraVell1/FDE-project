@@ -73,7 +73,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       spanElement.textContent = item.Name;
       spanElement.className = 'mySpan ' + item.ID;
       const spanHtml = spanElement.outerHTML;
-      this.editableText = this.editableText.replace(new RegExp(item.Name, 'g'), spanHtml);
+      this.editableText = this.editableText.replace(new RegExp(item.Name, 'g'), spanHtml); // decidere se far matchare tutte le occorrenze o solo la prima
     });
     
     this.fragList = this.response;

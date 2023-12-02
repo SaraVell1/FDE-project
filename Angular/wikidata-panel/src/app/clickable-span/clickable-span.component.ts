@@ -37,17 +37,19 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   openCard() {
     if (!this.cardOpen) {
       if (this.text === '') {
-        // Handle logic for adding a new span
-        // Optionally, initialize the card with default values
         this.selectedValue = '';
         this.cardOpen = true;
       } else {
-        // Existing logic for editing existing spans
         this.cardOpen = true;
       }
     }
   }
   
+
+  close(){
+    this.cardOpen = false;
+  }
+
   updateSpanData() {
     this.cardOpen = false;
     this.updatedDataId = this.selectedValue ? this.selectedValue : this.dataId;
