@@ -11,7 +11,7 @@
 </div>
 
 <div class="row" style="min-height: 70vh;">
-  <div class="col-md-auto" *ngIf="!loading === true">
+  <div class="col-md-auto listSpan" *ngIf="!loading === true">
     <div class="addButton">
       <button (click)="addNewSpan()">Add new entity</button>
     </div>
@@ -19,7 +19,7 @@
       <ng-container *ngFor="let item of fragList">
         <li>
           <span [attr.data-identifier]="item.ID">{{ item.Name }}</span>
-          <span>
+          <span class="edit-icons">
           <i class="pi pi-pencil" (click)="handleSpanClick(item)"></i>
           <i class="pi pi-trash" (click)="deleteEntity(item)"></i>
           </span>

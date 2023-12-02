@@ -64,21 +64,79 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     })
   }
 
+  // formatText(text: string, response: any) {
+  //   const flatResponse = response.flatMap((array: any) => array);
+  
+  //   const sentencesBetweenNewLines = 5;
+  //   let sentenceCountOriginal = text.split('.').length - 1;
+  //   console.log("sentence count:", sentenceCountOriginal);
+  
+  //   let sentenceCountProcessed = 0;
+  
+  //   flatResponse.forEach((item: any) => {
+  //     const spanElement = document.createElement('span');
+  //     spanElement.textContent = item.Name;
+  //     spanElement.className = 'mySpan ' + item.ID;
+  //     const spanHtml = spanElement.outerHTML;
+  
+  //     const regex = new RegExp(item.Name, 'g');
+  //     text = text.replace(regex, spanHtml);
+  //     sentenceCountProcessed += (text.split(/(?<=[.!?)])(?<!\(\w)\s+/).length - 1);
+  
+  //     if (sentenceCountProcessed > 0 && sentenceCountProcessed % sentencesBetweenNewLines === 0) {
+  //       // Sostituisci '. ' con '. <br>' ogni volta che raggiungi la quinta frase
+  //       text = text.replace(/\.\s/g, '. <br>');
+  //   }
+    
+  //   });
+  
+  //   console.log("sentence count processed", sentenceCountProcessed);
+  
+  //   this.editableText = text;
+  //   this.fragList = this.response;
+  //   return this.editableText;
+  // }
+  
   formatText(text: string, response: any) {
-    this.editableText = text;
-    const flatResponse = response.flatMap((array:any) => array);
-    
-    flatResponse.forEach((item:any) => {
-      const spanElement = document.createElement('span');
-      spanElement.textContent = item.Name;
-      spanElement.className = 'mySpan ' + item.ID;
-      const spanHtml = spanElement.outerHTML;
-      this.editableText = this.editableText.replace(new RegExp(item.Name, 'g'), spanHtml); // decidere se far matchare tutte le occorrenze o solo la prima
+    const flatResponse = response.flatMap((array: any) => array);
+    const sentencesBetweenNewLines = 5;
+
+    flatResponse.forEach((item: any, index: number) => {
+        const spanElement = document.createElement('span');
+        spanElement.textContent = item.Name;
+        spanElement.className = 'mySpan ' + item.ID;
+        const spanHtml = spanElement.outerHTML;
+
+        const regex = new RegExp(item.Name, 'g');
+        text = text.replace(regex, spanHtml);
     });
-    
+    const sentences = text.match(/[^.!?]*((?:[.!?]["']*)|(?:$))/g) || [];
+
+    let sentenceCountProcessed = 0;
+    let modifiedText = "";
+
+    sentences.forEach((sentence, index) => {
+        sentenceCountProcessed++;
+        if (sentenceCountProcessed % sentencesBetweenNewLines === 0 && sentenceCountProcessed < sentences.length) {
+            modifiedText += `<br/><br/>`;
+        }
+        modifiedText += sentence;
+    });
+
+    this.editableText = modifiedText;
     this.fragList = this.response;
     return this.editableText;
-  }
+}
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   
   handleSpanClick(spanData: any) {
