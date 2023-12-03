@@ -16,6 +16,7 @@ export class ViewModeComponent {
   editedContent: any;
   editedContentSubscription: Subscription | any;
   sanitizedText:SafeHtml = '';
+  cardOpen:boolean = false;
   
   constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef){}
 
@@ -65,16 +66,10 @@ export class ViewModeComponent {
   
     entitySpans.forEach((element: Element) => {
       const spanElement = element as HTMLElement;
-  
-      // Verifica se l'elemento ha la classe 'entitySpan'
       if (spanElement.classList.contains('entitySpan')) {
-        // Accedi alla proprietà id usando la notazione a chiave
         const itemId = spanElement['id'];
-  
-        // Aggiungi un gestore dell'evento a ciascuno span
         spanElement.addEventListener('click', (event) => {
           if (itemId) {
-            console.log('Clicked on item with ID:', itemId);
             this.getIdInfo(itemId);
           } else {
             console.log('Item ID not found on clicked element.');
@@ -86,12 +81,22 @@ export class ViewModeComponent {
   
   
   getIdInfo(itemId:string){
-    console.log("I'm clicked!");
-    this.infoService.getEntityInfo(itemId).subscribe((value)=>{
-      console.log("My response is", value);
+    this.infoService.getEntityInfo(itemId).subscribe((response)=>{
+      console.log("My response is:", response);
+      if(response.type === "human"){
+        this.cardOpen = true;
+        this.infoService.setEntityData(response);
+        console.log("My human data are:", response.data);
+      }
+      if(response.type === "city"){
+        console.log("My city data are:", response.data);
+      }
     })
   }
 
+  closePanel(event:any){
+    this.cardOpen = event;
+  }
   ngOnDestroy(): void {
     this.editedContentSubscription.unsubscribe();
   }

@@ -1,8 +1,15 @@
+.row{
+    display: flex;
+}
+
+
 .viewMode{
+    flex-grow: 1;
     display: flex;
     border: 1px solid gray;
-    margin: auto;
-    width: 60vw;
+    margin-left: 7%;
+    margin-right: 7%;
+    max-width: 50vw;
     padding: 5% 3% 3% 3%;
     text-align: justify;
     min-height: 70vh;

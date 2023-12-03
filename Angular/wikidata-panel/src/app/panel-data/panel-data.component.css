@@ -1,0 +1,16 @@
+.card {
+    display: inline-block;
+    padding: 2%;
+    background-color: lightgray;
+    margin-top: 5%;
+    max-width: 20vw;
+  }
+
+  .pi-times{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .myImg{
+    max-width: 60%;
+  }

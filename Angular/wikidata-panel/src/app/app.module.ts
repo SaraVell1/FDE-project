@@ -14,6 +14,7 @@ import { ApiService } from './api.service';
 import { ViewModeComponent } from './view-mode/view-mode.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
+import { PanelDataComponent } from './panel-data/panel-data.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     AppComponent,
     routingComponents,
     ViewModeComponent,
+    PanelDataComponent,
   ],
   imports: [
     BrowserModule,
