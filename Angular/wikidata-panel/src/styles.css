@@ -71,4 +71,5 @@ button{
 
   .entitySpan{
     background-color: #D0D0D0;
+    cursor: pointer;
   }

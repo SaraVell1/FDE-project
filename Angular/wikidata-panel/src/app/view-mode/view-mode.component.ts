@@ -4,6 +4,7 @@ import { ApiService } from '../api.service';
 import { EditedText } from '../edited-text';
 import { Subscription } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { InfoService } from '../info.service';
 
 @Component({
   selector: 'app-view-mode',
@@ -16,7 +17,7 @@ export class ViewModeComponent {
   editedContentSubscription: Subscription | any;
   sanitizedText:SafeHtml = '';
   
-  constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private cdr: ChangeDetectorRef){}
+  constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef){}
 
   ngOnInit(){
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
@@ -33,12 +34,14 @@ export class ViewModeComponent {
         const spanElement = document.createElement('span');
         spanElement.textContent = item.Name;
         spanElement.className = 'entitySpan';
-        spanElement.id = item.ID;
+        spanElement.id = item.ID;         
+   
         const spanHtml = spanElement.outerHTML;
-
         const regex = new RegExp(item.Name, 'g');
         text = text.replace(regex, spanHtml);
     });
+
+  
     const sentences = text.match(/[^.!?]*((?:[.!?]["']*)|(?:$))/g) || [];
 
     let sentenceCountProcessed = 0;
@@ -57,12 +60,45 @@ export class ViewModeComponent {
     return this.editedContent;
   }
 
+  addClickEventToEntitySpans() {
+    const entitySpans = document.querySelectorAll('.entitySpan');
+  
+    entitySpans.forEach((element: Element) => {
+      const spanElement = element as HTMLElement;
+  
+      // Verifica se l'elemento ha la classe 'entitySpan'
+      if (spanElement.classList.contains('entitySpan')) {
+        // Accedi alla proprietà id usando la notazione a chiave
+        const itemId = spanElement['id'];
+  
+        // Aggiungi un gestore dell'evento a ciascuno span
+        spanElement.addEventListener('click', (event) => {
+          if (itemId) {
+            console.log('Clicked on item with ID:', itemId);
+            this.getIdInfo(itemId);
+          } else {
+            console.log('Item ID not found on clicked element.');
+          }
+        });
+      }
+    });
+  }
+  
+  
+  getIdInfo(itemId:string){
+    console.log("I'm clicked!");
+    this.infoService.getEntityInfo(itemId).subscribe((value)=>{
+      console.log("My response is", value);
+    })
+  }
+
   ngOnDestroy(): void {
     this.editedContentSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
     this.cdr.detectChanges();
+    this.addClickEventToEntitySpans();
   }
 
   

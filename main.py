@@ -16,5 +16,13 @@ def returnInfo():
     results = findEntity.convertText(text)
     return results
 
+@app.route('/<string:id>', methods=['GET'])
+def getEntityInfo(id):
+    info = Result()
+
+    result = info.findEntityInfo(id)
+    return jsonify(result)
+
+
 if __name__ == '__main__':
     app.run(port=8888)
