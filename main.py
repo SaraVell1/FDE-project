@@ -16,11 +16,11 @@ def returnInfo():
     results = findEntity.convertText(text)
     return results
 
-@app.route('/<string:id>', methods=['GET'])
-def getEntityInfo(id):
+@app.route('/<string:type>/<string:id>', methods=['GET'])
+def getEntityInfo(type, id):
     info = Result()
 
-    result = info.findEntityInfo(id)
+    result = info.findEntityInfo(type, id)
     return jsonify(result)
 
 

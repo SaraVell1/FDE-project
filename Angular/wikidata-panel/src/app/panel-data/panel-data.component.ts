@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { InfoService } from '../info.service';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +15,7 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
   entityImage:string='';
   entityInfo:any;
   res:any;
-  constructor(private infoService: InfoService){}
+  constructor(private infoService: InfoService, private cdr:ChangeDetectorRef){}
 
   ngOnInit(){
     
@@ -23,11 +23,11 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit(){
     this.getEntityInformation();
+    this.cdr.detectChanges();
   }
 
   getEntityInformation(){
    const entityData = this.infoService.getEntityData();
-   console.log(entityData);
    if(entityData){
     this.type = entityData.type;
     this.entityInfo = entityData.data;
@@ -44,7 +44,6 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
       case "human":
         this.entityName = this.entityInfo.Name;
         this.entityImage = this.entityInfo.Image || null;
-        console.log("entityName is", this.entityName);
         break;
       default:
         console.log("Sono nel default e questo è il mio type", type);

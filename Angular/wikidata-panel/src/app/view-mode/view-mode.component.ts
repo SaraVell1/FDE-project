@@ -35,7 +35,8 @@ export class ViewModeComponent {
         const spanElement = document.createElement('span');
         spanElement.textContent = item.Name;
         spanElement.className = 'entitySpan';
-        spanElement.id = item.ID;         
+        spanElement.id = item.ID;
+        spanElement.setAttribute('type', item.Type)         
    
         const spanHtml = spanElement.outerHTML;
         const regex = new RegExp(item.Name, 'g');
@@ -68,9 +69,11 @@ export class ViewModeComponent {
       const spanElement = element as HTMLElement;
       if (spanElement.classList.contains('entitySpan')) {
         const itemId = spanElement['id'];
+        const itemType = spanElement.getAttribute('type');
         spanElement.addEventListener('click', (event) => {
-          if (itemId) {
-            this.getIdInfo(itemId);
+          if (itemId && itemType) {
+            console.log("my itemtype", itemType)
+            this.getIdInfo(itemType, itemId);
           } else {
             console.log('Item ID not found on clicked element.');
           }
@@ -80,8 +83,8 @@ export class ViewModeComponent {
   }
   
   
-  getIdInfo(itemId:string){
-    this.infoService.getEntityInfo(itemId).subscribe((response)=>{
+  getIdInfo(itemType:string, itemId:string){
+    this.infoService.getEntityInfo(itemType, itemId).subscribe((response)=>{
       console.log("My response is:", response);
       if(response.type === "human"){
         this.cardOpen = true;

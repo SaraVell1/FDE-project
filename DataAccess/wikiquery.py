@@ -19,23 +19,13 @@ class Result():
         sparql.setReturnFormat(JSON)
         return sparql.query().convert()
 
-    def findEntityInfo(self, id):
-        endpoint_url = "https://query.wikidata.org/sparql"
-        query = queries.checkEntityType(id)
+    def findEntityInfo(self, type, id):
         try:
-            results = self.get_results(endpoint_url, query)
-            for res in results["results"]["bindings"]:
-                entity_type = res.get("instanceOfLabel", {}).get("value", "")
-
-            # match entity_type:
-            #     case "human":
-            #           self.getHumanInfo(id)
-            
-            print(entity_type)
-            if "human" in entity_type:
+            match type:
+                case "Human":
                     return self.getHumanInfo(id)
-            elif "city" in entity_type:
-                    return self.getCityInfo(id)
+                case "Location":
+                    return self.getLocationInfo(id)
         except Exception as e:
             return f"An error occurred: {str(e)}"
 
@@ -59,9 +49,9 @@ class Result():
         except Exception as e:
             return f"An error occurred: {str(e)}"
     
-    def getCityInfo(self, id):
+    def getLocationInfo(self, id):
         endpoint_url = "https://query.wikidata.org/sparql"
-        query = queries.cityQuery(id)
+        query = queries.locationQuery(id)
         try:
             result = Result()
             my_res = result.get_results(endpoint_url, query)
@@ -77,7 +67,6 @@ class Result():
         except Exception as e:
             return f"An error occurred: {str(e)}"
         
-
     def formatDate(self, date):
         print("my date is", date)
         parsed_date = parser.parse(date)

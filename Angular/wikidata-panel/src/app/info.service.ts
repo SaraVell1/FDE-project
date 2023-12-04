@@ -11,9 +11,9 @@ export class InfoService {
 
   constructor(private http:HttpClient) { }
 
-  getEntityInfo(id:string):Observable<any>{
+  getEntityInfo(type:string, id:string):Observable<any>{
     console.log("GetEntityInfo in InfoService is called!");
-    const apiUrl = `http://127.0.0.1:8888/${id}`;
+    const apiUrl = `http://127.0.0.1:8888/${type}/${id}`;
     return this.http.get(apiUrl)
   }
 

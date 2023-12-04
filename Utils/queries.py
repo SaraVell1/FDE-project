@@ -14,35 +14,56 @@ def personQuery(id):
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX schema: <http://schema.org/>
 
-            SELECT ?personLabel ?dateOfBirth ?dateOfDeath ?occupationLabel ?image ?placeBLabel ?placeDLabel
+            SELECT ?personLabel ?personDesc ?genderLabel ?dateOfBirth ?placeBLabel  ?dateOfDeath ?placeDLabel(GROUP_CONCAT(DISTINCT ?occupationLabel; separator=", ") as ?occupationsLabels)  ?image ?viafID ?wiki_page
             WHERE{
-              BIND( wd:""" + id + """ AS ?person)
+              BIND( wd:"""+id+""" AS ?person)
               OPTIONAL{
-                {?person wdt:P569 ?dateOfBirth.}
-                {?person wdt:P570 ?dateOfDeath.}
-                {?person wdt:P106 ?occupation.
-                ?occupation rdfs:label ?occupationLabel}
+                ?person wdt:P21 ?gender.
+                ?gender rdfs:label ?genderLabel
+                FILTER(LANG(?genderLabel) = "en")
+              }
+              OPTIONAL{
+               ?person schema:description ?personDesc.
+                FILTER(LANG(?personDesc) = "en")
+                }
+              OPTIONAL{
+                ?person wdt:P569 ?dateOfBirth.
+                }
+              OPTIONAL{
+                ?person wdt:P570 ?dateOfDeath.
+                }
+              OPTIONAL{
+                ?person wdt:P106 ?occupation.
+                ?occupation rdfs:label ?occupationLabel
                 FILTER(LANG(?occupationLabel) = "en") 
+                }
+              OPTIONAL{
+                ?person wdt:P19 ?placeOfBirth.
+                ?placeOfBirth rdfs:label ?placeBLabel  
+                FILTER(LANG(?placeBLabel) = "en")
               }
               OPTIONAL{
-                 {?person wdt:P19 ?placeOfBirth.
-                 ?placeOfBirth rdfs:label ?placeBLabel}   
-                 FILTER(LANG(?placeBLabel) = "en")
+                ?person wdt:P20 ?placeOfDeath.
+                ?placeOfDeath rdfs:label ?placeDLabel   
+                FILTER(LANG(?placeDLabel) = "en")
               }
-              OPTIONAL{
-                 {?person wdt:P20 ?placeOfDeath.
-                 ?placeOfDeath rdfs:label ?placeDLabel}   
-                 FILTER(LANG(?placeDLabel) = "en")
-              }
-
               OPTIONAL {
                 ?person wdt:P18 ?image.
               }
+              OPTIONAL {
+                ?person wdt:P214 ?viafID.
+              }
+              OPTIONAL {
+                  ?wiki_page schema:about ?person .
+                  ?wiki_page schema:inLanguage "en" .
+                  FILTER (SUBSTR(str(?wiki_page), 1, 25) = "https://en.wikipedia.org/")
+                }
               SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
             }
-            LIMIT 1"""
+        GROUP BY ?personLabel ?personDesc ?genderLabel ?dateOfBirth ?dateOfDeath ?image ?placeBLabel ?placeDLabel ?viafID ?wiki_page
+        LIMIT 1"""
 
-def cityQuery(id):
+def locationQuery(id):
     return """
           PREFIX wd: <http://www.wikidata.org/entity/>
           PREFIX wdt: <http://www.wikidata.org/prop/direct/>

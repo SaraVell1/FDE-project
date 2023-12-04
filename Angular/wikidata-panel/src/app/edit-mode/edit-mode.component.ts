@@ -192,8 +192,22 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
 
   saveText() {
+    this.fragList = this.findType(this.fragList);
     this.apiService.setEditedContent(this.inText, this.fragList);
-    console.log('The text has been saved!');
+    console.log('The text has been saved!', this.fragList);
   }
 
+  findType(list:any){
+    let type:any;
+    let humanArray = ["PERSON", "Deity", "Group of fictional characters"];
+    let planetArray = ["Natural satellite", "satellite", "planet", "Astronomical object"]
+    list.forEach((entity:any) => {
+      type = entity.Type;
+      if(humanArray.find(x => x.valueOf() === type)){
+        entity.Type = "Human"
+      }
+    });
+    console.log(this.fragList);
+    return this.fragList;
+  }
 }
