@@ -3,9 +3,11 @@
     padding: 2%;
     background-color: lightgray;
     margin-top: 5%;
-    max-width: 20vw;
   }
 
+  .card h4{
+    text-align: center;
+  }
   .pi-times{
     display: flex;
     justify-content: flex-end;
@@ -13,4 +15,24 @@
 
   .myImg{
     max-width: 60%;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td.cell {
+    border-left: 1px solid black;
+  }
+
+  th, td {
+    padding: 4px;
+    text-align: left;
+  }
+
+  .cell{
+    max-width: 200px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
   }

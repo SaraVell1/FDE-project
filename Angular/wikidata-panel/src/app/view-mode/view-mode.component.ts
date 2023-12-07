@@ -86,13 +86,25 @@ export class ViewModeComponent {
   getIdInfo(itemType:string, itemId:string){
     this.infoService.getEntityInfo(itemType, itemId).subscribe((response)=>{
       console.log("My response is:", response);
-      if(response.type === "human"){
+      if(response.type === "Human"){
         this.cardOpen = true;
         this.infoService.setEntityData(response);
         console.log("My human data are:", response.data);
       }
-      if(response.type === "city"){
-        console.log("My city data are:", response.data);
+      else if(response.type === "Location"){
+        this.cardOpen = true;
+        this.infoService.setEntityData(response);
+        console.log("My location data are:", response.data);
+      }
+      else if(response.type === "Space"){
+          this.cardOpen = true;
+          this.infoService.setEntityData(response);
+          console.log("My space data are:", response.data);
+      }
+      else if(response.type === "Default"){
+        this.cardOpen = true;
+        this.infoService.setEntityData(response);
+        console.log("My default data are:", response.data);
       }
     })
   }

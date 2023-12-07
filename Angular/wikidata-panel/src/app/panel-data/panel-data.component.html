@@ -1,8 +1,26 @@
 <div class="card">
-     <i class="pi pi-times" (click)="close()" ></i>  <!--(click)="close()" -->
-    <div>
-        <h4>{{entityName}}</h4>
-        <img src="{{entityImage}}" *ngIf="entityImage" class="myImg">
-    </div>
+     <i class="pi pi-times" (click)="close()" ></i> 
+     <h4>{{entityName}}</h4>
+    <table>
+        <tbody>
+        <ng-container *ngFor="let key of keys">
+            <tr>
+            <td *ngIf="key!=='Name'">{{ key }}</td>
+            <td class="cell" *ngIf="key!=='Name'">
+                <ng-container *ngIf="key !== 'Image' && key !== 'Wikipedia'">
+                    {{ entityInfo[key] }}
+                </ng-container>
+                <ng-container *ngIf="key === 'Image'">
+                <img [src]="entityInfo[key]" alt="Image" class="myImg">
+                </ng-container>
+                <ng-container *ngIf="key === 'Wikipedia'">
+                    <a [href]="entityInfo[key]" target="_blank">Go to Wikipedia</a>
+                </ng-container>
+            
+            </td>
+            </tr>
+        </ng-container>
+        </tbody>
+    </table>  
 </div>
   

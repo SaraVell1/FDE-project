@@ -70,30 +70,119 @@ def locationQuery(id):
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
           PREFIX schema: <http://schema.org/>
 
-          SELECT ?officialName ?countryLabel ?regionLabel ?population ?flag
+          SELECT ?officialName ?locationDesc ?officialLanguageLabel ?currencyLabel ?population ?flag ?viafID ?wiki_page
           WHERE {
-            BIND(wd:"""+id+""" AS ?city)
+            BIND(wd:"""+id+""" AS ?location) 
             
             OPTIONAL {
-              ?city wdt:P1448 ?officialName.
-              OPTIONAL {
-                ?city wdt:P17 ?country.
-                ?country rdfs:label ?countryLabel.
-                FILTER(LANG(?countryLabel) = "en")
+              ?location wdt:P1448 ?officialName.
               }
+             OPTIONAL{
+               ?location schema:description ?locationDesc.
+                FILTER(LANG(?locationDesc) = "en")
+                }
+            OPTIONAL {
+              ?location wdt:P37 ?officialLanguage.
+              ?officialLanguage rdfs:label ?officialLanguageLabel.
+              FILTER(LANG(?officialLanguageLabel) = "en")
             }
             OPTIONAL{
-              ?city wdt:P1376 ?region.
-              ?region rdfs:label ?regionLabel. 
-              FILTER(LANG(?regionLabel) = "en")
+              ?location wdt:P38 ?currency.
+              ?currency rdfs:label ?currencyLabel. 
+              FILTER(LANG(?currencyLabel) = "en")
             }
             OPTIONAL{
-              ?city wdt:P41 ?flag.
+              ?location wdt:P41 ?flag.
             }
             OPTIONAL {
-              ?city wdt:P1082 ?population.
+              ?location wdt:P1082 ?population.
             }
+            OPTIONAL {
+                ?location wdt:P214 ?viafID.
+              }
+            OPTIONAL {
+                  ?wiki_page schema:about ?location.
+                  ?wiki_page schema:inLanguage "en".
+                  FILTER (SUBSTR(str(?wiki_page), 1, 25) = "https://en.wikipedia.org/")
+                }
             SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
           }
           LIMIT 1   
         """
+
+def spaceObjQuery(id):
+    return """
+          PREFIX wd: <http://www.wikidata.org/entity/>
+          PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX schema: <http://schema.org/>
+
+          SELECT ?spaceObjLabel ?spaceObjDesc ?partOfLabel ?mass ?image ?viafID ?wiki_page
+          WHERE {
+            BIND(wd:"""+id+""" AS ?spaceObj) 
+            
+            OPTIONAL {
+              ?spaceObj rdfs:label ?spaceObjLabel.
+              FILTER(LANG(?spaceObjDesc) = "en")
+              }
+             OPTIONAL{
+               ?spaceObj schema:description ?spaceObjDesc.
+                FILTER(LANG(?spaceObjDesc) = "en")
+                }
+            OPTIONAL{
+              ?spaceObj wdt:P361 ?partOf.
+              ?partOf rdfs:label ?partOfLabel.
+               FILTER(LANG(?partOfLabel) = "en")
+            }
+            OPTIONAL{
+              ?spaceObj wdt:P2067 ?mass.
+            }
+            OPTIONAL{
+              ?spaceObj wdt:P18 ?image.
+            }
+            OPTIONAL {
+                ?spaceObj wdt:P214 ?viafID.
+              }
+            OPTIONAL {
+                  ?wiki_page schema:about ?spaceObj.
+                  ?wiki_page schema:inLanguage "en".
+                  FILTER (SUBSTR(str(?wiki_page), 1, 25) = "https://en.wikipedia.org/")
+                }
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+          }
+          LIMIT 1
+          """
+def defaultEntity(id):
+  return """
+          PREFIX wd: <http://www.wikidata.org/entity/>
+          PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX schema: <http://schema.org/>
+
+          SELECT ?entityLabel ?entityDesc ?image ?viafID ?wiki_page
+          WHERE {
+            BIND(wd:"""+id+""" AS ?entity) 
+            
+            OPTIONAL {
+              ?entity rdfs:label ?entityLabel.
+              FILTER(LANG(?spaceObjDesc) = "en")
+              }
+             OPTIONAL{
+               ?entity schema:description ?entityDesc.
+                FILTER(LANG(?entityDesc) = "en")
+                }
+            OPTIONAL{
+              ?entity wdt:P18 ?image.
+            }
+            OPTIONAL {
+                ?entity wdt:P214 ?viafID.
+              }
+            OPTIONAL {
+                  ?wiki_page schema:about ?entity.
+                  ?wiki_page schema:inLanguage "en".
+                  FILTER (SUBSTR(str(?wiki_page), 1, 25) = "https://en.wikipedia.org/")
+                }
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+          }
+          LIMIT 1
+          """

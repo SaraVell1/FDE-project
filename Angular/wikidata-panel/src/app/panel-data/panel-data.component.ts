@@ -15,6 +15,7 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
   entityImage:string='';
   entityInfo:any;
   res:any;
+  keys: string[] = [];
   constructor(private infoService: InfoService, private cdr:ChangeDetectorRef){}
 
   ngOnInit(){
@@ -31,23 +32,17 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
    if(entityData){
     this.type = entityData.type;
     this.entityInfo = entityData.data;
-    this.createPanel(this.type);
+    this.createPanel();
    }else{
     console.log("EntityData is empty");
    }
   }
 
-  createPanel(type:string){
+  createPanel(){
     console.log("Sono nel create Panel");
-    switch(type)
-    {
-      case "human":
-        this.entityName = this.entityInfo.Name;
-        this.entityImage = this.entityInfo.Image || null;
-        break;
-      default:
-        console.log("Sono nel default e questo è il mio type", type);
-    }
+      this.keys = Object.keys(this.entityInfo);
+      this.entityName = this.entityInfo['Name'];
+      return this.keys;
   }
   close(){
     this.closePanel.emit(false);

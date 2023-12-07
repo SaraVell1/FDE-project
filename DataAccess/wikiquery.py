@@ -26,6 +26,10 @@ class Result():
                     return self.getHumanInfo(id)
                 case "Location":
                     return self.getLocationInfo(id)
+                case "Space":
+                    return self.getSpaceObjectQuery(id)
+                case "Default":
+                    return self.defaultEntityQuery(id)
         except Exception as e:
             return f"An error occurred: {str(e)}"
 
@@ -38,14 +42,18 @@ class Result():
 
             for res in my_res["results"]["bindings"]:
                 person_label = res.get("personLabel", {}).get("value", "")
+                description = res.get("personDesc", {}).get("value", "")
+                gender = res.get("genderLabel", {}).get("value", "")
                 birth_date = self.formatDate(res.get("dateOfBirth", {}).get("value", ""))
                 death_date = self.formatDate(res.get("dateOfDeath", {}).get("value", ""))
-                occupation_label = res.get("occupationLabel", {}).get("value", "")
+                occupation_label = res.get("occupationsLabels", {}).get("value", "")
                 image_url = res.get("image", {}).get("value", "")
                 place_of_birth = res.get("placeBLabel", {}).get("value", "")
                 place_of_death = res.get("placeDLabel", {}).get("value", "")
-            return { "type": "human", "data": {"Name": person_label, "BirthDate": birth_date, "DeathDate": death_date, "Occupation": occupation_label, "Image": image_url, "BirthPlace": place_of_birth,
-                    "DeathPlace":place_of_death}}
+                viafID = res.get("viafID", {}).get("value", "")
+                wikipedia_url = res.get("wiki_page", {}).get("value", "")
+            return { "type": "Human", "data": {"Name": person_label, "Description": description, "Gender":gender, "Birth_Date": birth_date, "Death_Date": death_date, "Occupation": occupation_label, "Image": image_url, "Birth_Place": place_of_birth,
+                    "Death_Place":place_of_death, "viafID":viafID, "Wikipedia":wikipedia_url}}
         except Exception as e:
             return f"An error occurred: {str(e)}"
     
@@ -58,15 +66,56 @@ class Result():
 
             for res in my_res["results"]["bindings"]:
                 official_name = res.get("officialName", {}).get("value", "")
-                country = res.get("countryLabel", {}).get("value", "")
-                image_url = res.get("flag", {}).get("value", "")
+                description = res.get("locationDesc", {}).get("value", "")
+                language = res.get("officialLanguageLabel", {}).get("value", "")
+                currency = res.get("currencyLabel", {}).get("value", "")
                 population = res.get("population", {}).get("value", "")
-                region = res.get("regionLabel", {}).get("value", "")
-            return { "type": "city", "data": {"Name": official_name, "Country": country, "Population": population, "Image": image_url,
-                    "Region": region }}
+                image_url = res.get("flag", {}).get("value", "")
+                viafID = res.get("viafID", {}).get("value", "")
+                wikipedia_url = res.get("wiki_page", {}).get("value", "")
+            return { "type": "Location", "data": {"Name": official_name, "Description": description, "Language": language, "Currency":currency,"Population": population, "Image": image_url,
+                    "viafID":viafID, "Wikipedia": wikipedia_url }}
         except Exception as e:
             return f"An error occurred: {str(e)}"
-        
+
+    def getSpaceObjectQuery(self, id):
+        endpoint_url = "https://query.wikidata.org/sparql"
+        query = queries.spaceObjQuery(id)
+        try:
+            result = Result()
+            my_res = result.get_results(endpoint_url, query)
+
+            for res in my_res["results"]["bindings"]:
+                official_name = res.get("spaceObjLabel", {}).get("value", "")
+                description = res.get("spaceObjDesc", {}).get("value", "")
+                partOf = res.get("partOfLabel", {}).get("value", "")
+                mass = res.get("mass", {}).get("value", "")
+                image_url = res.get("image", {}).get("value", "")
+                viafID = res.get("viafID", {}).get("value", "")
+                wikipedia_url = res.get("wiki_page", {}).get("value", "")
+            return { "type": "Space", "data": {"Name": official_name, "Description": description, "Part_Of": partOf, "Mass":mass, "Image": image_url,
+                    "viafID":viafID, "Wikipedia": wikipedia_url }}
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+
+    def defaultEntityQuery(self, id):
+        endpoint_url = "https://query.wikidata.org/sparql"
+        query = queries.defaultEntity(id)
+        try:
+            result = Result()
+            my_res = result.get_results(endpoint_url, query)
+
+            for res in my_res["results"]["bindings"]:
+                official_name = res.get("entityLabel", {}).get("value", "")
+                description = res.get("entityDesc", {}).get("value", "")
+                image_url = res.get("image", {}).get("value", "")
+                viafID = res.get("viafID", {}).get("value", "")
+                wikipedia_url = res.get("wiki_page", {}).get("value", "")
+            return { "type": "Default", "data": {"Name": official_name, "Description": description, "Image": image_url,
+                    "viafID":viafID, "Wikipedia": wikipedia_url }}
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+             
     def formatDate(self, date):
         print("my date is", date)
         parsed_date = parser.parse(date)
