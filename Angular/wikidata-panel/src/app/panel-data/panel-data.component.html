@@ -5,12 +5,12 @@
         <tbody>
         <ng-container *ngFor="let key of keys">
             <tr>
-            <td *ngIf="key!=='Name'">{{ key }}</td>
+            <td *ngIf="key!=='Name'"><b>{{ key }}</b></td>
             <td class="cell" *ngIf="key!=='Name'">
-                <ng-container *ngIf="key !== 'Image' && key !== 'Wikipedia'">
+                <ng-container *ngIf="key !== 'Image' && key !== 'Wikipedia' && key !=='Flag'">
                     {{ entityInfo[key] }}
                 </ng-container>
-                <ng-container *ngIf="key === 'Image'">
+                <ng-container *ngIf="key === 'Image' || key === 'Flag'">
                 <img [src]="entityInfo[key]" alt="Image" class="myImg">
                 </ng-container>
                 <ng-container *ngIf="key === 'Wikipedia'">

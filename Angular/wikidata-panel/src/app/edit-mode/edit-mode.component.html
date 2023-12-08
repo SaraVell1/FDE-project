@@ -1,4 +1,4 @@
-
+<div class="editDiv">
 <div class="row explanation" *ngIf="!loading === true">
   <p>To <b>add</b> a new entity select the word and then click on the "Add new entity" button. 
   <br/>
@@ -10,10 +10,11 @@
   <p-progressSpinner></p-progressSpinner>
 </div>
 
-<div class="row" style="min-height: 70vh;">
+<div class="row">
   <div class="col-md-auto listSpan" *ngIf="!loading === true">
     <div class="addButton">
       <button (click)="addNewSpan()">Add new entity</button>
+      <button *ngIf="!spansSaved && !loading === true" [routerLink]="['../view']" (click)="saveText()">Save Spans</button>
     </div>
     <ol>
       <ng-container *ngFor="let item of fragList">
@@ -37,5 +38,6 @@
 </div>
 
 <div class = "row saveButton">
-  <button *ngIf="!spansSaved && !loading === true" [routerLink]="['../view']" (click)="saveText()">Save Spans</button>
+ 
+</div>
 </div>

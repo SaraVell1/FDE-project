@@ -16,6 +16,7 @@ export class LoadingModeComponent {
   fileContent: string | null = null;
   fileUploaded: boolean = false;
   fileName:string = '';
+  emptyFile:boolean = true;
 
   constructor(private apiService: ApiService, private router: Router){}
   ngOnInit(): void {}
@@ -48,7 +49,7 @@ export class LoadingModeComponent {
 
       sendRequest(0);
     } else {
-      console.error('No text to analyze.');
+      this.fileUploaded = false;
     }
   }
   
@@ -72,6 +73,8 @@ export class LoadingModeComponent {
   onFileChange(event: any) {
     const fileList: FileList | null = event.target.files;
     if (fileList && fileList.length > 0) {
+      this.fileUploaded = true;
+      this.emptyFile = false;
       const file: File = fileList[0];
 
       const reader = new FileReader();
@@ -86,7 +89,6 @@ export class LoadingModeComponent {
       };
 
       reader.readAsText(file);
-      this.fileUploaded = true;
       this.fileName = file.name;
 
     } else {

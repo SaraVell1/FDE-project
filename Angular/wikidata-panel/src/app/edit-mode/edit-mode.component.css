@@ -1,17 +1,7 @@
-/* .col-md-auto{
-    text-align: center;
+.editDiv{
+  max-height: 60vh;
+  overflow-y: scroll;
 }
-
-h1{
-    text-align: center;
-}
-
-.bookMode{
-    background-color: beige;
-    padding: 5%;
-    float: left;
-} */
-
 .row {
     display: flex;
   }
@@ -31,7 +21,8 @@ h1{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 90vh;
+   max-height: 50vh;
+   overflow-y: hidden;
     width: auto; 
   }
   
@@ -55,10 +46,12 @@ h1{
   }
   .addButton{
     text-align: center;
+    display: flex;
+    justify-content: space-between;
   }
 
   .addButton button{
-    padding: 2vh;
+    padding: 1vh;
     cursor: pointer;
   }
   

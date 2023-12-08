@@ -1,5 +1,7 @@
 .row{
     display: flex;
+    max-height: 55vh;
+    overflow:auto;
 }
 
 
@@ -12,5 +14,6 @@
     max-width: 50vw;
     padding: 5% 3% 3% 3%;
     text-align: justify;
-    min-height: 70vh;
+    max-height: 55vh;
+    overflow:auto;
 }

@@ -52,8 +52,8 @@ class Result():
                 place_of_death = res.get("placeDLabel", {}).get("value", "")
                 viafID = res.get("viafID", {}).get("value", "")
                 wikipedia_url = res.get("wiki_page", {}).get("value", "")
-            return { "type": "Human", "data": {"Name": person_label, "Description": description, "Gender":gender, "Birth_Date": birth_date, "Death_Date": death_date, "Occupation": occupation_label, "Image": image_url, "Birth_Place": place_of_birth,
-                    "Death_Place":place_of_death, "viafID":viafID, "Wikipedia":wikipedia_url}}
+            return { "type": "Human", "data": {"Name": person_label, "Description": description, "Gender":gender, "Birth Date": birth_date, "Death Date": death_date, "Occupation": occupation_label, "Image": image_url, "Birth Place": place_of_birth,
+                    "Death Place":place_of_death, "viafID":viafID, "Wikipedia":wikipedia_url}}
         except Exception as e:
             return f"An error occurred: {str(e)}"
     
@@ -73,7 +73,7 @@ class Result():
                 image_url = res.get("flag", {}).get("value", "")
                 viafID = res.get("viafID", {}).get("value", "")
                 wikipedia_url = res.get("wiki_page", {}).get("value", "")
-            return { "type": "Location", "data": {"Name": official_name, "Description": description, "Language": language, "Currency":currency,"Population": population, "Image": image_url,
+            return { "type": "Location", "data": {"Name": official_name, "Description": description, "Language": language, "Currency":currency,"Population": population, "Flag": image_url,
                     "viafID":viafID, "Wikipedia": wikipedia_url }}
         except Exception as e:
             return f"An error occurred: {str(e)}"
@@ -93,7 +93,7 @@ class Result():
                 image_url = res.get("image", {}).get("value", "")
                 viafID = res.get("viafID", {}).get("value", "")
                 wikipedia_url = res.get("wiki_page", {}).get("value", "")
-            return { "type": "Space", "data": {"Name": official_name, "Description": description, "Part_Of": partOf, "Mass":mass, "Image": image_url,
+            return { "type": "Space", "data": {"Name": official_name, "Description": description, "Part Of": partOf, "Mass":mass, "Image": image_url,
                     "viafID":viafID, "Wikipedia": wikipedia_url }}
         except Exception as e:
             return f"An error occurred: {str(e)}"

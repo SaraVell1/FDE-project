@@ -3,6 +3,8 @@
     padding: 2%;
     background-color: lightgray;
     margin-top: 5%;
+    max-height: 50vh;
+    overflow:auto;
   }
 
   .card h4{

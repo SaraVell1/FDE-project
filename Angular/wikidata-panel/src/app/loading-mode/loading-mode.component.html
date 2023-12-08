@@ -14,10 +14,11 @@
           <h2>Or choose your .txt file</h2>
             <label for="files"> Choose <i class="pi pi-upload"></i> </label><span *ngIf="fileUploaded"> {{fileName}}</span>
             <input type="file" id="files" accept=".txt" (change)="onFileChange($event)" style="display: none;">   
+            <span *ngIf="emptyFile">No file uploaded</span>
         </div>
       </div>
   </div>
   <div class="row center">  
-    <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyze Text"></button>
+    <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyze Text" [disabled]="emptyFile" [ngClass]="{'disabledButton': emptyFile}"></button>
   </div>
 </div>
