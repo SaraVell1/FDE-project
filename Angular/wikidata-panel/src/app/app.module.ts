@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,6 +16,8 @@ import { ViewModeComponent } from './view-mode/view-mode.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { PanelDataComponent } from './panel-data/panel-data.component';
+import { DialogModule } from 'primeng/dialog';
+
 
 
 @NgModule({
@@ -25,7 +28,9 @@ import { PanelDataComponent } from './panel-data/panel-data.component';
     PanelDataComponent,
   ],
   imports: [
+    DialogModule,
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,

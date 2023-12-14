@@ -15,7 +15,7 @@ export class ApiService {
   private spanDataSubject = new BehaviorSubject<any>(null);
   spanData$ = this.spanDataSubject.asObservable();
   private editedContent: any = {};
-  private editedContentSubject = new BehaviorSubject<EditedText>({ text: '', spans: [] });
+  private editedContentSubject = new BehaviorSubject<EditedText>({ text: '', spans: [], metadata:{} });
   editedContent$ = this.editedContentSubject.asObservable();
 
 
@@ -44,8 +44,8 @@ export class ApiService {
     return this.dataList = newDataList;
   }
 
-  setEditedContent(content: string, list: any): void {
-    let myRes:EditedText = {text: content, spans: list};
+  setEditedContent(content: string, list: any, data:any): void {
+    let myRes:EditedText = {text: content, spans: list, metadata: data};
     this.editedContentSubject.next(myRes);
   }
 

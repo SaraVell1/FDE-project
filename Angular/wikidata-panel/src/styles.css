@@ -72,3 +72,9 @@ button{
     background-color: #D0D0D0;
     cursor: pointer;
   }
+
+  p-dialog div.p-dialog.p-component{
+    width:10vw!important;
+    min-height: 20vh!important;
+    background-color: lightgoldenrodyellow;
+  }

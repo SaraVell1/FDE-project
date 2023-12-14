@@ -7,7 +7,7 @@
 
 .viewMode{
     flex-grow: 1;
-    display: flex;
+    /* display: flex; */
     border: 1px solid gray;
     margin-left: 7%;
     margin-right: 7%;

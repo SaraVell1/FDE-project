@@ -10,12 +10,21 @@
   <p-progressSpinner></p-progressSpinner>
 </div>
 
+<div class="row addButton" *ngIf="!loading === true">
+  <button (click)="addNewSpan()">Add new entity</button>
+  <button *ngIf="!spansSaved && !loading === true" [routerLink]="['../view']" (click)="saveText()">Save Spans</button>
+  <button (click)="showDialogMetadata()">Add Metadata</button>
+    <p-dialog [(visible)]="dialogVisible" [style]="{width: '50vw'}">
+      <label>Title</label>
+      <input type="text" pInputText [(ngModel)]="titleValue" />
+      <label>Author</label>
+      <input type="text" pInputText [(ngModel)]="authorValue" />
+      <button (click)="createMetadata()">Add</button>
+    </p-dialog>
+
+</div>
 <div class="row">
   <div class="col-md-auto listSpan" *ngIf="!loading === true">
-    <div class="addButton">
-      <button (click)="addNewSpan()">Add new entity</button>
-      <button *ngIf="!spansSaved && !loading === true" [routerLink]="['../view']" (click)="saveText()">Save Spans</button>
-    </div>
     <ol>
       <ng-container *ngFor="let item of fragList">
         <li>

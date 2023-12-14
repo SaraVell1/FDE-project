@@ -1,13 +1,3 @@
-def checkEntityType(id):
-    return """
-            SELECT ?instanceOfLabel
-            WHERE {
-                    wd:"""+id+""" wdt:P31 ?instanceOf.
-              
-              SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-            }
-            """
-
 def personQuery(id):
     return """PREFIX wd: <http://www.wikidata.org/entity/>
             PREFIX wdt: <http://www.wikidata.org/prop/direct/>

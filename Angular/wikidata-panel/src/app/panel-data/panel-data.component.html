@@ -1,26 +1,42 @@
 <div class="card">
-     <i class="pi pi-times" (click)="close()" ></i> 
-     <h4>{{entityName}}</h4>
+    <i class="pi pi-times" (click)="close()"></i>
+    <h4>{{entityName}}</h4>
     <table>
         <tbody>
-        <ng-container *ngFor="let key of keys">
-            <tr>
-            <td *ngIf="key!=='Name'"><b>{{ key }}</b></td>
-            <td class="cell" *ngIf="key!=='Name'">
-                <ng-container *ngIf="key !== 'Image' && key !== 'Wikipedia' && key !=='Flag'">
-                    {{ entityInfo[key] }}
-                </ng-container>
+            <ng-container *ngFor="let key of keys">
                 <ng-container *ngIf="key === 'Image' || key === 'Flag'">
-                <img [src]="entityInfo[key]" alt="Image" class="myImg">
+                    <tr>
+                        <td><b>{{ key }}</b></td>
+                        <td class="cell">
+                            <img *ngIf="key === 'Image'" [src]="entityInfo[key]" alt="Image" class="myImg">
+                            <img *ngIf="key === 'Flag'" [src]="entityInfo[key]" alt="Flag" class="myImg">
+                        </td>
+                    </tr>
                 </ng-container>
-                <ng-container *ngIf="key === 'Wikipedia'">
-                    <a [href]="entityInfo[key]" target="_blank">Go to Wikipedia</a>
+            </ng-container>
+            <ng-container *ngFor="let key of keys">
+                <ng-container *ngIf="key === 'Description'">
+                    <tr>
+                        <td><b>{{ key }}</b></td>
+                        <td class="cell">
+                            {{entityInfo[key]}}
+                        </td>
+                    </tr>
                 </ng-container>
-            
-            </td>
-            </tr>
-        </ng-container>
+            </ng-container>
+            <ng-container *ngFor="let key of keys">
+                <ng-container *ngIf="key !== 'Image' && key !== 'Flag' && key != 'Description'">
+                    <tr>
+                        <td *ngIf="key!=='Name'"><b>{{ key }}</b></td>
+                        <td class="cell" *ngIf="key!=='Name' && key !== 'Wikipedia'">
+                            {{ entityInfo[key] }}
+                        </td>
+                        <td class="cell" *ngIf="key === 'Wikipedia'">
+                            <a [href]="entityInfo[key]" target="_blank">Go to Wikipedia</a>
+                        </td>
+                    </tr>
+                </ng-container>
+            </ng-container>
         </tbody>
-    </table>  
+    </table>
 </div>
-  

@@ -32,6 +32,10 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   editableText : any;
   maxSentenceNumber = 10;
   paragraphs: string[] = [];
+  dialogVisible: boolean = false;
+  titleValue: string = '';
+  authorValue: string = '';
+  metadata: any;
 
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
@@ -132,6 +136,16 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       this.componentRef = this.dynamicComponentRef;
     }
   }
+
+  showDialogMetadata(){
+    this.dialogVisible = true;
+  }
+
+  createMetadata(){
+    this.dialogVisible = false;
+    this.metadata = { 'Title': this.titleValue, 'Author': this.authorValue};
+
+  }
   
   addNewSpan() {
     if (this.highlightedText) {
@@ -193,7 +207,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
   saveText() {
     this.fragList = this.findType(this.fragList);
-    this.apiService.setEditedContent(this.inText, this.fragList);
+    this.apiService.setEditedContent(this.inText, this.fragList, this.metadata);
     console.log('The text has been saved!', this.fragList);
   }
 

@@ -13,6 +13,8 @@ import { InfoService } from '../info.service';
 })
 export class ViewModeComponent {
 
+  author:string = '';
+  title:string = '';
   editedContent: any;
   editedContentSubscription: Subscription | any;
   sanitizedText:SafeHtml = '';
@@ -24,6 +26,8 @@ export class ViewModeComponent {
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
       (content: any) => {
         this.editedContent = this.formatText(content.text, content.spans);
+        this.author = content.metadata['Author'];
+        this.title = content.metadata['Title'];
       });
   }
 

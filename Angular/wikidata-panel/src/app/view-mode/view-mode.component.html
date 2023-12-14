@@ -1,5 +1,9 @@
 <div class="row">
   <div class="col viewMode">
+    <div>
+      <h1 *ngIf="title">{{title}}</h1>
+      <h5 *ngIf="author">By {{author}}</h5>
+    </div>
     <div [innerHTML]="editedContent"></div>
   </div>
   <app-panel-data *ngIf="cardOpen" (closePanel)="closePanel($event)"></app-panel-data>
