@@ -26,8 +26,8 @@ export class ViewModeComponent {
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
       (content: any) => {
         this.editedContent = this.formatText(content.text, content.spans);
-        this.author = content.metadata['Author'];
-        this.title = content.metadata['Title'];
+        this.author = content.metadata['Author'] ? content.metadata['Author']: null;
+        this.title = content.metadata['Title'] ? content.metadata['Title']: null;
       });
   }
 
@@ -75,8 +75,8 @@ export class ViewModeComponent {
         const itemId = spanElement['id'];
         const itemType = spanElement.getAttribute('type');
         spanElement.addEventListener('click', (event) => {
+          this.closePanel(false);
           if (itemId && itemType) {
-            console.log("my itemtype", itemType)
             this.getIdInfo(itemType, itemId);
           } else {
             console.log('Item ID not found on clicked element.');
@@ -89,26 +89,21 @@ export class ViewModeComponent {
   
   getIdInfo(itemType:string, itemId:string){
     this.infoService.getEntityInfo(itemType, itemId).subscribe((response)=>{
-      console.log("My response is:", response);
       if(response.type === "Human"){
         this.cardOpen = true;
         this.infoService.setEntityData(response);
-        console.log("My human data are:", response.data);
       }
       else if(response.type === "Location"){
         this.cardOpen = true;
         this.infoService.setEntityData(response);
-        console.log("My location data are:", response.data);
       }
       else if(response.type === "Space"){
           this.cardOpen = true;
           this.infoService.setEntityData(response);
-          console.log("My space data are:", response.data);
       }
       else if(response.type === "Default"){
         this.cardOpen = true;
         this.infoService.setEntityData(response);
-        console.log("My default data are:", response.data);
       }
     })
   }
