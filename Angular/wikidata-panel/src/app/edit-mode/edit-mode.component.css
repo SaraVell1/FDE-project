@@ -23,6 +23,7 @@
     align-items: center;
     justify-content: center;
    max-height: 50vh;
+   min-height: 50vh;
    overflow-y: hidden;
     width: auto; 
   }

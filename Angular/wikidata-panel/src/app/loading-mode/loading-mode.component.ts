@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
+import * as PizZip from 'pizzip';
+import * as DocxtemplaterModule from 'docxtemplater';
+const Docxtemplater = DocxtemplaterModule as any;
 
 
 @Component({
@@ -73,27 +76,62 @@ export class LoadingModeComponent {
   onFileChange(event: any) {
     const fileList: FileList | null = event.target.files;
     if (fileList && fileList.length > 0) {
-      this.fileUploaded = true;
-      this.emptyFile = false;
       const file: File = fileList[0];
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        const fileContent: string | ArrayBuffer | null = reader.result;
-
-        if (typeof fileContent === 'string') {
-          this.fileContent = fileContent;
-        } else {
-          console.error('Failed to read file content as string.');
-        }
-      };
-
-      reader.readAsText(file);
-      this.fileName = file.name;
-
+  
+      if (file.name.endsWith('.txt')) {
+        this.processTxtFile(file);
+      } else if (file.name.endsWith('.docx')) {
+        this.convertDocxToTxt(file);
+      } else {
+        console.error('Formato del file non supportato.');
+      }
     } else {
       this.fileContent = null;
     }
+  }
+  
+  processTxtFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const fileContent: string | ArrayBuffer | null = reader.result;
+  
+      if (typeof fileContent === 'string') {
+        this.fileUploaded = true;
+        this.emptyFile = false;
+        this.fileContent = fileContent;
+        this.fileName = file.name;
+      } else {
+        console.error('Failed to read file content as string.');
+      }
+    };
+  
+    reader.readAsText(file);
+  }
+  
+  async convertDocxToTxt(docxFile: File) {
+    const fileBuffer = await this.readFile(docxFile);
+    const zip = new PizZip(fileBuffer);
+    const doc = new Docxtemplater();
+    doc.loadZip(zip);
+  
+    const textContent = doc.getFullText();
+  
+    this.fileUploaded = true;
+    this.emptyFile = false;
+    this.fileContent = textContent;
+    this.fileName = `${docxFile.name}.txt`;
+  }
+  
+  async readFile(file: File): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const arrayBuffer = event.target?.result as ArrayBuffer;
+        resolve(arrayBuffer);
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
   }
 }
 
