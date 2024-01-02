@@ -62,6 +62,7 @@
   .addButton button{
     padding: 1vh;
     cursor: pointer;
+    margin-top: 5px;
   }
   
   .mySpan {

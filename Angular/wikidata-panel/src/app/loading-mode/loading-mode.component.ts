@@ -119,7 +119,7 @@ export class LoadingModeComponent {
     this.fileUploaded = true;
     this.emptyFile = false;
     this.fileContent = textContent;
-    this.fileName = `${docxFile.name}.txt`;
+    this.fileName = `${docxFile.name}`;
   }
   
   async readFile(file: File): Promise<ArrayBuffer> {

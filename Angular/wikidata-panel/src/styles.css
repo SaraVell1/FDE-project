@@ -73,7 +73,24 @@ button{
   }
 
   p-dialog div.p-dialog.p-component{
-    width:10vw!important;
+    width:10rem!important;
     min-height: 20vh!important;
+    padding: 0.5rem!important;
     background-color: lightgoldenrodyellow;
+  }
+
+  .p-dialog-header-icons button.p-dialog-header-close{
+    border:none!important;
+    background: none!important;
+  }
+
+  .p-tabview-nav li{
+    padding: 3px;
+    margin:0.2px;
+    border: #495b69 solid 1px;
+    border-bottom:none;
+  }
+
+  .p-tabview-nav li.p-highlight{
+    background-color: lavender;
   }

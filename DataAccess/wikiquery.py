@@ -29,7 +29,7 @@ class Result():
                     return self.getLocationInfo(id)
                 case "Space":
                     return self.getSpaceObjectQuery(id)
-                case "Default":
+                case "Other":
                     return self.defaultEntityQuery(id)
         except Exception as e:
             return f"An error occurred: {str(e)}"
@@ -112,7 +112,7 @@ class Result():
                 image_url = self.checkIfEmpty(res.get("image", {}).get("value", ""))
                 viafID = self.checkIfEmpty(res.get("viafID", {}).get("value", ""))
                 wikipedia_url = self.checkIfEmpty(res.get("wiki_page", {}).get("value", ""))
-            return { "type": "Default", "data": {"Name": official_name, "Description": description, "Image": image_url,
+            return { "type": "Other", "data": {"Name": official_name, "Description": description, "Image": image_url,
                     "viafID":viafID, "Wikipedia": wikipedia_url }}
         except Exception as e:
             return f"An error occurred: {str(e)}"

@@ -213,24 +213,24 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
   findType(list:any){
     let type:any;
-    let humanArray = ["PERSON", "Deity", "Group of fictional characters"];
+    let humanArray = ["PERSON", "Deity", "Group of fictional characters", "Human"];
     let locationArray = ["GPE", "LOC"]
     let planetArray = ["Natural satellite", "satellite", "planet", "Astronomical object", "Planetary system"]
     list.forEach((entity:any) => {
       type = entity.Type;
-      if(humanArray.find(x => x.valueOf() === type)){
+      if(humanArray.find(x => x.valueOf().toLowerCase() === type.toLowerCase())){
         entity.Type = "Human";
       }
-      else if(locationArray.find(x => x.valueOf() === type))
+      else if(locationArray.find(x => x.valueOf().toLowerCase() === type.toLowerCase()))
       {
         entity.Type = "Location";
       }
-      else if((planetArray.find(x => x.valueOf() === type)))
+      else if((planetArray.find(x => x.valueOf().toLowerCase() === type.toLowerCase())))
       {
         entity.Type = "Space";
       }
       else{
-        entity.Type = "Default";
+        entity.Type = "Other";
       }
     });
     console.log(this.fragList);

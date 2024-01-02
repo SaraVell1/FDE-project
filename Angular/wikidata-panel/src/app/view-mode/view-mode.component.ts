@@ -19,16 +19,51 @@ export class ViewModeComponent {
   editedContentSubscription: Subscription | any;
   sanitizedText:SafeHtml = '';
   cardOpen:boolean = false;
-  
+  panelHeader:Array<string> = [];
+  panelContent:Array<string> = [];
+  entities: { type: string, names: string[] }[] = [];
+
   constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef){}
 
   ngOnInit(){
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
       (content: any) => {
         this.editedContent = this.formatText(content.text, content.spans);
-        this.author = content.metadata['Author'] ? content.metadata['Author']: null;
-        this.title = content.metadata['Title'] ? content.metadata['Title']: null;
+        this.author = content.metadata['Author'] === null ? '': content.metadata['Author'];
+        this.title = content.metadata['Title'] === null ? '': content.metadata['Title'];
+        this.setHeaders(content.spans);      
+        this.createSummaryPanel(content.spans);
       });
+  }
+
+  setHeaders(spans:any){
+    spans.forEach((item:any)=>{
+      this.panelHeader.push(item.Type);
+    });
+    this.panelHeader = Array.from(new Set(this.panelHeader));
+    console.log("Headers", this.panelHeader);
+  }
+
+  setPanelsEntity(spans:any, header:string){
+    this.panelContent = [];
+    spans.forEach((item:any)=>{
+      if(item.Type === header){
+        this.panelContent.push(item.Name);
+      }
+    })
+    console.log("PanelContent", this.panelContent)
+    return this.panelContent   
+  }
+
+  createSummaryPanel(spans:any){
+    this.panelHeader.forEach((item: any) => {
+      const entity: { type: string, names: string[] } = { type: item, names: [] };
+      this.setPanelsEntity(spans, item).forEach((name: string) => {
+        entity.names.push(name);
+      });
+      this.entities.push(entity);
+    });
+    console.log("entities", this.entities);
   }
 
   formatText(text: string, response: any) {
@@ -101,7 +136,7 @@ export class ViewModeComponent {
           this.cardOpen = true;
           this.infoService.setEntityData(response);
       }
-      else if(response.type === "Default"){
+      else if(response.type === "Other"){
         this.cardOpen = true;
         this.infoService.setEntityData(response);
       }

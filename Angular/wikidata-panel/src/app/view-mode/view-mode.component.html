@@ -1,4 +1,26 @@
 <div class="row">
+  <div class="col summaryPanel">
+    <p-tabView>
+      <ng-container *ngFor="let entity of entities">
+        <ng-container *ngIf="entity.type !== 'Other'">
+          <p-tabPanel [header]="entity.type">
+            <ul *ngFor="let name of entity.names">
+              <li>{{name}}</li>
+            </ul>
+          </p-tabPanel>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngFor="let entity of entities">
+        <ng-container *ngIf="entity.type === 'Other'">
+          <p-tabPanel [header]="entity.type">
+            <ul *ngFor="let name of entity.names">
+              <li>{{name}}</li>
+            </ul>
+          </p-tabPanel>
+        </ng-container>
+      </ng-container>
+    </p-tabView>      
+  </div>
   <div class="col viewMode">
     <div>
       <h1 *ngIf="title">{{title}}</h1>
