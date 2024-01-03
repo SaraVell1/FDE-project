@@ -29,8 +29,8 @@ export class ViewModeComponent {
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
       (content: any) => {
         this.editedContent = this.formatText(content.text, content.spans);
-        this.author = content.metadata['Author'] === null ? '': content.metadata['Author'];
-        this.title = content.metadata['Title'] === null ? '': content.metadata['Title'];
+        this.author = content.metadata && content.metadata['Author'] !== undefined ? content.metadata['Author'] : '';
+        this.title = content.metadata && content.metadata['Title'] !== undefined ? content.metadata['Title'] : '';
         this.setHeaders(content.spans);      
         this.createSummaryPanel(content.spans);
       });
@@ -41,7 +41,6 @@ export class ViewModeComponent {
       this.panelHeader.push(item.Type);
     });
     this.panelHeader = Array.from(new Set(this.panelHeader));
-    console.log("Headers", this.panelHeader);
   }
 
   setPanelsEntity(spans:any, header:string){
@@ -51,7 +50,6 @@ export class ViewModeComponent {
         this.panelContent.push(item.Name);
       }
     })
-    console.log("PanelContent", this.panelContent)
     return this.panelContent   
   }
 
@@ -63,7 +61,6 @@ export class ViewModeComponent {
       });
       this.entities.push(entity);
     });
-    console.log("entities", this.entities);
   }
 
   formatText(text: string, response: any) {

@@ -6,6 +6,8 @@
 
 .summaryPanel{
     margin-left:2.5rem;
+    max-height: 55vh;
+    overflow:auto;
 }
 
 .viewMode{
@@ -19,4 +21,9 @@
     text-align: justify;
     max-height: 55vh;
     overflow:auto;
+}
+
+.pi-circle{
+    font-size:0.6rem;
+    margin: 0 5px;
 }

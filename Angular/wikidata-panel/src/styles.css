@@ -73,10 +73,14 @@ button{
   }
 
   p-dialog div.p-dialog.p-component{
-    width:10rem!important;
+    width:11rem!important;
     min-height: 20vh!important;
     padding: 0.5rem!important;
     background-color: lightgoldenrodyellow;
+  }
+
+  .p-tabview.p-component{
+    min-width: 20vw;
   }
 
   .p-dialog-header-icons button.p-dialog-header-close{
@@ -86,11 +90,34 @@ button{
 
   .p-tabview-nav li{
     padding: 3px;
-    margin:0.2px;
     border: #495b69 solid 1px;
     border-bottom:none;
+    margin-right: 3px;
+   font-weight:800;
   }
 
   .p-tabview-nav li.p-highlight{
     background-color: lavender;
+  }
+
+  .p-tabview-panels{
+    padding-top:10px;
+    background:lavender;
+    border-bottom: #495b69 solid 0.5px;
+    border-left: #495b69 solid 0.5px;
+    border-right: #495b69 solid 0.5px;
+  }
+
+  p-tabpanel div.p-tabview-panel{
+    overflow-y:auto;
+    min-height: 55vh;
+    max-height: 55vh;
+  }
+
+  p-tabpanel div span{
+    display:block!important;
+  }
+
+  div.p-tabview-panel span{
+    padding-bottom: 3px;
   }
