@@ -21,9 +21,11 @@ export class ViewModeComponent {
   cardOpen:boolean = false;
   panelHeader:Array<string> = [];
   panelContent:Array<string> = [];
-  entities: { type: string, names: string[] }[] = [];
+  entities: { type: string, names:{ name: string, position: number }[]}[] = [];
+  spanPos: {name:string, position:number}[] = [];
+  spanPositions:{ name:string, positions:number[]}[] = [];
 
-  constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef){}
+  constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef, private renderer:Renderer2){}
 
   ngOnInit(){
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
@@ -32,7 +34,7 @@ export class ViewModeComponent {
         this.author = content.metadata && content.metadata['Author'] !== undefined ? content.metadata['Author'] : '';
         this.title = content.metadata && content.metadata['Title'] !== undefined ? content.metadata['Title'] : '';
         this.setHeaders(content.spans);      
-        this.createSummaryPanel(content.spans);
+        this.createSummaryPanel(content.spans, content.text);
       });
   }
 
@@ -53,12 +55,20 @@ export class ViewModeComponent {
     return this.panelContent   
   }
 
-  createSummaryPanel(spans:any){
+  createSummaryPanel(spans:any, text:string){
     this.panelHeader.forEach((item: any) => {
-      const entity: { type: string, names: string[] } = { type: item, names: [] };
-      this.setPanelsEntity(spans, item).forEach((name: string) => {
-        entity.names.push(name);
+      const entity: { type: string, names: { name: string, position: number }[] } = { type: item, names: [] };
+      const entityNames = this.setPanelsEntity(spans, item);
+  
+      entityNames.forEach((name: string) => {
+        const positions = this.spanPos.filter(span => span.name === name).map(span => span.position);
+  
+        positions.forEach(position => {
+          entity.names.push({ name, position });
+          console.log("entities", entity);
+        });
       });
+  
       this.entities.push(entity);
     });
   }
@@ -66,20 +76,24 @@ export class ViewModeComponent {
   formatText(text: string, response: any) {
     const flatResponse = response.flatMap((array: any) => array);
     const sentencesBetweenNewLines = 5;
+    let offset=0;
 
     flatResponse.forEach((item: any) => {
         const spanElement = document.createElement('span');
+        let positions = this.findPositions(item.Name, text); 
+
         spanElement.textContent = item.Name;
         spanElement.className = 'entitySpan';
         spanElement.id = item.ID;
-        spanElement.setAttribute('type', item.Type)         
+        spanElement.setAttribute('pos', positions.toString())
+        spanElement.setAttribute('type', item.Type);               
    
+        this.spanPos.push({name:item.Name, position: positions[0]})
         const spanHtml = spanElement.outerHTML;
-        const regex = new RegExp(item.Name, 'g');
-        text = text.replace(regex, spanHtml);
+        console.log("my pos", this.spanPositions)
+        text = text.replace(item.Name, spanHtml);
     });
 
-  
     const sentences = text.match(/[^.!?]*((?:[.!?]["']*)|(?:$))/g) || [];
 
     let sentenceCountProcessed = 0;
@@ -97,6 +111,38 @@ export class ViewModeComponent {
     this.editedContent = this.sanitizedText;
     return this.editedContent;
   }
+  
+  findPositions(name: string, text: string): number[] {
+    const positions: number[] = [];
+    const regex = new RegExp(`\\b${name}\\b`, 'gi');
+    let match;
+  
+    while ((match = regex.exec(text)) !== null) {
+      const position = match.index;
+      positions.push(position);
+    } 
+    return positions;
+  }
+    
+  goToPos(position: string): void {
+    console.log("goToPos cliccato!");
+    console.log("position in goToPos", position);
+  
+    const elements = this.el.nativeElement.querySelectorAll(`[pos="${position}"]`);
+  
+    console.log(elements);
+    if (elements.length > 0) {
+      const container = this.el.nativeElement.querySelector('#file');
+      const element = elements[0] as HTMLElement;
+      const entityId = element.id;
+  
+      const entityElement = this.el.nativeElement.querySelector(`[id="${entityId}"]`);
+    if (entityElement) {
+      entityElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      }
+    }
+  }
+  
 
   addClickEventToEntitySpans() {
     const entitySpans = document.querySelectorAll('.entitySpan');
@@ -151,6 +197,5 @@ export class ViewModeComponent {
     this.cdr.detectChanges();
     this.addClickEventToEntitySpans();
   }
-
   
 }

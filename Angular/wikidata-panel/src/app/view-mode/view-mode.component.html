@@ -4,22 +4,22 @@
       <ng-container *ngFor="let entity of entities">
         <ng-container *ngIf="entity.type !== 'Other'">
           <p-tabPanel [header]="entity.type">
-            <span *ngFor="let name of entity.names">
-              <i class="pi pi-circle"></i>{{name}}</span>
+            <span *ngFor="let obj of entity.names">
+              <i class="pi pi-arrow-circle-right" (click)="goToPos(obj.position.toString())"></i>{{obj.name}}</span>
           </p-tabPanel>
         </ng-container>
       </ng-container>
       <ng-container *ngFor="let entity of entities">
         <ng-container *ngIf="entity.type === 'Other'">
           <p-tabPanel [header]="entity.type">
-            <span *ngFor="let name of entity.names">
-              <i class="pi pi-circle"></i>{{name}}</span>
+            <span *ngFor="let obj of entity.names">
+              <i class="pi pi-arrow-circle-right" (click)="goToPos(obj.position.toString())"></i>{{obj.name}}</span>
           </p-tabPanel>
         </ng-container>
       </ng-container>
     </p-tabView>      
   </div>
-  <div class="col viewMode">
+  <div class="col viewMode" #file id="file">
     <div>
       <h1 *ngIf="title">{{title}}</h1>
       <h5 *ngIf="author">By {{author}}</h5>

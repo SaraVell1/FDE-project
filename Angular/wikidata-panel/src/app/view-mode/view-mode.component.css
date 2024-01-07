@@ -23,7 +23,8 @@
     overflow:auto;
 }
 
-.pi-circle{
-    font-size:0.6rem;
+.pi-arrow-circle-right{
+    font-size:0.8rem;
     margin: 0 5px;
+    cursor: pointer;
 }

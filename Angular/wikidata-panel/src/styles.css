@@ -110,8 +110,8 @@ button{
 
   p-tabpanel div.p-tabview-panel{
     overflow-y:auto;
-    min-height: 55vh;
-    max-height: 55vh;
+    min-height: 48.5vh;
+    max-height: 48.5vh;
   }
 
   p-tabpanel div span{
