@@ -28,11 +28,14 @@
                 <ng-container *ngIf="key !== 'Image' && key !== 'Flag' && key != 'Description'">
                     <tr>
                         <td *ngIf="key!=='Name'"><b>{{ key }}</b></td>
-                        <td class="cell" *ngIf="key!=='Name' && key !== 'Wikipedia'">
+                        <td class="cell" *ngIf="key!=='Name' && key !== 'Wikipedia' && key != 'Turtle'">
                             {{ entityInfo[key] }}
                         </td>
                         <td class="cell" *ngIf="key === 'Wikipedia'">
                             <a [href]="entityInfo[key]" target="_blank">Go to Wikipedia</a>
+                        </td>
+                        <td class="cell" *ngIf="key === 'Turtle'">
+                            <a (click)="downloadTurtleFile()" target="_blank">Download Turtle</a>
                         </td>
                     </tr>
                 </ng-container>

@@ -32,6 +32,7 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
    if(entityData){
     this.type = entityData.type;
     this.entityInfo = entityData.data;
+    console.log(this.entityInfo)
     this.createPanel();
    }else{
     console.log("EntityData is empty");
@@ -44,6 +45,24 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
       this.entityName = this.entityInfo['Name'];
       return this.keys;
   }
+
+  downloadTurtleFile() {
+    const turtleData = this.entityInfo['Turtle'];  
+    
+    if (turtleData) {
+      const blob = new Blob([turtleData], { type: 'text/turtle;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'turtle_entity_data.ttl';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.error('Turtle data is missing.');
+    }
+  }
+
+
   close(){
     this.closePanel.emit(false);
   }

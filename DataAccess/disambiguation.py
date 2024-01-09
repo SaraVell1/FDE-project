@@ -1,14 +1,9 @@
 import json
-from xml.dom.minidom import Entity
 import stanza
-import spacy
 import en_core_web_lg
 from flask import jsonify
-import datetime
 from refined.inference.processor import Refined
-from refined.data_types.base_types import Span
-
-from DataAccess.wikiquery import Result
+import spacy
 
 
 class Disambiguation():
@@ -39,7 +34,6 @@ class Disambiguation():
         refined = Refined.from_pretrained(model_name="wikipedia_model", entity_set="wikidata", download_files=False)
         spans = refined.process_text(text)
         my_spans = str(spans)
-        print(spans)
         entities = []
         entity_list = []
         for span in spans:
