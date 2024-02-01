@@ -167,7 +167,7 @@ export class ViewModeComponent {
   
   getIdInfo(itemType:string, itemId:string){
     this.infoService.getEntityInfo(itemType, itemId).subscribe((response)=>{
-      if(response.type === "Human"){
+      if(response.type === "Person"){
         this.cardOpen = true;
         this.infoService.setEntityData(response);
       }

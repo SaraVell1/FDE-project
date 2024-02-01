@@ -1,23 +1,15 @@
-.mySpan-container {
-    display: inline-block;
-    cursor: pointer;
-  }
-  
-  .card {
-    display: inline-block;
-    padding: 2%;
-    background-color: lightgray;
-    margin-top: 5%;
-    /* Add styling for the card container */
-  }
-  
-  .mySpan-container:hover + .card {
-    display: block;
-    position: absolute;
-    /* Add positioning and styling for the card when hovering over the span container */
-  }
-  
-  .pi-times{
-    display: flex;
-    justify-content: end;
-  }
+.card {
+  display: inline-block;
+  padding: 2%;
+  background-color: lightgray;
+  margin-top: 5%;
+}
+
+.card {
+  display: block;
+}
+
+.pi-times{
+  display: flex;
+  justify-content: end;
+}

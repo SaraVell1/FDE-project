@@ -3,9 +3,14 @@
   <div>
     <p>Entity: {{text}} </p>
     <p>ID: <input [(ngModel)]="dataId"></p>
-    <p>Class: <input [(ngModel)]="dataClass"></p>
-    <p *ngIf="dataList.length > 0">ID List:
-      <select [(ngModel)]="selectedValue">
+    <a href="https://www.wikidata.org/wiki/{{dataId}}" target="_blank">Check in Wikidata</a>
+    <p>Class:
+      <select [(ngModel)]="dataClass">
+        <option *ngFor="let option of classArray" [value]="option">{{ option }}</option>
+      </select>
+    </p>
+    <p *ngIf="dataList.length > 0">Candidates ID:
+      <select [(ngModel)]="dataId">
         <option *ngFor="let value of dataList" [value]="value" >{{ value }}</option> 
       </select>
     </p>

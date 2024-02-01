@@ -142,7 +142,7 @@ def spaceObjQuery(id):
           }
           LIMIT 1
           """
-def defaultEntity(id):
+def defaultEntityQuery(id):
   return """
           PREFIX wd: <http://www.wikidata.org/entity/>
           PREFIX wdt: <http://www.wikidata.org/prop/direct/>

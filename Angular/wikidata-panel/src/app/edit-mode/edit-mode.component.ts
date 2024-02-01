@@ -15,7 +15,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   formattedText: string = '';
   loading: boolean = false;
   value: number = 0;
-  spanDataList: any[] = [];
   selectedSpanData: any = null;
   spanContainer: any;
   response: any;
@@ -23,15 +22,12 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   dataL:string[] = [];
   spansSaved: boolean = false;
   highlightedText:string = '';
-  addingNewSpan:boolean = false;
   editedContent: any;
   fragList:any[] = [];
   private componentRef: ComponentRef<ClickableSpanComponent> | null = null;
   private dynamicComponentRef: ComponentRef<ClickableSpanComponent> | null = null;
 
   editableText : any;
-  maxSentenceNumber = 10;
-  paragraphs: string[] = [];
   dialogVisible: boolean = false;
   titleValue: string = '';
   authorValue: string = '';
@@ -213,13 +209,13 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
   findType(list:any){
     let type:any;
-    let humanArray = ["PERSON", "Deity", "Group of fictional characters", "Human"];
+    let personArray = ["PERSON", "Deity", "Group of fictional characters", "Human"];
     let locationArray = ["GPE", "LOC"]
     let planetArray = ["Natural satellite", "satellite", "planet", "Astronomical object", "Planetary system"]
     list.forEach((entity:any) => {
       type = entity.Type;
-      if(humanArray.find(x => x.valueOf().toLowerCase() === type.toLowerCase())){
-        entity.Type = "Human";
+      if(personArray.find(x => x.valueOf().toLowerCase() === type.toLowerCase())){
+        entity.Type = "Person";
       }
       else if(locationArray.find(x => x.valueOf().toLowerCase() === type.toLowerCase()))
       {

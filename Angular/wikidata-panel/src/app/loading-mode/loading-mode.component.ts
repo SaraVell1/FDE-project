@@ -12,7 +12,7 @@ const Docxtemplater = DocxtemplaterModule as any;
   styleUrls: ['./loading-mode.component.css']
 })
 export class LoadingModeComponent {
-  title = 'wikidata-panel';
+  title = 'FDE - Flying Digital Editions';
   searchText: string = '';
   entityData: any;
   formData: any;
@@ -20,6 +20,7 @@ export class LoadingModeComponent {
   fileUploaded: boolean = false;
   fileName:string = '';
   emptyFile:boolean = true;
+  isEnabled:boolean= false;
 
   constructor(private apiService: ApiService, private router: Router){}
   ngOnInit(): void {}
@@ -32,7 +33,7 @@ export class LoadingModeComponent {
     const textToAnalyze = this.fileContent !== null ? this.fileContent : this.searchText;
     if (textToAnalyze) {
       this.apiService.setText(textToAnalyze);
-      const maxSentencesPerBlock = 15; //con 5 me ne riconosce 14, con 10 me ne ricosce 15, con 15 me ne riconosce 17
+      const maxSentencesPerBlock = 20; //con 5 me ne riconosce 14, con 10 me ne ricosce 15, con 15 me ne riconosce 17 -- con sample test, settato su 20
       const blocks = this.splitTextIntoBlocks(textToAnalyze, maxSentencesPerBlock);
 
       const allResponses: any[] = [];
@@ -42,17 +43,16 @@ export class LoadingModeComponent {
           const block = blocks[index];
           this.apiService.getAnalyzedText(block).subscribe(response => {
             allResponses.push(response);
-
             sendRequest(index + 1);
           });
         } else {
           this.handleCombinedResponse(allResponses);
         }
       };
-
       sendRequest(0);
     } else {
       this.fileUploaded = false;
+      this.emptyFile = true;
     }
   }
   
@@ -73,6 +73,15 @@ export class LoadingModeComponent {
     this.apiService.setCombinedResponse(combinedResponse);
   }
 
+  onTextChange(){
+    if(this.searchText !== ''){
+      this.isEnabled = true;
+    }
+    else{
+      this.isEnabled = false;
+    }
+  }
+
   onFileChange(event: any) {
     const fileList: FileList | null = event.target.files;
     if (fileList && fileList.length > 0) {
@@ -84,9 +93,11 @@ export class LoadingModeComponent {
         this.convertDocxToTxt(file);
       } else {
         console.error('Formato del file non supportato.');
+        this.emptyFile = true;
       }
     } else {
       this.fileContent = null;
+      this.emptyFile = true;
     }
   }
   
@@ -100,11 +111,11 @@ export class LoadingModeComponent {
         this.emptyFile = false;
         this.fileContent = fileContent;
         this.fileName = file.name;
+        this.isEnabled = true;
       } else {
         console.error('Failed to read file content as string.');
       }
-    };
-  
+    };  
     reader.readAsText(file);
   }
   
@@ -118,6 +129,7 @@ export class LoadingModeComponent {
   
     this.fileUploaded = true;
     this.emptyFile = false;
+    this.isEnabled = true;
     this.fileContent = textContent;
     this.fileName = `${docxFile.name}`;
   }

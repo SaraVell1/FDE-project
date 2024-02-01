@@ -1,11 +1,6 @@
-.container{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
-  max-height: 60vh;
-  min-height: 60vh;
-  /* max-height: 60vh; */
+.row.files-upload{
+  display:inline-flex;
+  margin-bottom:10px;
 }
 
 h2{
@@ -23,43 +18,36 @@ textarea{
   resize: none;
 }
 
-.split {
-  height: 70%;
-  width: 50%;
-  position: absolute;
-  top: 0;
-  overflow-x: hidden;
-  /* padding-top: 20px; */
-  display: inline-block;
-  }
-  
-  /* Control the left side */
-  .left {
-    left: 0;
-  }
-  
-  /* Control the right side */
-  .right {
-    right: 0;
-  }
-  
-  /* If you want the content centered horizontally and vertically */
-  .centered {
-    position: relative;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-  }
-  .centered label{
-    border: 2px solid #495b69;
-    padding: 0.5%;
-    border-radius: 3px;
-    cursor: pointer;
-  }
+.split{
+  height: 55vh;
+  width: auto;
+  padding: 0 15%;
+  display: inline-flex;
+}
 
-  .disabledButton{
-    background-color:lightgray;
-  }
- 
-  
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+.centered {
+  top: 55%;
+  left: 50%;
+  text-align: center;
+  width:25rem;
+}
+
+.centered label{
+  border: 2px solid #495b69;
+  padding: 0.5%;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.disabledButton{
+  background-color:lightgray;
+}
+

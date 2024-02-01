@@ -13,15 +13,20 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   @Input() dataList: string[] = [];
   selectedValue: string = '';
   updatedDataId: string = '';
+  showSuggestions: boolean = false;
+  classArray: Array<string> = []
 
   @Output() updateSpan: EventEmitter<any> = new EventEmitter();
   @Output() spanClick: EventEmitter<any> = new EventEmitter();
 
   constructor(private apiService: ApiService, private cdr: ChangeDetectorRef){}
   cardOpen = false;
+  
 
   ngOnInit(){
      this.updatedDataId = this.apiService.getUpdatedDataId();
+     this.dataClass = this.dataClass || '';
+     this.classArray = [ this.dataClass, 'Person', 'Location', 'Space', 'Other']
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -50,25 +55,24 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
     this.cardOpen = false;
   }
 
-  updateSpanData() {
-    this.cardOpen = false;
-    this.updatedDataId = this.selectedValue ? this.selectedValue : this.dataId;
-    this.apiService.updateSpanData({
-      ID: this.updatedDataId,
-      Candidates: this.dataList,
-    });
-    this.apiService.updateDataList(this.dataList);
-    this.apiService.setUpdatedDataId(this.updatedDataId);
-    this.updateSpan.emit({
-      Name: this.text,
-      ID: this.updatedDataId,
-      Type: this.dataClass,
-      Candidates: this.dataList,
-      text: this.text,
-      dataId: this.updatedDataId,
-      dataClass: this.dataClass,
-      dataList: this.dataList
+ updateSpanData() {
+  console.log("dataclass in updateSpanData", this.dataClass);
+  this.cardOpen = false;
+  this.updatedDataId = this.selectedValue ? this.selectedValue : this.dataId;
+  const updatedDataClass = this.dataClass || 'DefaultClass';
+  this.apiService.updateSpanData({
+    ID: this.updatedDataId,
+    Candidates: this.dataList,
+  });
+  this.apiService.updateDataList(this.dataList);
+  this.apiService.setUpdatedDataId(this.updatedDataId);
+  this.updateSpan.emit({
+    text: this.text,
+    dataId: this.updatedDataId,
+    dataClass: updatedDataClass,
+    dataList: this.dataList
   });
   this.cdr.detectChanges();
-  }
+}
+
 }
