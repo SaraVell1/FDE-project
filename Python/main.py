@@ -49,4 +49,4 @@ def getEntityInfo(type, id):
 
 
 if __name__ == '__main__':
-    serve(app, port=8888, host="localhost")
+    serve(app, port=8888, host="0.0.0.0") #usare localhost in locale
