@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from DataAccess.wikiquery import WikiQuery
 from DataAccess.disambiguation import Disambiguation
+from waitress import serve
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -47,4 +49,4 @@ def getEntityInfo(type, id):
 
 
 if __name__ == '__main__':
-    app.run(port=8888, host="0.0.0.0")
+    serve(app, port=8888, host="localhost")
