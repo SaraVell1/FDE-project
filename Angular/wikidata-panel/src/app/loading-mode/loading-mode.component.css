@@ -1,6 +1,8 @@
 .row.files-upload{
   display:inline-flex;
   margin-bottom:10px;
+  justify-content: space-around;
+  width:100vw;
 }
 
 h2{
@@ -21,7 +23,6 @@ textarea{
 .split{
   height: 55vh;
   width: auto;
-  padding: 0 15%;
   display: inline-flex;
 }
 

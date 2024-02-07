@@ -39,17 +39,15 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   constructor(private sanitizer: DomSanitizer, private el:ElementRef, private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
-    this.apiService.spanData$.subscribe((spanData) => {
-      console.log('Updated spanData:', spanData);
-    });
+    // this.apiService.spanData$.subscribe((spanData) => {
+    //   console.log('Updated spanData:', spanData);
+    // });
     this.getResult();
   }
   
 
   ngAfterViewInit() {
-    console.log("ngAfterViewInit called")
     if (this.response) {
-      console.log("the response is arrived", this.response)
       this.formatText(this.inText, this.response);
     }  
   }
@@ -159,18 +157,14 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   
 
   deleteEntity(spanData: any) {
-    console.log('deleteEntity called');  
     var myDiv = document.getElementById('book');
     var targetId = spanData.ID;
-    console.log('Target ID:', targetId);
 
     if (myDiv) {
         if (myDiv.querySelector(`span.${targetId}`)) {
             var spanEl = this.el.nativeElement.querySelector(`span.${targetId}`);
-            console.log("spanEl", spanEl);
 
             if (spanEl && spanEl.textContent !== null) {
-                console.log("Im in the if");
                 var textNode = document.createTextNode(spanEl.textContent);
                 spanEl.parentNode?.replaceChild(textNode, spanEl);
                 this.popOutFromArray(spanData);
@@ -204,14 +198,13 @@ export class EditModeComponent implements OnInit, AfterViewInit {
   saveText() {
     this.fragList = this.findType(this.fragList);
     this.apiService.setEditedContent(this.inText, this.fragList, this.metadata);
-    console.log('The text has been saved!', this.fragList);
   }
 
   findType(list:any){
     let type:any;
     let personArray = ["PERSON", "Deity", "Group of fictional characters", "Human"];
-    let locationArray = ["GPE", "LOC"]
-    let planetArray = ["Natural satellite", "satellite", "planet", "Astronomical object", "Planetary system"]
+    let locationArray = ["GPE", "LOC", "Location"]
+    let planetArray = ["Natural satellite", "satellite", "planet", "Astronomical object", "Planetary system", "galaxy", "Space"]
     list.forEach((entity:any) => {
       type = entity.Type;
       if(personArray.find(x => x.valueOf().toLowerCase() === type.toLowerCase())){

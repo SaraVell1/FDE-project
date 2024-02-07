@@ -15,11 +15,12 @@ body {
 .footer {
   position: absolute; 
   bottom: 0;
-  text-align: center;
-  width: -webkit-fill-available;
-  height: 15vh;
+  width: 100vw;
+  height: 16vh;
   background-color: #c2d1f0;
   color:#495b69;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .header{
@@ -74,8 +75,9 @@ button{
   color: #536878;
 }
 
-.mySpan {
+  .mySpan {
     text-decoration: underline;
+    text-decoration-color: #ac3973;
   }
   
   .card {

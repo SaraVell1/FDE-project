@@ -141,7 +141,7 @@ class WikiQuery():
 
             
             return { "type": "Space", "data": {"Name": official_name, "Description": description, "Part Of": partOf, "Mass":mass, "Image": image_url,
-                    "viafID":viafID, "Wikipedia": wikipedia_url }}
+                    "viafID":viafID, "Wikipedia": wikipedia_url, "Turtle": turtle_data }}
         except Exception as e:
             return f"An error occurred: {str(e)}"
 

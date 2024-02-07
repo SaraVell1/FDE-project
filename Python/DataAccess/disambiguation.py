@@ -6,9 +6,9 @@ class Disambiguation():
         pass
 
     def convertText(self, text):
-        refined = Refined.from_pretrained(model_name="wikipedia_model", entity_set="wikidata", download_files=False)
+        refined = Refined.from_pretrained(model_name="wikipedia_model", entity_set="wikidata")
         spans = refined.process_text(text)
-        my_spans = str(spans)
+        # print("spans", str(spans))
         entities = []
         entity_list = []
         for span in spans:
@@ -24,4 +24,4 @@ class Disambiguation():
             elif entity_id is not None and entity_name is not None and entity_type is None:
                 entity_type = span.predicted_entity_types[0][1].capitalize()
                 entities.append([{"Name":entity_name, "ID":entity_id, "Type": entity_type, "Candidates": entity_list}])
-        return jsonify(entities)
+        return entities

@@ -25,7 +25,7 @@ export class ViewModeComponent {
   spanPos: {name:string, position:number}[] = [];
   spanPositions:{ name:string, positions:number[]}[] = [];
 
-  constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef, private renderer:Renderer2){}
+  constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef){}
 
   ngOnInit(){
      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
@@ -34,7 +34,7 @@ export class ViewModeComponent {
         this.author = content.metadata && content.metadata['Author'] !== undefined ? content.metadata['Author'] : '';
         this.title = content.metadata && content.metadata['Title'] !== undefined ? content.metadata['Title'] : '';
         this.setHeaders(content.spans);      
-        this.createSummaryPanel(content.spans, content.text);
+        this.createSummaryPanel(content.spans);
       });
   }
 
@@ -55,82 +55,82 @@ export class ViewModeComponent {
     return this.panelContent   
   }
 
-  createSummaryPanel(spans:any, text:string){
+  createSummaryPanel(spans: any) {
     this.panelHeader.forEach((item: any) => {
-      const entity: { type: string, names: { name: string, position: number }[] } = { type: item, names: [] };
-      const entityNames = this.setPanelsEntity(spans, item);
-  
-      entityNames.forEach((name: string) => {
-        const positions = this.spanPos.filter(span => span.name === name).map(span => span.position);
-  
-        positions.forEach(position => {
-          entity.names.push({ name, position });
-          console.log("entities", entity);
+        const entity: { type: string, names: { name: string, position: number }[] } = { type: item, names: [] };
+        const entityNames = this.setPanelsEntity(spans, item);
+
+        const seenNames = new Set<string>(); 
+        entityNames.forEach((name: string) => {
+            this.spanPos
+                .filter(span => span.name === name)
+                .forEach(span => {
+                    const uniqueName = span.name;
+                    const uniquePosition = span.position;
+
+                    if (!seenNames.has(uniqueName)) {
+                        entity.names.push({ name: uniqueName, position: uniquePosition });
+                        seenNames.add(uniqueName);
+                    }
+                });
         });
-      });
-  
-      this.entities.push(entity);
-    });
-  }
-
-  formatText(text: string, response: any) {
-    const flatResponse = response.flatMap((array: any) => array);
-    const sentencesBetweenNewLines = 5;
-    let offset=0;
-
-    flatResponse.forEach((item: any) => {
-        const spanElement = document.createElement('span');
-        let positions = this.findPositions(item.Name, text); 
-
-        spanElement.textContent = item.Name;
-        spanElement.className = 'entitySpan';
-        spanElement.id = item.ID;
-        spanElement.setAttribute('pos', positions.toString())
-        spanElement.setAttribute('type', item.Type);               
-   
-        this.spanPos.push({name:item.Name, position: positions[0]})
-        const spanHtml = spanElement.outerHTML;
-        console.log("my pos", this.spanPositions)
-        text = text.replace(item.Name, spanHtml);
-    });
-
-    const sentences = text.match(/[^.!?]*((?:[.!?]["']*)|(?:$))/g) || [];
-
-    let sentenceCountProcessed = 0;
-    let modifiedText = '';
-
-    sentences.forEach((sentence) => {
-        sentenceCountProcessed++;
-        if (sentenceCountProcessed % sentencesBetweenNewLines === 0 && sentenceCountProcessed < sentences.length) {
-            modifiedText += `<br/><br/>`;
+        if (!this.entities.some(e => e.type === item)) {
+            this.entities.push(entity);
         }
-        modifiedText += sentence;
     });
+}
 
-    this.sanitizedText = this.sanitizer.bypassSecurityTrustHtml(modifiedText);
-    this.editedContent = this.sanitizedText;
-    return this.editedContent;
+formatText(text: string, response: any) {
+  const flatResponse = response.flatMap((array: any) => array);
+  const sentencesBetweenNewLines = 5;
+
+  flatResponse.forEach((item: any) => {
+      const existingSpan = this.spanPos.find(span => span.name === item.Name);
+
+      if (!existingSpan) {
+          let positions = this.findPosition(item.Name, text);
+          const spanElement = document.createElement('span');
+          spanElement.textContent = item.Name;
+          spanElement.className = 'entitySpan';
+          spanElement.id = item.ID;
+          spanElement.setAttribute('pos', positions.toString());
+          spanElement.setAttribute('type', item.Type);
+
+          this.spanPos.push({ name: item.Name, position: positions });
+          const spanHtml = spanElement.outerHTML;
+          const regex = new RegExp(item.Name, 'g');
+          text = text.replace(regex, spanHtml);
+      }
+  });
+
+  const sentences = text.match(/[^.!?]*((?:[.!?]["']*)|(?:$))/g) || [];
+
+  let sentenceCountProcessed = 0;
+  let modifiedText = '';
+
+  sentences.forEach((sentence) => {
+      sentenceCountProcessed++;
+      if (sentenceCountProcessed % sentencesBetweenNewLines === 0 && sentenceCountProcessed < sentences.length) {
+          modifiedText += `<br/><br/>`;
+      }
+      modifiedText += sentence;
+  });
+
+  this.sanitizedText = this.sanitizer.bypassSecurityTrustHtml(modifiedText);
+  this.editedContent = this.sanitizedText;
+  return this.editedContent;
+}
+
+  findPosition(name: string, text: string){
+    const regex = new RegExp(`\\b${name}\\b`, 'i');  
+    const match = regex.exec(text);
+
+    return match ? match.index : 0;
   }
   
-  findPositions(name: string, text: string): number[] {
-    const positions: number[] = [];
-    const regex = new RegExp(`\\b${name}\\b`, 'gi');
-    let match;
-  
-    while ((match = regex.exec(text)) !== null) {
-      const position = match.index;
-      positions.push(position);
-    } 
-    return positions;
-  }
     
-  goToPos(position: string): void {
-    console.log("goToPos cliccato!");
-    console.log("position in goToPos", position);
-  
+  goToPos(position: string) {
     const elements = this.el.nativeElement.querySelectorAll(`[pos="${position}"]`);
-  
-    console.log(elements);
     if (elements.length > 0) {
       const container = this.el.nativeElement.querySelector('#file');
       const element = elements[0] as HTMLElement;
@@ -138,48 +138,37 @@ export class ViewModeComponent {
   
       const entityElement = this.el.nativeElement.querySelector(`[id="${entityId}"]`);
     if (entityElement) {
-      entityElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        entityElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
       }
     }
   }
   
 
   addClickEventToEntitySpans() {
-    const entitySpans = document.querySelectorAll('.entitySpan');
-  
+    const entitySpans = this.el.nativeElement.querySelectorAll('.entitySpan');
+
     entitySpans.forEach((element: Element) => {
-      const spanElement = element as HTMLElement;
-      if (spanElement.classList.contains('entitySpan')) {
-        const itemId = spanElement['id'];
-        const itemType = spanElement.getAttribute('type');
-        spanElement.addEventListener('click', (event) => {
-          this.closePanel(false);
-          if (itemId && itemType) {
-            this.getIdInfo(itemType, itemId);
-          } else {
-            console.log('Item ID not found on clicked element.');
-          }
-        });
-      }
+        const spanElement = element as HTMLElement;
+        if (spanElement.classList.contains('entitySpan')) {
+            const itemId = spanElement['id'];
+            const itemType = spanElement.getAttribute('type');
+            spanElement.addEventListener('click', (event) => {
+                this.closePanel(false);
+                if (itemId && itemType) {
+                    this.getIdInfo(itemType, itemId);
+                } else {
+                    console.log('Item ID not found on clicked element.');
+                }
+            });
+        }
     });
   }
+
   
   
   getIdInfo(itemType:string, itemId:string){
     this.infoService.getEntityInfo(itemType, itemId).subscribe((response)=>{
-      if(response.type === "Person"){
-        this.cardOpen = true;
-        this.infoService.setEntityData(response);
-      }
-      else if(response.type === "Location"){
-        this.cardOpen = true;
-        this.infoService.setEntityData(response);
-      }
-      else if(response.type === "Space"){
-          this.cardOpen = true;
-          this.infoService.setEntityData(response);
-      }
-      else if(response.type === "Other"){
+      if(response){
         this.cardOpen = true;
         this.infoService.setEntityData(response);
       }

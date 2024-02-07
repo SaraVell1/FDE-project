@@ -42,8 +42,12 @@ export class LoadingModeComponent {
         if (index < blocks.length) {
           const block = blocks[index];
           this.apiService.getAnalyzedText(block).subscribe(response => {
+            console.log(response);
             allResponses.push(response);
             sendRequest(index + 1);
+          },
+          error => {
+            console.log("Errore durante la richiesta:", error);
           });
         } else {
           this.handleCombinedResponse(allResponses);

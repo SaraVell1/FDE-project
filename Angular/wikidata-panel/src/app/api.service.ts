@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from 'rxjs';
 import { EditedText } from './edited-text';
 
 @Injectable({
@@ -8,7 +8,6 @@ import { EditedText } from './edited-text';
 })
 export class ApiService {
   private inText :string = '';
-  private apiResponse: any;
   private apiResponseSubject = new Subject<any>();
   private updatedDataId:string = '';
   private dataList: string[] = [];
@@ -54,25 +53,23 @@ export class ApiService {
   }
 
   getAnalyzedText(textBlock: string): Observable<any> {
-    const apiUrl = 'http://127.0.0.1:8888';
+    const apiUrl = 'http://127.0.0.1:8888/getEntities';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const requestBody = { text: textBlock };
-
-    return this.http.post(apiUrl, requestBody);
+    return this.http.post(apiUrl, requestBody, {headers});
   }
 
+  
   setCombinedResponse(combinedResponse: any[]) {
-    const flattenedArray = combinedResponse
-    .flatMap(innerArrays => innerArrays.flat())
-    .filter(item => item && item.ID && item.Name && item.Type);
-
+    const filteredResponses = combinedResponse.filter(response => response.success !== false);
+    const flattenedArray = filteredResponses
+      .flatMap(innerArrays => innerArrays.flat())
+      .filter(item => item && item.ID && item.Name && item.Type);
     this.apiResponseSubject.next(flattenedArray);
   }
 
   getResponseSubject(){
     return this.apiResponseSubject.asObservable();
   }
-  getResponse():any{
-    return this.apiResponse;
-  }
+
 }

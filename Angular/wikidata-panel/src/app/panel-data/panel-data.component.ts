@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 export class PanelDataComponent implements OnInit, AfterViewInit{
 
   @Output() closePanel = new EventEmitter<any>();
-  type:string = '';
   entityName:string = '';
   entityImage:string='';
   entityInfo:any;
@@ -30,30 +29,28 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
   getEntityInformation(){
    const entityData = this.infoService.getEntityData();
    if(entityData){
-    this.type = entityData.type;
     this.entityInfo = entityData.data;
-    console.log(this.entityInfo)
     this.createPanel();
-   }else{
-    console.log("EntityData is empty");
    }
+   else
+   {
+      alert("No information provided for this entity");
+    }
   }
 
   createPanel(){
-    console.log("Sono nel create Panel");
-      this.keys = Object.keys(this.entityInfo);
-      this.entityName = this.entityInfo['Name'];
-      return this.keys;
+    this.keys = Object.keys(this.entityInfo);
+    this.entityName = this.entityInfo['Name'];
+    return this.keys;
   }
 
   downloadTurtleFile() {
-    const turtleData = this.entityInfo['Turtle'];  
-    
+    const turtleData = this.entityInfo['Turtle'];   
     if (turtleData) {
       const blob = new Blob([turtleData], { type: 'text/turtle;charset=utf-8' });
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = 'turtle_entity_data.ttl';
+      link.download = 'turtle_entity_'+this.entityInfo['Name']+'.ttl';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -61,7 +58,6 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
       console.error('Turtle data is missing.');
     }
   }
-
 
   close(){
     this.closePanel.emit(false);
