@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { APIURL } from './edited-text';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class InfoService {
   constructor(private http:HttpClient) { }
 
   getEntityInfo(type:string, id:string){
-    const apiUrl = `http://127.0.0.1:8888/${type}/${id}`;
+    const apiUrl = `${APIURL}/${type}/${id}`;
     const headers = new HttpHeaders({ 'Content-Type': '*/*' });
 
     return this.http.get(apiUrl, {headers})

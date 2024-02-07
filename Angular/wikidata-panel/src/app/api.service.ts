@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from 'rxjs';
-import { EditedText } from './edited-text';
+import { APIURL, EditedText } from './edited-text';
 
 @Injectable({
   providedIn: 'root'
@@ -52,8 +52,8 @@ export class ApiService {
     return this.editedContent;
   }
 
-  getAnalyzedText(textBlock: string): Observable<any> {
-    const apiUrl = 'http://127.0.0.1:8888/getEntities';
+  getAnalyzedText(textBlock: string){
+    const apiUrl = `${APIURL}/getEntities`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const requestBody = { text: textBlock };
     return this.http.post(apiUrl, requestBody, {headers});
