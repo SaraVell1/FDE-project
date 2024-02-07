@@ -6,7 +6,7 @@ class Disambiguation():
         pass
 
     def convertText(self, text):
-        refined = Refined.from_pretrained(model_name="wikipedia_model", entity_set="wikidata", data_dir="./data_model")
+        refined = Refined.from_pretrained(model_name="wikipedia_model", entity_set="wikidata")
         spans = refined.process_text(text)
         # print("spans", str(spans))
         entities = []
