@@ -8,7 +8,7 @@
                     <tr>
                         <td><b>{{ key }}</b></td>
                         <td class="cell">
-                            <img *ngIf="key === 'Image'" [src]="entityInfo[key]" alt="Image" class="myImg">
+                            <img *ngIf="key === 'Image'"   [src]="entityInfo[key] !== '-' ? entityInfo[key] : ''" alt="Image" class="myImg">
                             <img *ngIf="key === 'Flag'" [src]="entityInfo[key]" alt="Flag" class="myImg">
                         </td>
                     </tr>
@@ -32,7 +32,8 @@
                             {{ entityInfo[key] }}
                         </td>
                         <td class="cell" *ngIf="key === 'Wikipedia'">
-                            <a [href]="entityInfo[key]" target="_blank">Go to Wikipedia</a>
+                            <a [href]="entityInfo[key] !== '-' " target="_blank">Go to Wikipedia</a>
+                            <p *ngIf="entityInfo[key]=== '-'">No Wikipedia Page found</p>
                         </td>
                         <td class="cell" *ngIf="key === 'Turtle'" style="text-decoration: underline;cursor: pointer;">
                             <a (click)="downloadTurtleFile()" target="_blank">Download Turtle</a>
