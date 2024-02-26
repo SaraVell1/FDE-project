@@ -1,4 +1,7 @@
 @import 'primeicons/primeicons.css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+
 *{
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color:#495b69;
@@ -13,10 +16,8 @@ body {
 }
 
 .footer {
-  position: absolute; 
-  bottom: 0;
-  width: 100vw;
-  height: 16vh;
+  width: 100%;
+  height: auto;
   background-color: #c2d1f0;
   color:#495b69;
   display: flex;
@@ -25,12 +26,12 @@ body {
 
 .header{
   position: relative;
-  width:-webkit-fill-available;
+  width: 100%;
   height: auto;
   background-color: #c2d1f0;
   margin-bottom: 2%;
-  display: inline-flex;
-  padding: 2vh 2vw;
+  display: flex;
+  padding: 0.5vh 2vw;
   justify-content: space-between;
 }
 
@@ -66,13 +67,14 @@ button{
   z-index: 1;
 } 
 
-.header h1{
+.header span{
   margin: 0%;
   padding-top: 2vh;
   padding-left: 1vw;
   padding-bottom: 2vh;
   text-align: left;
   color: #536878;
+  font-size: 1.5rem;
 }
 
   .mySpan {
@@ -101,6 +103,11 @@ button{
     background-color: lightgoldenrodyellow;
   }
 
+  p-dialog.dialogInfo div.p-dialog.p-component{
+    width: 60rem!important;
+    padding: 5%!important;
+  }
+
   .p-tabview.p-component{
     min-width: 20vw;
   }
@@ -120,6 +127,15 @@ button{
 
   .p-tabview-nav li.p-highlight{
     background-color: lavender;
+  }
+
+  .p-tabview-nav-content ul{
+    padding-left:0!important;
+    margin:0!important;
+  }
+
+  .p-tabview-nav-content a{
+    text-decoration: none!important;
   }
 
   .p-tabview-panels{
@@ -143,3 +159,20 @@ button{
   div.p-tabview-panel span{
     padding-bottom: 3px;
   }
+
+.footer button.footer-button{
+  border: none;
+  background: none;
+  font-size: small;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+textarea.p-inputtextarea.p-inputtext.p-component.p-element{
+  width: 334px!important;
+  height: 191px!important;
+}
+
+app-clickable-span .row>*{
+  width: auto!important;
+}

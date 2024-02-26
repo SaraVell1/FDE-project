@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col summaryPanel">
+<div class="d-flex">
+  <div class="col-md-3 summaryPanel">
     <p-tabView>
       <ng-container *ngFor="let entity of entities">
         <ng-container *ngIf="entity.type !== 'Other'">
@@ -19,7 +19,7 @@
       </ng-container>
     </p-tabView>      
   </div>
-  <div class="col viewMode" #file id="file">
+  <div class="col-md-3 viewMode" #file id="file">
     <div>
       <h1 *ngIf="title">{{title}}</h1>
       <h5 *ngIf="author">By {{author}}</h5>

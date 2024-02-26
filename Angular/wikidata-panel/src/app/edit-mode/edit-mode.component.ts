@@ -3,6 +3,7 @@ import { EditedText } from '../edited-text';
 import { ApiService } from '../api.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ClickableSpanComponent } from '../clickable-span/clickable-span.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-mode',
@@ -35,14 +36,27 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('spanContainer', {read: ViewContainerRef}) spans: ViewContainerRef | any;
   @ViewChild('formattedTextContainer', {static: true}) formattedTextContainer: ElementRef | any;
+  editedContentSubscription: Subscription | any;
 
-  constructor(private sanitizer: DomSanitizer, private el:ElementRef, private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef){}
+  constructor( private el:ElementRef, private apiService:ApiService, private componentFactoryResolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
-    // this.apiService.spanData$.subscribe((spanData) => {
-    //   console.log('Updated spanData:', spanData);
-    // });
-    this.getResult();
+    const savedContent = this.apiService.getEditedContent();
+    if (savedContent && savedContent.text && savedContent.spans && savedContent.spans.length > 0) {
+      this.editedContentSubscription = this.apiService.editedContent$.subscribe(
+        (content: any) => {
+          this.inText = content.text;
+          this.fragList = content.spans;
+          this.metadata = content.metadata;
+          setTimeout(() => {
+            this.formatText(this.inText, this.fragList);
+          }, 100); 
+          this.loading = false;          
+        })     
+    }
+    else{
+      this.getResult();
+    }
   }
   
 
@@ -57,7 +71,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     this.inText = this.apiService.getText();
     this.apiService.getResponseSubject().subscribe((apiResponse)=> {
       this.response = [...apiResponse];
-    this.formatText(this.inText, this.response);
+      this.formatText(this.inText, this.response);
       this.loading = false;
     })
   }
@@ -66,13 +80,16 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     const flatResponse = response.flatMap((array: any) => array);
     const sentencesBetweenNewLines = 5;
 
+    if(this.fragList.length === 0){
+      this.fragList = this.response;
+    }
     flatResponse.forEach((item: any) => {
         const spanElement = document.createElement('span');
         spanElement.textContent = item.Name;
         spanElement.className = 'mySpan ' + item.ID;
         const spanHtml = spanElement.outerHTML;
 
-        const regex = new RegExp(item.Name, 'g');
+        const regex = new RegExp(item.Name, 'gi');
         text = text.replace(regex, spanHtml);
     });
     const sentences = text.match(/[^.!?]*((?:[.!?]["']*)|(?:$))/g) || [];
@@ -89,14 +106,11 @@ export class EditModeComponent implements OnInit, AfterViewInit {
     });
 
     this.editableText = modifiedText;
-    this.fragList = this.response;
     return this.editableText;
 }
   
   handleSpanClick(spanData: any) {
-    console.log('Span clicked:', spanData);
     this.selectedSpanData = spanData;
-
     const factory = this.componentFactoryResolver.resolveComponentFactory(ClickableSpanComponent);
     this.dynamicComponentRef = this.spans.createComponent(factory);
     
@@ -107,7 +121,6 @@ export class EditModeComponent implements OnInit, AfterViewInit {
       dynamicComponent.dataClass = spanData.Type;
       dynamicComponent.dataList = spanData.Candidates;
       dynamicComponent.openCard();
-
       dynamicComponent.updateSpan.subscribe((data: any) => {
         if (this.componentRef) {
           this.componentRef.instance.dataList = data.dataList;
@@ -120,7 +133,12 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         spanData.Type = data.dataClass;
  
         this.cdr.detectChanges();
-        this.editableText = this.formatText(this.inText, this.response);
+        if(this.fragList.length === 0){
+          this.editableText = this.formatText(this.inText, this.response);
+        }
+        else{
+          this.editableText = this.formatText(this.inText, this.fragList);
+        }
       });
     
       this.spans.insert(this.dynamicComponentRef.hostView);
@@ -150,7 +168,13 @@ export class EditModeComponent implements OnInit, AfterViewInit {
 
         this.fragList.push(spanData);
         this.handleSpanClick(spanData);
-        this.editableText = this.formatText(this.inText, this.response);
+        if(this.fragList.length === 0){
+          this.editableText = this.formatText(this.inText, this.response);   
+        }
+        else{
+          this.editableText = this.formatText(this.inText, this.fragList);   
+        }
+            
       }
      }
   }
@@ -168,6 +192,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
                 var textNode = document.createTextNode(spanEl.textContent);
                 spanEl.parentNode?.replaceChild(textNode, spanEl);
                 this.popOutFromArray(spanData);
+                
             } else {
                 console.log("Span element not found or has no text content.");
             }
@@ -222,7 +247,7 @@ export class EditModeComponent implements OnInit, AfterViewInit {
         entity.Type = "Other";
       }
     });
-    console.log(this.fragList);
     return this.fragList;
   }
+
 }

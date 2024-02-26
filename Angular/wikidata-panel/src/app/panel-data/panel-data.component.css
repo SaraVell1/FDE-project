@@ -1,41 +1,42 @@
 .card {
-    display: inline-block;
-    padding: 2%;
-    background-color: lightgray;
-    max-height: 52.1vh;
-    min-height: 44vh;
-    overflow:auto;
-  }
+  display: block;
+  padding: 2%;
+  background-color: lightgray;
+  max-height: 55vh;
+  overflow-y:auto;
+  overflow-x: hidden;
+  min-width: 25vw;
+}
 
-  .card h4{
-    text-align: center;
-  }
-  .pi-times{
-    display: flex;
-    justify-content: flex-end;
-    cursor: pointer;
-  }
+.card h4{
+  text-align: center;
+}
+.pi-times{
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}
 
-  .myImg{
-    max-width: 60%;
-  }
+.myImg{
+  max-width: 60%;
+}
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
-  td.cell {
-    border-left: 1px solid black;
-  }
+td.cell {
+  border-left: 1px solid black;
+}
 
-  th, td {
-    padding: 4px;
-    text-align: left;
-  }
+th, td {
+  padding: 4px;
+  text-align: left;
+}
 
-  .cell{
-    max-width: 200px; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.cell{
+  max-width: 200px; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

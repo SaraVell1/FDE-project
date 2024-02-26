@@ -1,6 +1,6 @@
-<div>
+<div class="container">
   <div class="row files-upload">
-    <div class="split left col-md-auto">
+    <div class="split left col-md-6">
         <div class="centered">
           <h2>Insert your text here</h2>
           <div>
@@ -9,7 +9,7 @@
         </div>
       </div>
 
-      <div class = "split right col-md-auto">
+      <div class = "split right col-md-6">
         <div class="centered">
           <h2>Or choose your file</h2>
             <label for="files"> Choose <i class="pi pi-upload"></i> </label><span *ngIf="fileUploaded"> {{fileName}}</span>
@@ -19,6 +19,8 @@
       </div>
   </div>
   <div class="row center">  
-    <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyse Text" [disabled]="!isEnabled" [ngClass]="{'disabledButton': !isEnabled }"></button>
+    <div class="col-md-12 d-flex justify-content-center align-items-center">
+      <button pButton [routerLink]="['./edit']" (click)="sendText()" label="Analyse Text" [disabled]="!isEnabled" [ngClass]="{'disabledButton': !isEnabled }"></button>
+    </div>
   </div>
 </div>

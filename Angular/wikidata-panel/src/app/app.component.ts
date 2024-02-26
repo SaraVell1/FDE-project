@@ -1,6 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ApiService } from './api.service';
-import { Route, Router } from '@angular/router';
+import { Component, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,22 +8,18 @@ import { Route, Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'wikidata-panel';
-  searchText: string = '';
-  entityData: any;
+  dialogVisible:boolean = false;
+  
 
-  constructor(private apiService: ApiService, private router: Router){}
+  constructor(private router: Router){}
   ngOnInit(): void {}
 
   goToUrl(path:any){
     this.router.navigate(path);
   }
   
-  // callApi(){
-  //   this.entityData = null;
-  //   this.apiService.getResults(this.searchText).subscribe(response => {
-  //     this.entityData = response;
-  //     console.log(response);
-  //   })
-  // }
+  openDialog(){
+    this.dialogVisible = true;
+  }
 }
 

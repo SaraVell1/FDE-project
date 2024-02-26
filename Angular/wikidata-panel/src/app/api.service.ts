@@ -44,8 +44,8 @@ export class ApiService {
   }
 
   setEditedContent(content: string, list: any, data:any): void {
-    let myRes:EditedText = {text: content, spans: list, metadata: data};
-    this.editedContentSubject.next(myRes);
+    this.editedContent = {text: content, spans: list, metadata: data};
+    this.editedContentSubject.next(this.editedContent);
   }
 
   getEditedContent() {

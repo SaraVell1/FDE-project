@@ -56,7 +56,6 @@ export class ClickableSpanComponent implements OnInit, OnChanges{
   }
 
  updateSpanData() {
-  console.log("dataclass in updateSpanData", this.dataClass);
   this.cardOpen = false;
   this.updatedDataId = this.selectedValue ? this.selectedValue : this.dataId;
   const updatedDataClass = this.dataClass || 'DefaultClass';

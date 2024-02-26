@@ -30,6 +30,7 @@ export class LoadingModeComponent {
   }
   
   sendText() {
+    this.apiService.setEditedContent('', [], null);
     const textToAnalyze = this.fileContent !== null ? this.fileContent : this.searchText;
     if (textToAnalyze) {
       this.apiService.setText(textToAnalyze);
@@ -42,12 +43,11 @@ export class LoadingModeComponent {
         if (index < blocks.length) {
           const block = blocks[index];
           this.apiService.getAnalyzedText(block).subscribe(response => {
-            console.log(response);
             allResponses.push(response);
             sendRequest(index + 1);
           },
           error => {
-            console.log("Errore durante la richiesta:", error);
+            alert("Error! Please, retry.");;
           });
         } else {
           this.handleCombinedResponse(allResponses);

@@ -1,13 +1,12 @@
 .card {
-  display: inline-block;
   padding: 2%;
   background-color: lightgray;
   margin-top: 5%;
+  display: flex;
+  width:auto;
+  height:40vh;
 }
 
-.card {
-  display: block;
-}
 
 .pi-times{
   display: flex;

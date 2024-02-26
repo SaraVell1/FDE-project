@@ -1,17 +1,27 @@
-<header class="header">
+<nav class="navbar header">
     <div class="logo">
         <img src="../assets/images/logo3.png" alt="image">
-        <h1>Flying Digital Editions</h1>
+        <span>Flying Digital Editions</span>
     </div>
   <div class="home">
       <button routerLink="/">Go to Loading Page</button>
   </div>
-</header>
+</nav>
 <router-outlet></router-outlet>
-<footer class="footer">
+<p-dialog [(visible)]="dialogVisible" class="dialogInfo">
+    <p>
+      <b>ATTENTION: This is just a demo of the official Flying Digital Editions project! Check out the main repository <a href="">here</a>.</b>
+      <br><br>
+      <b>Flying Digital Editions</b> is a project that has the aim of creating digital editions in a dynamic and simple way, to give the user a new way of exploring text, linking entities automatically to a knowledge base and retrieving information.
+      The idea is to give users the opportunity to upload any type of texts, which will be analysed for creating a <i>digital edition on-the-fly</i>. Automatically, the tool will extract the most important entities from the text and link them to the <a href="https://www.wikidata.org/wiki/Wikidata:Main_Page">Wikidata</a> knowledge base, assigning an ID.
+      The user can check the assigned IDs to ensure that the entities are linked correctly and can decide to delete or add other entities. Once saved, an interface will present a summary table of entities by category on the left and text with the entities highlighted in the centre. 
+      By clicking on them, an information panel will appear on the right with all the basic information.
+    </p>
+  </p-dialog>
+<footer class="footer fixed-bottom">
     <div style="padding-left: 3vw; font-size:small">
         <p>Alma Mater Studiorum - Università di Bologna</p>
         <p>Sara Vellone - 2024</p>
-        <p><a>About FDE</a> / <a><i class="pi pi-github"></i></a></p>
+        <p><button class="footer-button" (click)="openDialog()" style="cursor: pointer;">About FDE</button> / <a href="https://github.com/SaraVell1/FDE-project"><i class="pi pi-github"></i></a></p>
     </div>
 </footer>

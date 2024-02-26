@@ -1,9 +1,11 @@
-<div class="card" *ngIf="cardOpen">
+<div class="col-md-3 card" *ngIf="cardOpen">
   <i class="pi pi-times" (click)="close()"></i>
-  <div>
-    <p>Entity: {{text}} </p>
-    <p>ID: <input [(ngModel)]="dataId"></p>
+  <div class="d-block" style="height:40vh; overflow-y: auto">
+    <p>Entity: <b>{{text}}</b></p>
+    <p>ID: <input [(ngModel)]="dataId"> <br>
     <a href="https://www.wikidata.org/wiki/{{dataId}}" target="_blank">Check in Wikidata</a>
+    </p>
+   
     <p>Class:
       <select [(ngModel)]="dataClass">
         <option *ngFor="let option of classArray" [value]="option">{{ option }}</option>

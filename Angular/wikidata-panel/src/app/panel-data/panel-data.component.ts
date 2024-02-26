@@ -17,9 +17,7 @@ export class PanelDataComponent implements OnInit, AfterViewInit{
   keys: string[] = [];
   constructor(private infoService: InfoService, private cdr:ChangeDetectorRef){}
 
-  ngOnInit(){
-    
-  }
+  ngOnInit(){}
 
   ngAfterViewInit(){
     this.getEntityInformation();
