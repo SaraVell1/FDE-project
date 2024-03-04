@@ -24,7 +24,11 @@
       <h1 *ngIf="title">{{title}}</h1>
       <h5 *ngIf="author">By {{author}}</h5>
     </div>
-    <div [innerHTML]="editedContent"></div>
+    <div [innerHTML]="editedContent" #text></div>
   </div>
   <app-panel-data *ngIf="cardOpen" (closePanel)="closePanel($event)"></app-panel-data>
+</div>
+<div class="d-flex justify-content-between">
+  <button class="mt-2"  style="margin-left: 2%;" [routerLink]="['../edit']">Back to Edit-mode</button>
+  <button class="mt-2" (click)="transformToXML()" style="margin-right: 2%;">Export Text in XML</button>
 </div>

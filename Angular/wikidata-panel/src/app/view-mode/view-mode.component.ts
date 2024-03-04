@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { EditedText } from '../edited-text';
@@ -27,6 +27,7 @@ export class ViewModeComponent {
   contentSpan: Array<string> = []
   contentMetadata: any = null;
   modifiedText = '';
+  @ViewChild('text') textToXML!:ElementRef;
 
   constructor(private apiService: ApiService, private sanitizer: DomSanitizer, private el: ElementRef, private infoService: InfoService, private cdr: ChangeDetectorRef){}
 
@@ -42,6 +43,35 @@ export class ViewModeComponent {
        this.createSummaryPanel(content.spans);
      });
  }
+
+ transformToXML(){
+    const textHTML = this.textToXML.nativeElement.outerHTML;
+    const xmlContent = this.convertToXML(textHTML);
+    this.downloadXML(xmlContent);
+ }
+
+ convertToXML(htmlContent: string): string {
+  const replacedDivContent = htmlContent.replace(/<div\s+([^>]*)>/g, "<paragraph>").replace(/<\/div>/g, "</paragraph>");
+  const replacedBrContent = replacedDivContent.replace(/<br>\s*<br>/g, "</paragraph><paragraph>");
+  const replacedSpanContent = replacedBrContent.replace(/<span\s+class="([^"]*)"\s+id="([^"]*)"\s+pos="([^"]*)"\s+type="([^"]*)">(.*?)<\/span>/g, "<entity class=\"$1\" id=\"$2\" pos=\"$3\" type=\"$4\">$5</entity>");
+ 
+  return `<?xml version="1.0" encoding="UTF-8"?>
+          <document>${replacedSpanContent}</document>`;
+  }
+
+  downloadXML(xmlContent: string) {
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'text.xml';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
+
 
  setHeaders(spans:any){
    spans.forEach((item:any)=>{
