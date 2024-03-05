@@ -53,10 +53,24 @@ export class ViewModeComponent {
  convertToXML(htmlContent: string): string {
   const replacedDivContent = htmlContent.replace(/<div\s+([^>]*)>/g, "<paragraph>").replace(/<\/div>/g, "</paragraph>");
   const replacedBrContent = replacedDivContent.replace(/<br>\s*<br>/g, "</paragraph><paragraph>");
-  const replacedSpanContent = replacedBrContent.replace(/<span\s+class="([^"]*)"\s+id="([^"]*)"\s+pos="([^"]*)"\s+type="([^"]*)">(.*?)<\/span>/g, "<entity class=\"$1\" id=\"$2\" pos=\"$3\" type=\"$4\">$5</entity>");
+  const replacedH1Content = replacedBrContent.replace(/<h1\s+([^>]*)>(.*?)<\/h1>/g, "<head><title>$2</title></head>");
+  const replacedH5Content = replacedH1Content.replace(/<h5\s+([^>]*)>(.*?)<\/h5>/g, "<head><title level=\"2\">$2</title></head>");
+  const replacedSpanContent = replacedH5Content.replace(/<span\s+class="([^"]*)"\s+id="([^"]*)"\s+pos="([^"]*)"\s+type="([^"]*)">(.*?)<\/span>/g, "<name class=\"$1\" id=\"$2\" type=\"$4\">$5</name>");
  
   return `<?xml version="1.0" encoding="UTF-8"?>
-          <document>${replacedSpanContent}</document>`;
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader>
+              <fileDesc>
+                <titleStmt>
+                  <title>${this.title}</title>
+                  <author>${this.author}</author> 
+                </titleStmt>
+              </fileDesc>
+            </teiHeader>
+            <text>
+              <body>${replacedSpanContent}</body>
+            </text>
+          </TEI>`;
   }
 
   downloadXML(xmlContent: string) {
