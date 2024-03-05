@@ -40,7 +40,7 @@
   position:sticky;
   top: 0;
   left: 0;
-  max-height: 40vh;
+  max-height: 36vh;
   overflow-y: auto;
 }
 
@@ -51,12 +51,13 @@
 .addButton{
   text-align: center;
   display: flex;
-  justify-content: space-between;
+  width:99%;
   margin-left: 10px;
 }
 
 .addButton button{
   padding: 1vh;
+  margin-right: 1%;
   cursor: pointer;
   margin-top: 5px;
 }

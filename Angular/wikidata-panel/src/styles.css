@@ -98,7 +98,7 @@ button{
   }
 
   p-dialog div.p-dialog.p-component{
-    width:11rem!important;
+    width:13rem!important;
     min-height: 20vh!important;
     padding: 0.5rem!important;
     background-color: lightgoldenrodyellow;
@@ -140,6 +140,7 @@ button{
   }
 
   .p-tabview-panels{
+    height: 52vh;
     padding-top:10px;
     background:lavender;
     border-bottom: #495b69 solid 0.5px;
