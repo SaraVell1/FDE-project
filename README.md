@@ -1,5 +1,5 @@
 <h1>Flying Digital Editions</h1>
-<h2> A tool for enhancing digital text Exploration through Wikidata</h2>
+<h2> A tool for enhancing digital text exploration through Wikidata</h2>
 
 <p>
   This project represents the result of my DHDK thesis which aim is to provide both expert and non-expert users with a tool that can create a manage a lightweight digital edition, by leveraging existing technologies and aumotating processes where possible.
